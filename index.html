@@ -7,267 +7,304 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <title>Team-Portal</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: sticky header, tab bar (bottom on phones), one 800px column. Cards only for list entries; forms and pickers sit on panels. */
+/* Layout: Kopfzeile mit Marke, Bereichen und Profil; eine 880px-Spalte. Auf dem Handy wandern die Bereiche nach unten. */
 :root {
-  --bg: #f6f4ef; --surface: #ffffff; --fg: #1d2330; --muted: #68707f; --line: #ddd8cf;
-  --accent-base: #0f5c6e; --accent: var(--accent-base); --accent-fg: #ffffff; --accent-soft: color-mix(in srgb, var(--accent) 12%, var(--surface));
-  --ok: #1f7a4d; --ok-soft: #dff1e6; --warn: #9a6200; --warn-soft: #fbefcf; --bad: #a83a2a; --bad-soft: #f8e1dc;
-  --shadow: 0 1px 2px rgba(20, 30, 40, .06), 0 4px 14px rgba(20, 30, 40, .05);
-  --radius: 12px;
-  --display: "Bricolage Grotesque", "Public Sans", system-ui, sans-serif;
-  --body: "Public Sans", system-ui, -apple-system, sans-serif;
+  --bg: #f4f5f7; --surface: #ffffff; --surface-2: #f8f9fb; --fg: #111827; --fg-2: #374151; --muted: #6b7280; --line: #e5e7eb; --line-2: #eef0f3;
+  --accent-base: #0f5c6e; --accent: var(--accent-base); --accent-fg: #ffffff;
+  --accent-soft: color-mix(in srgb, var(--accent) 9%, var(--surface)); --accent-line: color-mix(in srgb, var(--accent) 28%, var(--surface));
+  --ok: #15803d; --ok-soft: #e8f5ec; --warn: #a16207; --warn-soft: #fdf4dc; --bad: #b42318; --bad-soft: #fdecea;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, .05);
+  --shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 6px 16px -4px rgba(16, 24, 40, .08);
+  --shadow-lg: 0 24px 48px -12px rgba(16, 24, 40, .18);
+  --radius: 14px; --radius-sm: 10px;
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --hdr: 64px;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #151922; --surface: #1e242f; --fg: #e9ebef; --muted: #9aa3b2; --line: #333b49;
-  --accent: color-mix(in srgb, var(--accent-base) 55%, #ffffff); --accent-fg: #0f1a26; --accent-soft: color-mix(in srgb, var(--accent) 18%, var(--surface));
-  --ok: #7cd3a1; --ok-soft: #1d3a2b; --warn: #f0c060; --warn-soft: #3e3214; --bad: #f09a8a; --bad-soft: #452420;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
+  --bg: #0e1117; --surface: #161b22; --surface-2: #1b2129; --fg: #e6e8eb; --fg-2: #c3c8cf; --muted: #8b949e; --line: #2a313b; --line-2: #222831;
+  --accent: color-mix(in srgb, var(--accent-base) 50%, #ffffff); --accent-fg: #0b1218;
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, var(--surface)); --accent-line: color-mix(in srgb, var(--accent) 40%, var(--surface));
+  --ok: #6fd39a; --ok-soft: #15291e; --warn: #e9b949; --warn-soft: #2e2611; --bad: #f19a8e; --bad-soft: #3a1c19;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4); --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 6px 16px -4px rgba(0, 0, 0, .4); --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, .6);
   color-scheme: dark;
 }}
 :root[data-theme="dark"] {
-  --bg: #151922; --surface: #1e242f; --fg: #e9ebef; --muted: #9aa3b2; --line: #333b49;
-  --accent: color-mix(in srgb, var(--accent-base) 55%, #ffffff); --accent-fg: #0f1a26; --accent-soft: color-mix(in srgb, var(--accent) 18%, var(--surface));
-  --ok: #7cd3a1; --ok-soft: #1d3a2b; --warn: #f0c060; --warn-soft: #3e3214; --bad: #f09a8a; --bad-soft: #452420;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
+  --bg: #0e1117; --surface: #161b22; --surface-2: #1b2129; --fg: #e6e8eb; --fg-2: #c3c8cf; --muted: #8b949e; --line: #2a313b; --line-2: #222831;
+  --accent: color-mix(in srgb, var(--accent-base) 50%, #ffffff); --accent-fg: #0b1218;
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, var(--surface)); --accent-line: color-mix(in srgb, var(--accent) 40%, var(--surface));
+  --ok: #6fd39a; --ok-soft: #15291e; --warn: #e9b949; --warn-soft: #2e2611; --bad: #f19a8e; --bad-soft: #3a1c19;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4); --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 6px 16px -4px rgba(0, 0, 0, .4); --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, .6);
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
-body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5; margin: 0; }
-
-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--surface); border-bottom: 1px solid var(--line); }
-.hwrap { max-width: 800px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-.brand { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 12px 10px; }
-.brand h1 { font-family: var(--display); font-size: 21px; font-weight: 700; margin: 0; letter-spacing: -0.01em; line-height: 1.15; }
-.brand .sub2 { font-size: 12px; color: var(--muted); font-weight: 500; }
-.brand .logo { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.brand .mark { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); color: var(--accent-fg); display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 16px; flex: none; }
-.who { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); min-width: 0; }
-.who img { width: 28px; height: 28px; border-radius: 50%; }
-.who b { color: var(--fg); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.role { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; padding: 2px 7px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 600; white-space: nowrap; }
-nav { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; max-width: 800px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-nav button { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); font: inherit; font-weight: 600; padding: 10px 12px; min-height: 44px; cursor: pointer; white-space: nowrap; display: flex; gap: 8px; align-items: center; position: relative; }
-nav button svg { width: 20px; height: 20px; flex: none; }
-nav button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
-nav button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 4px; }
-.count { background: var(--warn); color: var(--surface); font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 999px; font-variant-numeric: tabular-nums; }
-.count:empty { display: none; }
-main { max-width: 800px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 60px; }
-@media (max-width: 640px) {
-  nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 9; max-width: none; background: var(--surface); border-top: 1px solid var(--line); justify-content: space-around; gap: 0; overflow: visible;
-    padding-left: max(4px, env(safe-area-inset-left, 0px)); padding-right: max(4px, env(safe-area-inset-right, 0px)); padding-bottom: env(safe-area-inset-bottom, 0px); }
-  nav button { flex: 1 1 0; flex-direction: column; gap: 3px; font-size: 11px; padding: 8px 2px 6px; min-height: 58px; border-bottom: 0; border-top: 2px solid transparent; justify-content: center; min-width: 0; }
-  nav button[aria-selected="true"] { border-top-color: var(--accent); }
-  nav button svg { width: 24px; height: 24px; }
-  nav .count { position: absolute; top: 4px; right: calc(50% - 22px); }
-  main { padding-block: 16px calc(90px + env(safe-area-inset-bottom, 0px)); }
-  .btn:not(.small) { width: 100%; min-height: 48px; font-size: 16px; }
-  .btn.small { min-height: 40px; padding: 8px 12px; flex: 1 1 auto; }
-  #toast { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
-}
+html, body { min-height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.55; margin: 0; -webkit-font-smoothing: antialiased; font-feature-settings: "cv11", "ss01"; }
 section[hidden], [hidden] { display: none !important; }
-h2 { font-family: var(--display); font-size: 20px; font-weight: 700; margin: 0 0 4px; text-wrap: balance; }
-h3 { font-size: 15px; font-weight: 600; margin: 0; }
-.lead { color: var(--muted); margin: 0 0 16px; max-width: 60ch; }
-.notice { background: var(--accent-soft); color: var(--fg); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 6px 6px 0; margin-bottom: 18px; font-size: 14px; }
-.notice.bad { background: var(--bad-soft); border-left-color: var(--bad); }
-.panel { display: grid; gap: 12px; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 20px; box-shadow: var(--shadow); }
+svg { flex: none; }
+
+/* ---------- Kopfzeile ---------- */
+.topbar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: saturate(180%) blur(12px); -webkit-backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+.wrap { max-width: 880px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; align-items: center; gap: 20px; height: var(--hdr); }
+.brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.mark { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(140deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px; letter-spacing: .02em; flex: none; box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15), var(--shadow-sm); }
+.brand-name { font-weight: 700; font-size: 16px; letter-spacing: -.015em; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand-sub { font-size: 12px; color: var(--muted); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+nav { display: flex; gap: 4px; margin-right: auto; }
+nav button { appearance: none; font: inherit; font-size: 14px; font-weight: 600; color: var(--muted); background: none; border: 0; border-radius: 8px; padding: 0 12px; height: 36px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; position: relative; transition: background .15s, color .15s; }
+nav button svg { width: 18px; height: 18px; }
+nav button:hover { color: var(--fg); background: var(--surface-2); }
+nav button[aria-selected="true"] { color: var(--accent); background: var(--accent-soft); }
+body.single nav { display: none; }
+body.single .brand { margin-right: auto; }
+.count { background: var(--bad); color: #fff; font-size: 11px; font-weight: 700; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; display: inline-grid; place-items: center; font-variant-numeric: tabular-nums; line-height: 1; }
+.count:empty { display: none; }
+.user { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.user-txt { display: grid; text-align: right; line-height: 1.25; min-width: 0; }
+.user-txt b { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-txt span { font-size: 12px; color: var(--muted); }
+.user .av { width: 34px; height: 34px; font-size: 12px; }
+.iconbtn { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer; }
+.iconbtn:hover { color: var(--fg); background: var(--surface-2); }
+.iconbtn svg { width: 18px; height: 18px; }
+main { padding-block: 28px 72px; }
+
+@media (max-width: 680px) {
+  :root { --hdr: 58px; }
+  /* backdrop-filter würde die fixierte Leiste unten an die Kopfzeile binden */
+  .topbar { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--surface); }
+  .wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .user-txt { display: none; }
+  .brand { margin-right: auto; }
+  nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; margin: 0; gap: 0; background: color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--line); padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px)); }
+  nav button { flex: 1; flex-direction: column; height: auto; min-height: 52px; gap: 2px; font-size: 11px; padding: 6px 4px; }
+  nav button svg { width: 22px; height: 22px; }
+  nav button[aria-selected="true"] { background: none; }
+  nav .count { position: absolute; top: 2px; left: calc(50% + 6px); }
+  main { padding-block: 20px calc(96px + env(safe-area-inset-bottom, 0px)); }
+  body.single main { padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)); }
+  #toast { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* ---------- Typografie & Grundelemente ---------- */
+h2 { font-size: 26px; font-weight: 700; letter-spacing: -.025em; line-height: 1.2; margin: 0; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; letter-spacing: -.005em; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+.lead { color: var(--muted); margin: 6px 0 0; max-width: 62ch; }
+.hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.hero > div { min-width: 0; }
+.notice { background: var(--accent-soft); color: var(--fg); border: 1px solid var(--accent-line); padding: 12px 14px; border-radius: var(--radius-sm); font-size: 14px; }
+.notice.bad { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 30%, transparent); color: var(--bad); }
+.panel { display: grid; gap: 14px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 20px; box-shadow: var(--shadow-sm); }
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.panel-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
 .row { display: flex; gap: 12px; flex-wrap: wrap; }
-.row > label { flex: 1 1 160px; min-width: 0; }
-label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); }
-label.check { display: flex; align-items: center; gap: 8px; color: var(--fg); font-weight: 500; font-size: 14px; min-height: 36px; }
-label.check input { width: 20px; height: 20px; min-height: 0; margin: 0; accent-color: var(--accent); }
-input, select, textarea { font: inherit; font-size: 16px; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 11px 12px; min-height: 46px; width: 100%; min-width: 0; }
-textarea { resize: vertical; min-height: 110px; }
-input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.row > label { flex: 1 1 180px; min-width: 0; }
+label { display: grid; gap: 6px; font-size: 13px; font-weight: 600; color: var(--fg-2); }
+label.check { display: flex; align-items: center; gap: 9px; color: var(--fg); font-weight: 500; font-size: 14px; min-height: 34px; cursor: pointer; }
+label.check input { width: 18px; height: 18px; min-height: 0; margin: 0; accent-color: var(--accent); cursor: pointer; }
+input, select, textarea { font: inherit; font-size: 15px; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 12px; min-height: 44px; width: 100%; min-width: 0; transition: border-color .15s, box-shadow .15s; }
+input:hover, select:hover { border-color: color-mix(in srgb, var(--line) 50%, var(--muted)); }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.btn { font: inherit; font-weight: 600; font-size: 14px; border-radius: 6px; padding: 8px 14px; min-height: 40px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; }
+.btn { font: inherit; font-weight: 600; font-size: 14px; border-radius: var(--radius-sm); padding: 0 16px; height: 40px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; white-space: nowrap; box-shadow: var(--shadow-sm); transition: background .15s, border-color .15s, filter .15s; }
+.btn:hover { background: var(--surface-2); }
+.btn svg { width: 18px; height: 18px; }
 .btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
-.btn.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
-.btn.bad { background: var(--bad-soft); color: var(--bad); border-color: transparent; }
-.btn.small { padding: 5px 10px; font-size: 13px; min-height: 34px; }
-.btn.icon { padding: 4px 8px; min-height: 32px; font-size: 16px; line-height: 1; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; box-shadow: none; }
+.btn.bad { background: var(--bad-soft); color: var(--bad); border-color: transparent; box-shadow: none; }
+.btn.ghost { background: none; border-color: transparent; box-shadow: none; color: var(--muted); }
+.btn.ghost:hover { color: var(--fg); background: var(--surface-2); }
+.btn.small { height: 32px; padding: 0 11px; font-size: 13px; border-radius: 8px; }
+.btn.icon { width: 32px; padding: 0; height: 32px; font-size: 15px; border-radius: 8px; }
 .btn:disabled { opacity: .5; cursor: default; }
-.add { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; font: inherit; font-weight: 600; font-size: 16px; border-radius: var(--radius); border: 1px dashed var(--accent); background: var(--accent-soft); color: var(--accent); cursor: pointer; margin-bottom: 16px; }
-.add svg { width: 20px; height: 20px; }
 .list { display: grid; gap: 10px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 8px; box-shadow: var(--shadow); }
-.card.mine { border-left: 3px solid var(--accent); }
-.card.pinned { border-color: var(--accent); }
-.card .top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
-.card .title { font-weight: 600; font-size: 16px; }
-.card .date { font-family: var(--display); font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
-.card p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 10px; box-shadow: var(--shadow-sm); }
+.card .top { display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; }
+.card .title { font-weight: 600; font-size: 16px; letter-spacing: -.01em; }
 .meta { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
-.meta img { width: 20px; height: 20px; border-radius: 50%; }
-.pill { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.pill { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; white-space: nowrap; line-height: 1.6; }
 .pill.pending { background: var(--warn-soft); color: var(--warn); }
 .pill.approved { background: var(--ok-soft); color: var(--ok); }
-.pill.rejected { background: var(--bad-soft); color: var(--bad); }
 .pill.open { background: var(--accent-soft); color: var(--accent); }
-.pill.restricted { background: var(--warn-soft); color: var(--warn); }
-.takers { display: grid; gap: 6px; padding: 8px 10px; background: var(--bg); border-radius: 6px; font-size: 14px; }
-.taker { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-.empty { color: var(--muted); padding: 22px 16px; text-align: center; border: 1px dashed var(--line); border-radius: 8px; }
-.sub { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; margin: 22px 0 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; margin-bottom: 14px; }
-.chip { font: inherit; font-size: 14px; font-weight: 600; padding: 7px 14px; min-height: 38px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; white-space: nowrap; }
-.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
-.member { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px 3px 3px; font-size: 13px; }
-.member img { width: 22px; height: 22px; border-radius: 50%; }
-.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 2px 12px; }
-/* Dienstplan */
-.weeknav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
-.weeknav .wk { font-family: var(--display); font-weight: 700; font-size: 17px; text-align: center; flex: 1; }
-.day { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-.day.today { border-color: var(--accent); }
-.day .dh { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: var(--bg); font-weight: 600; font-size: 14px; }
-.day .dh .dn { font-family: var(--display); font-size: 15px; }
-.day.today .dh { background: var(--accent-soft); color: var(--accent); }
-.shift { display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-top: 1px solid var(--line); font-size: 14px; }
-.shift img { width: 24px; height: 24px; border-radius: 50%; }
-.shift .sn { font-weight: 600; min-width: 86px; }
-.shift .pn { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.shift.me { background: var(--accent-soft); }
-.shift.none { color: var(--muted); font-style: italic; }
-.addshift { display: grid; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--line); background: var(--bg); }
-.addshift .row > label { flex: 1 1 130px; }
-/* Team */
-.trow { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
-.trow .roles { display: flex; gap: 10px; flex-wrap: wrap; }
-.trow .roles label.check { min-height: 30px; font-size: 13px; }
-@media (max-width: 520px) { .trow { grid-template-columns: 1fr; } }
-/* Editor + post body */
-.toolbar { display: flex; gap: 6px; flex-wrap: wrap; }
-.toolbar button { font: inherit; font-size: 13px; font-weight: 600; min-height: 36px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
-.toolbar button.hl { background: var(--warn-soft); color: var(--warn); }
-.editor { min-height: 160px; max-height: 60vh; overflow: auto; font-size: 16px; line-height: 1.55; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
-.editor:empty::before { content: attr(data-placeholder); color: var(--muted); }
-.editor:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.body, .editor { overflow-wrap: anywhere; }
-.body p, .editor p, .body div, .editor div { margin: 0 0 8px; }
-.body h3, .editor h3 { font-family: var(--display); font-size: 17px; margin: 14px 0 6px; }
-.body ul, .editor ul, .body ol, .editor ol { margin: 0 0 8px; padding-left: 22px; }
-.body mark, .editor mark { background: var(--warn-soft); color: inherit; padding: 0 3px; border-radius: 3px; }
-.body img, .editor img { display: block; max-width: 100%; height: auto; border-radius: 10px; margin: 8px 0; cursor: zoom-in; }
+.pill.restricted { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.pill.new { background: var(--bad); color: #fff; }
+.taker { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.empty { color: var(--muted); padding: 36px 20px; text-align: center; border: 1px dashed var(--line); border-radius: var(--radius); background: var(--surface); display: grid; gap: 6px; justify-items: center; }
+.empty svg { width: 32px; height: 32px; color: var(--line); margin-bottom: 4px; }
+.empty b { color: var(--fg); font-weight: 600; }
+.sub { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; margin: 26px 0 10px; }
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 2px 14px; }
+.av { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: #fff; font-size: 10px; font-weight: 700; flex: none; letter-spacing: .02em; }
+.member { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+.member .av { width: 32px; height: 32px; font-size: 12px; }
+
+/* ---------- Infos ---------- */
+.toolbar-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.search { position: relative; flex: 1 1 260px; }
+.search input { padding-left: 40px; background: var(--surface); }
+.search svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
+.seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 3px; gap: 2px; flex: none; }
+.seg button { font: inherit; font-size: 13px; font-weight: 600; color: var(--muted); background: none; border: 0; border-radius: 7px; padding: 0 12px; height: 36px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.seg button[aria-pressed="true"], .seg button[aria-selected="true"] { background: var(--accent-soft); color: var(--accent); }
+.seg .n { font-variant-numeric: tabular-nums; opacity: .75; }
+.chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; margin-bottom: 18px; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { font: inherit; font-size: 13px; font-weight: 600; padding: 0 14px; height: 34px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg-2); cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.chip:hover { border-color: var(--accent-line); }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--surface); border-color: var(--fg); }
+.chip .n { font-size: 12px; opacity: .6; font-variant-numeric: tabular-nums; }
+.card.post { padding: 0; overflow: hidden; gap: 0; transition: border-color .15s, box-shadow .15s; }
+.card.post:hover { border-color: color-mix(in srgb, var(--line) 40%, var(--muted)); }
+.card.post[data-open="true"] { box-shadow: var(--shadow); }
+.card.post.pinned { border-color: var(--accent-line); }
+.card.post .ph { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; padding: 16px 18px; cursor: pointer; }
+.card.post .ph-main { min-width: 0; display: grid; gap: 6px; flex: 1; }
+.card.post .ph-top { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.card.post .tag { font-size: 12px; font-weight: 600; color: var(--accent); }
+.card.post .title { display: flex; align-items: center; gap: 8px; font-size: 16px; }
+.card.post.unread .title::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); flex: none; }
+.card.post .preview { color: var(--muted); font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card.post .chev { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 8px; color: var(--muted); transition: transform .2s, background .15s; margin-top: 2px; }
+.card.post .chev svg { width: 18px; height: 18px; }
+.card.post .ph:hover .chev { background: var(--surface-2); }
+.card.post[data-open="true"] .chev { transform: rotate(90deg); }
+.card.post .pb { padding: 4px 18px 18px; display: grid; gap: 14px; border-top: 1px solid var(--line-2); padding-top: 16px; }
+.card.post .foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--line-2); }
+@media (prefers-reduced-motion: reduce) { .card.post .chev, nav button, .btn { transition: none; } }
+
+/* Beitragsinhalt + Editor */
+.body, .editor { overflow-wrap: anywhere; font-size: 15px; line-height: 1.65; color: var(--fg-2); }
+.body > :first-child, .editor > :first-child { margin-top: 0; }
+.body p, .editor p, .body div, .editor div { margin: 0 0 10px; }
+.body b, .body strong, .editor b, .editor strong { color: var(--fg); }
+.body h3, .editor h3 { font-size: 17px; font-weight: 700; letter-spacing: -.015em; color: var(--fg); margin: 20px 0 8px; }
+.body ul, .editor ul, .body ol, .editor ol { margin: 0 0 12px; padding-left: 22px; }
+.body li, .editor li { margin: 3px 0; }
+.body ol, .editor ol { counter-reset: step; list-style: none; padding-left: 0; display: grid; gap: 8px; }
+.body ol > li, .editor ol > li { counter-increment: step; position: relative; padding: 2px 0 2px 38px; margin: 0; min-height: 26px; }
+.body ol > li::before, .editor ol > li::before { content: counter(step); position: absolute; left: 0; top: 1px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 13px; display: grid; place-items: center; }
+.body mark, .editor mark { background: var(--warn-soft); color: inherit; padding: 1px 4px; border-radius: 4px; }
+.body img, .editor img { display: block; max-width: 100%; height: auto; border-radius: var(--radius-sm); margin: 10px 0; cursor: zoom-in; border: 1px solid var(--line-2); }
 .body img.size-s, .editor img.size-s { max-width: 40%; }
 .body img.size-m, .editor img.size-m { max-width: 70%; }
 .body img.size-l, .editor img.size-l { max-width: 100%; }
 .editor img.sel { outline: 3px solid var(--accent); outline-offset: 2px; }
-.body .gallery, .editor .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; margin: 8px 0; }
+.body .gallery, .editor .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin: 10px 0; }
 .body .gallery img, .editor .gallery img { margin: 0; width: 100%; aspect-ratio: 1; object-fit: cover; max-width: 100%; border-radius: 8px; }
-.body .callout, .editor .callout { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 10px 14px; border-radius: 0 10px 10px 0; margin: 10px 0; }
-.body .callout.warn, .editor .callout.warn { border-left-color: var(--bad); background: var(--bad-soft); }
-.body hr, .editor hr { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
-.body a.file, .editor a.file { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--accent); font-weight: 600; text-decoration: none; margin: 4px 6px 4px 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.body a.file::before, .editor a.file::before { content: "📎"; }
+.body .callout, .editor .callout { border: 1px solid var(--accent-line); border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 12px 14px; border-radius: 8px; margin: 12px 0; color: var(--fg); }
+.body .callout.warn, .editor .callout.warn { border-color: color-mix(in srgb, var(--bad) 30%, transparent); border-left-color: var(--bad); background: var(--bad-soft); }
+.body hr, .editor hr { border: 0; border-top: 1px solid var(--line); margin: 18px 0; }
+.body .time, .editor .time { display: inline-block; min-width: 58px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent); }
+.toolbar { display: flex; gap: 4px; flex-wrap: wrap; position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--hdr)); z-index: 2; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 5px; }
+.toolbar button { font: inherit; font-size: 13px; font-weight: 600; height: 32px; padding: 0 10px; border-radius: 6px; border: 0; background: none; color: var(--fg-2); cursor: pointer; }
+.toolbar button:hover { background: var(--surface); box-shadow: var(--shadow-sm); }
+.toolbar button.hl { color: var(--warn); }
+.toolbar .sep { width: 1px; background: var(--line); margin: 4px 2px; }
+.editor { min-height: 200px; max-height: 60vh; overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 16px; }
+.editor:empty::before { content: attr(data-placeholder); color: var(--muted); }
+.editor:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
 .imgbar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding: 8px 10px; background: var(--accent-soft); border-radius: 8px; font-size: 13px; }
-.toolbar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 58px); z-index: 2; background: var(--surface); padding: 6px 0; }
-.lightbox { position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, .92); display: flex; align-items: center; justify-content: center; padding: 16px; padding-top: calc(16px + env(safe-area-inset-top, 0px)); }
-.lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; }
+.vis-box { display: grid; gap: 8px; padding: 14px; background: var(--surface-2); border: 1px solid var(--line-2); border-radius: var(--radius-sm); }
+.vis-box .sub { margin: 4px 0 0; }
+.lightbox { position: fixed; inset: 0; z-index: 30; background: rgba(5, 8, 12, .92); display: flex; align-items: center; justify-content: center; padding: 16px; padding-top: calc(16px + env(safe-area-inset-top, 0px)); }
+.lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
 .lightbox button { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .15); color: #fff; font-size: 24px; cursor: pointer; }
-.body .time, .editor .time { display: inline-block; min-width: 56px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent); }
-.card.post { padding: 0; overflow: hidden; }
-.card.post .ph { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; }
-.card.post .ph .chev { flex: none; color: var(--muted); transition: transform .15s; }
-.card.post[data-open="true"] .ph .chev { transform: rotate(90deg); }
-.card.post .pb { padding: 0 16px 14px; display: grid; gap: 10px; }
-.pill.new { background: var(--bad); color: #fff; }
-.reads { display: grid; gap: 6px; padding: 10px 12px; background: var(--bg); border-radius: 10px; font-size: 14px; }
+
+/* Lesebestätigungen */
+.reads { display: grid; gap: 8px; padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--line-2); border-radius: var(--radius-sm); font-size: 14px; }
 .reads .bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
-.reads .bar i { display: block; height: 100%; background: var(--ok); }
-.reads .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.reads .col h4 { margin: 0 0 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
-.reads .col div { display: flex; align-items: center; gap: 6px; padding: 2px 0; font-size: 13px; }
-.reads .col img { width: 18px; height: 18px; border-radius: 50%; }
+.reads .bar i { display: block; height: 100%; background: var(--ok); border-radius: 3px; }
+.reads .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+.reads .col h4 { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+.reads .col div { display: flex; align-items: center; gap: 7px; padding: 3px 0; font-size: 13px; }
+.reads .col .av { width: 20px; height: 20px; font-size: 8px; }
 .reads .col .t { color: var(--muted); font-size: 11px; margin-left: auto; white-space: nowrap; }
-.reads .toggle { font: inherit; font-size: 13px; font-weight: 600; background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; text-align: left; }
-@media (max-width: 420px) { .reads .cols { grid-template-columns: 1fr; } }
-.card.post .preview { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-@media (prefers-reduced-motion: reduce) { .card.post .ph .chev { transition: none; } }
-/* simpler swap cards */
-.swap { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: center; }
-.swap .d { grid-row: span 2; font-family: var(--display); font-weight: 700; font-size: 15px; line-height: 1.2; text-align: center; min-width: 58px; padding: 8px 6px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); }
-.swap .d b { display: block; font-size: 24px; }
-.swap .s { font-weight: 600; font-size: 16px; }
-/* Startseite */
-.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
-.tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 8px; box-shadow: var(--shadow); align-content: start; }
-.tile h3 { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-.tile h3 .lnk { font: inherit; text-transform: none; letter-spacing: 0; background: none; border: 0; color: var(--accent); cursor: pointer; font-weight: 600; padding: 0; min-height: 0; }
-.tile .big { font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1.2; }
-.tile .line { display: flex; align-items: center; gap: 8px; font-size: 14px; padding: 4px 0; border-top: 1px solid var(--line); }
-.tile .line:first-of-type { border-top: 0; }
-.tile .line img { width: 22px; height: 22px; border-radius: 50%; }
-.tile .line .sn { font-weight: 600; min-width: 78px; }
-.tile .line .pn { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tile.alert { border-color: var(--warn); background: var(--warn-soft); }
-.tile.alert .big { color: var(--warn); }
-.quick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 18px; }
-.quick button { min-height: 52px; border-radius: var(--radius); font-size: 15px; }
-.greet { margin: 0 0 4px; font-family: var(--display); font-size: 24px; font-weight: 700; }
-.search { position: relative; margin-bottom: 12px; }
-.search input { padding-left: 40px; }
-.search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
-.subtabs { display: flex; gap: 6px; margin-bottom: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 4px; }
-.subtabs button { flex: 1; font: inherit; font-weight: 600; font-size: 14px; min-height: 40px; border: 0; border-radius: 9px; background: none; color: var(--muted); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; }
-.subtabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-fg); }
-.swatches { display: flex; gap: 8px; flex-wrap: wrap; }
-.swatch { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; padding: 0; }
-.swatch[aria-pressed="true"] { border-color: var(--fg); }
-.stat { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
-.stat span { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; font-size: 13px; color: var(--muted); }
-.stat b { color: var(--fg); font-variant-numeric: tabular-nums; }
-#toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: 14px; max-width: calc(100% - 32px); opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 20; }
-#toast.show { opacity: 1; }
+.reads .toggle { font: inherit; font-size: 13px; font-weight: 600; background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; }
+@media (max-width: 440px) { .reads .cols { grid-template-columns: 1fr; } }
+
+/* ---------- Leitung ---------- */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow-sm); display: grid; gap: 2px; }
+.kpi-l { font-size: 13px; color: var(--muted); font-weight: 500; }
+.kpi-v { font-size: 26px; font-weight: 700; letter-spacing: -.025em; font-variant-numeric: tabular-nums; line-height: 1.2; }
+@media (max-width: 680px) { .kpis { grid-template-columns: 1fr 1fr; gap: 10px; } .kpi { padding: 14px; } .kpi-v { font-size: 22px; } }
+.tabs2 { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-bottom: 22px; overflow-x: auto; scrollbar-width: none; }
+.tabs2::-webkit-scrollbar { display: none; }
+.tabs2 button { font: inherit; font-size: 14px; font-weight: 600; color: var(--muted); background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 14px; margin-bottom: -1px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 7px; }
+.tabs2 button:hover { color: var(--fg); }
+.tabs2 button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.inline-form { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.inline-form label { flex: 1 1 240px; }
+.trow { display: grid; gap: 8px; padding: 14px 0; border-top: 1px solid var(--line-2); }
+.trow:first-child { border-top: 0; }
+.trow .who-col { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; flex-wrap: wrap; }
+.trow .roles { display: flex; gap: 6px 14px; flex-wrap: wrap; align-items: center; padding-left: 40px; }
+.trow .roles:empty { display: none; }
+.trow .roles label.check { min-height: 30px; font-size: 13px; }
+.trow .roles .btn:first-of-type { margin-left: auto; }
+@media (max-width: 600px) { .trow .roles { padding-left: 0; } .trow .roles .btn:first-of-type { margin-left: 0; } }
+.pending-box { display: grid; gap: 10px; padding: 14px 16px; background: var(--warn-soft); border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent); border-radius: var(--radius-sm); }
+.pending-box > b { color: var(--warn); }
+.cat-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line-2); flex-wrap: wrap; }
+.cat-row:first-child { border-top: 0; }
+.cat-row input { flex: 1 1 200px; }
+.swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+.swatch { width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer; padding: 0; box-shadow: 0 0 0 1px rgba(0, 0, 0, .08) inset; }
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--fg); }
+.help .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
+.help details { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0 14px; background: var(--surface); }
+.help details + details { margin-top: -6px; }
+.help summary { cursor: pointer; font-weight: 600; padding: 12px 0; list-style: none; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.help summary::-webkit-details-marker { display: none; }
+.help summary::before { content: "›"; color: var(--muted); font-size: 18px; line-height: 1; transition: transform .15s; }
+.help details[open] summary::before { transform: rotate(90deg); }
+.help details p { margin: 0 0 14px; font-size: 14px; color: var(--fg-2); }
+.help code { background: var(--surface-2); border: 1px solid var(--line-2); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+
+#toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 8px); background: var(--fg); color: var(--bg); padding: 11px 16px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; max-width: calc(100% - 32px); opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; z-index: 40; box-shadow: var(--shadow-lg); }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
 @media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
 
-/* Hilfe */
-.help .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
-.help .links .btn { text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
-.help details { border: 1px solid var(--line); border-radius: 8px; padding: 0 12px; background: var(--bg); }
-.help summary { cursor: pointer; font-weight: 600; padding: 10px 0; list-style: none; display: flex; align-items: center; gap: 8px; }
-.help summary::before { content: "›"; color: var(--muted); transition: transform .15s; }
-.help details[open] summary::before { transform: rotate(90deg); }
-.help details p, .help details ol { margin: 0 0 12px; font-size: 14px; }
-.help details ol { padding-left: 20px; }
-.help code { background: var(--surface); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
-/* Login */
-html, body { min-height: 100%; }
-.login { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)); }
-.loginbox { width: 100%; max-width: 400px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); display: grid; gap: 16px; }
-.loginbox h1 { font-family: var(--display); font-size: 22px; margin: 0; }
-.loginbox form { display: grid; gap: 12px; }
-.loginbox .btn { width: 100%; min-height: 48px; font-size: 16px; }
-.loginbox .notice { margin: 0; }
-.av { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; color: #fff; font-size: 10px; font-weight: 700; flex: none; letter-spacing: .02em; }
-.member .av { width: 26px; height: 26px; }
-.reads .col .av { width: 18px; height: 18px; font-size: 8px; }
-.who .btn { margin-left: 6px; }
+/* ---------- Anmeldung ---------- */
+.login { min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 32px max(16px, env(safe-area-inset-left, 0px)); background: radial-gradient(1200px 600px at 50% -10%, var(--accent-soft), transparent 70%), var(--bg); }
+.loginbox { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 32px 28px 28px; box-shadow: var(--shadow-lg); display: grid; gap: 20px; }
+.loginbox .brand .mark { width: 44px; height: 44px; font-size: 16px; border-radius: 12px; }
+.loginbox h1 { font-size: 22px; font-weight: 700; letter-spacing: -.02em; margin: 0; line-height: 1.25; }
+.loginbox .lead { margin-top: 4px; font-size: 14px; }
+.loginbox form { display: grid; gap: 14px; }
+.loginbox .btn { width: 100%; height: 46px; font-size: 15px; }
+.loginbox .alt { text-align: center; font-size: 14px; color: var(--muted); margin: 0; padding-top: 16px; border-top: 1px solid var(--line-2); }
+.loginbox .alt button { font: inherit; font-weight: 600; color: var(--accent); background: none; border: 0; cursor: pointer; padding: 0; }
+@media (max-width: 680px) { .btn.block-sm { width: 100%; height: 46px; } }
 </style>
 </head>
 <body>
-<!-- LOGIN -->
+<!-- ANMELDEN -->
 <div id="login" class="login" hidden>
   <div class="loginbox">
-    <div class="logo"><div class="mark" id="l-mark">TP</div><div><h1 id="l-name">Team-Portal</h1><div class="sub2" id="l-sub"></div></div></div>
+    <div class="brand"><div class="mark" id="l-mark">TP</div><div><div class="brand-name" id="l-name">Team-Portal</div><div class="brand-sub" id="l-sub"></div></div></div>
+    <div><h1>Willkommen zurück</h1><p class="lead">Melde dich mit deinem Namen und deiner PIN an.</p></div>
     <form id="form-login">
-      <label>Dein Name <input id="login-id" autocomplete="username" required placeholder="Vorname Nachname"></label>
+      <label>Name <input id="login-id" autocomplete="username" required placeholder="Vorname Nachname"></label>
       <label>PIN <input id="login-pin" type="password" inputmode="numeric" autocomplete="current-password" required placeholder="6 Ziffern"></label>
       <button class="btn primary" type="submit" id="login-btn">Anmelden</button>
       <div class="notice bad" id="login-err" hidden></div>
     </form>
-    <p class="meta">Neu im Team? <button class="btn small" type="button" id="to-register">Registrieren</button></p>
+    <p class="alt">Neu im Team? <button type="button" id="to-register">Zugang beantragen</button></p>
   </div>
 </div>
 
 <!-- NEUE PIN (nach Zurücksetzen durch die Leitung) -->
 <div id="newpin" class="login" hidden>
   <div class="loginbox">
-    <h1>Neue PIN wählen</h1>
-    <p class="lead" id="newpin-lead">Deine PIN wurde zurückgesetzt. Wähle jetzt eine neue PIN mit 6 Ziffern.</p>
+    <div><h1>Neue PIN wählen</h1><p class="lead">Deine PIN wurde zurückgesetzt. Wähle jetzt eine neue PIN mit 6 Ziffern.</p></div>
     <form id="form-newpin">
       <label>Neue PIN <input id="np-pin" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
       <label>Neue PIN wiederholen <input id="np-pin2" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
@@ -281,28 +318,26 @@ html, body { min-height: 100%; }
 <!-- REGISTRIEREN -->
 <div id="register" class="login" hidden>
   <div class="loginbox">
-    <h1>Registrieren</h1>
-    <p class="lead">Wähle deinen Namen und eine PIN. Die Leitung schaltet dich danach frei.</p>
+    <div><h1>Zugang beantragen</h1><p class="lead">Wähle deinen Namen und eine PIN. Die Leitung schaltet dich danach frei.</p></div>
     <form id="form-register">
-      <label>Dein Name <input id="reg-name" required maxlength="60" placeholder="Vorname Nachname"></label>
-      <label>Deine PIN (6 Ziffern) <input id="reg-pin" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
+      <label>Name <input id="reg-name" required maxlength="60" placeholder="Vorname Nachname"></label>
+      <label>PIN (6 Ziffern) <input id="reg-pin" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
       <label>PIN wiederholen <input id="reg-pin2" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
-      <button class="btn primary" type="submit">Registrieren</button>
-      <button class="btn" type="button" id="to-login">Zurück zur Anmeldung</button>
+      <button class="btn primary" type="submit">Zugang beantragen</button>
       <div class="notice bad" id="reg-err" hidden></div>
       <div class="notice" id="reg-ok" hidden></div>
     </form>
+    <p class="alt">Schon freigeschaltet? <button type="button" id="to-login">Zur Anmeldung</button></p>
   </div>
 </div>
 
-<!-- SETUP (first run) -->
+<!-- EINRICHTUNG (erster Start) -->
 <div id="setup" class="login" hidden>
   <div class="loginbox">
-    <h1>Portal einrichten</h1>
-    <p class="lead">Du bist die erste Person. Lege dein eigenes Leitungs-Konto an.</p>
+    <div><h1>Portal einrichten</h1><p class="lead">Du bist die erste Person. Lege dein eigenes Leitungs-Konto an.</p></div>
     <form id="form-setup">
-      <label>Dein Name <input id="setup-name" required maxlength="60"></label>
-      <label>Deine PIN (6 Ziffern) <input id="setup-pin" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
+      <label>Name <input id="setup-name" required maxlength="60"></label>
+      <label>PIN (6 Ziffern) <input id="setup-pin" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
       <button class="btn primary" type="submit">Einrichten</button>
       <div class="notice bad" id="setup-err" hidden></div>
     </form>
@@ -310,134 +345,91 @@ html, body { min-height: 100%; }
 </div>
 
 <div id="app" hidden>
-<header>
-  <div class="hwrap">
-    <div class="brand">
-      <div class="logo"><div class="mark" id="brand-mark">TP</div><div><h1 id="brand-name">Team-Portal</h1><div class="sub2" id="brand-sub" hidden></div></div></div>
-      <div class="who" id="who"><b id="who-name"></b><span class="role" id="who-role"></span><button class="btn small" id="logout" type="button">Abmelden</button></div>
+<header class="topbar">
+  <div class="wrap bar">
+    <div class="brand"><div class="mark" id="brand-mark">TP</div><div style="min-width:0"><div class="brand-name" id="brand-name">Team-Portal</div><div class="brand-sub" id="brand-sub" hidden></div></div></div>
+    <nav role="tablist" id="tabs" aria-label="Bereiche">
+      <button role="tab" data-tab="infos" aria-selected="true" id="tab-infos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/><path d="M20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/></svg><span>Infos</span><span class="count" id="count-infos"></span></button>
+      <button role="tab" data-tab="leitung" aria-selected="false" id="tab-leitung" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg><span>Leitung</span><span class="count" id="count-leitung"></span></button>
+    </nav>
+    <div class="user">
+      <div class="user-txt"><b id="who-name"></b><span id="who-role"></span></div>
+      <span class="av" id="who-av"></span>
+      <button class="iconbtn" id="logout" type="button" title="Abmelden" aria-label="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l-5-5 5-5"/><path d="M5 12h11"/></svg></button>
     </div>
   </div>
 </header>
-<nav role="tablist" id="tabs" aria-label="Bereiche">
-  <button role="tab" data-tab="heute" aria-selected="true" id="tab-heute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Heute</span></button>
-  <button role="tab" data-tab="infos" aria-selected="false" id="tab-infos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/><path d="M20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/></svg><span>Infos</span><span class="count" id="count-infos"></span></button>
-  <button role="tab" data-tab="anfragen" aria-selected="false" id="tab-anfragen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><span>Anfragen</span><span class="count" id="count-tausch"></span></button>
-  <button role="tab" data-tab="leitung" aria-selected="false" id="tab-leitung" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg><span>Leitung</span><span class="count" id="count-leitung"></span></button>
-</nav>
 
-<main>
-  <div class="notice" id="status-note" hidden></div>
+<main class="wrap">
+  <!-- INFOS -->
+  <section id="sec-infos">
+    <div class="hero">
+      <div><p class="eyebrow" id="today-line"></p><h2 id="greet">Hallo</h2><p class="lead" id="hero-lead"></p></div>
+      <button class="btn primary block-sm" id="add-post" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Neuer Beitrag</button>
+    </div>
 
-  <section id="sec-heute">
-    <p class="greet" id="greet">Hallo</p>
-    <p class="lead" id="today-line"></p>
-    <div class="quick"><button class="btn" id="q-swap">Schicht abgeben</button><button class="btn" id="q-vac">Ferien beantragen</button></div>
-    <div class="grid2" id="home-tiles"></div>
-  </section>
-
-  <section id="sec-infos" hidden>
-    <h2>Infos</h2>
-    <p class="lead">Tippe auf einen Beitrag, um ihn zu öffnen.</p>
-    <button class="add" id="add-post" aria-expanded="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Neuer Beitrag</button>
     <form class="panel" id="form-post" hidden>
-      <h3 id="form-post-title">Neuer Beitrag</h3>
+      <div class="panel-head"><div><h3 id="form-post-title">Neuer Beitrag</h3><p>Infos, Regeln oder Schritt-für-Schritt-Anleitungen für das Team.</p></div></div>
       <div class="row">
         <label>Kapitel <select id="post-cat" required></select></label>
-        <label>Titel <input id="post-title" required maxlength="140" placeholder="z. B. Öffnungszeiten über Weihnachten"></label>
+        <label style="flex-grow:2">Titel <input id="post-title" required maxlength="140" placeholder="z. B. Kasse am Abend abschliessen"></label>
       </div>
       <div class="toolbar" role="toolbar" aria-label="Formatierung">
         <button type="button" data-cmd="bold"><b>Fett</b></button>
         <button type="button" data-cmd="mark" class="hl">Markieren</button>
-        <button type="button" data-cmd="h3">Titel</button>
+        <button type="button" data-cmd="h3">Zwischentitel</button>
+        <span class="sep" aria-hidden="true"></span>
         <button type="button" data-cmd="ul">Liste</button>
-        <button type="button" data-cmd="img" id="btn-img">Bilder</button>
+        <button type="button" data-cmd="ol">Schritte</button>
+        <button type="button" data-cmd="plan">Tagesablauf</button>
+        <span class="sep" aria-hidden="true"></span>
         <button type="button" data-cmd="note">Hinweis</button>
         <button type="button" data-cmd="warn">Wichtig</button>
         <button type="button" data-cmd="hr">Linie</button>
-        <button type="button" data-cmd="plan">Tagesablauf</button>
+        <button type="button" data-cmd="img" id="btn-img">Bilder</button>
         <input type="file" id="img-file" accept="image/*" multiple hidden>
       </div>
       <div class="imgbar" id="imgbar" hidden><span>Bild:</span><button type="button" class="btn small" data-size="size-s">Klein</button><button type="button" class="btn small" data-size="size-m">Mittel</button><button type="button" class="btn small" data-size="size-l">Gross</button><button type="button" class="btn small bad" data-size="remove">Entfernen</button></div>
-      <div class="editor" id="post-editor" contenteditable="true" data-placeholder="Der Inhalt des Beitrags – Text, Bilder, Markierungen" aria-label="Text"></div>
+      <div class="editor" id="post-editor" contenteditable="true" data-placeholder="Inhalt des Beitrags – Text, Schritte, Bilder, Hinweise …" aria-label="Inhalt"></div>
       <div class="meta" id="img-status" hidden>Bild wird hochgeladen …</div>
-      <label class="check"><input type="checkbox" id="post-pin"> Oben anheften</label>
-      <label>Sichtbar für
-        <select id="post-vis"><option value="all">Alle im Team</option><option value="some">Nur bestimmte Personen oder Gruppen</option></select>
-      </label>
-      <div id="post-vis-box" hidden>
-        <div class="sub" style="margin-top:0">Gruppen</div>
+      <div class="row">
+        <label>Sichtbar für
+          <select id="post-vis"><option value="all">Alle im Team</option><option value="some">Nur bestimmte Personen oder Gruppen</option></select>
+        </label>
+        <label class="check" style="align-self:end;flex:0 1 auto"><input type="checkbox" id="post-pin"> Oben anheften</label>
+      </div>
+      <div class="vis-box" id="post-vis-box" hidden>
+        <div class="sub">Gruppen</div>
         <div class="checks" id="post-groups"></div>
         <div class="sub">Personen</div>
         <div class="checks" id="post-people"></div>
       </div>
-      <div class="actions"><button class="btn primary" type="submit" id="post-submit">Veröffentlichen</button><button class="btn" type="button" id="post-cancel">Abbrechen</button></div>
+      <div class="actions"><button class="btn primary" type="submit" id="post-submit">Veröffentlichen</button><button class="btn ghost" type="button" id="post-cancel">Abbrechen</button></div>
     </form>
-    <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="post-search" placeholder="Infos durchsuchen …" aria-label="Infos durchsuchen"></div>
+
+    <div class="toolbar-row">
+      <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="post-search" placeholder="Infos durchsuchen …" aria-label="Infos durchsuchen"></div>
+      <div class="seg" id="read-filter" role="group" aria-label="Filter"></div>
+    </div>
     <div class="chips" id="cat-chips"></div>
     <div class="list" id="post-list"></div>
   </section>
 
-  <section id="sec-anfragen" hidden>
-    <div class="subtabs" role="tablist" id="subtabs"><button role="tab" data-sub="tausch" aria-selected="true">Schichttausch</button><button role="tab" data-sub="ferien" aria-selected="false">Ferien</button></div>
-    <div id="sec-tausch">
-      <h2>Schichttausch</h2>
-      <p class="lead">Schicht abgeben, Schicht übernehmen, Leitung gibt frei.</p>
-      <button class="add" id="add-swap" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Schicht abgeben</button>
-      <form class="panel" id="form-swap" hidden>
-        <h3>Ich gebe eine Schicht ab</h3>
-        <div class="row">
-          <label>Datum <input type="date" id="swap-date" required></label>
-          <label>Schicht <select id="swap-shift"></select></label>
-        </div>
-        <label>Bemerkung (optional) <input id="swap-note" maxlength="300" placeholder="z. B. Arzttermin, gerne auch Tausch gegen Spätdienst"></label>
-        <div class="actions"><button class="btn primary" type="submit" id="swap-submit">Schicht einstellen</button><button class="btn" type="button" id="swap-cancel">Abbrechen</button></div>
-      </form>
-      <div class="sub">Offene Schichten</div>
-      <div class="list" id="swap-open"></div>
-      <div class="sub">Erledigt</div>
-      <div class="list" id="swap-done"></div>
-    </div>
-    <div id="sec-ferien" hidden>
-      <h2>Ferien &amp; Freitage</h2>
-      <p class="lead">Beantrage Ferien oder einzelne freie Tage.</p>
-      <button class="add" id="add-vac" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ferien beantragen</button>
-      <form class="panel" id="form-vac" hidden>
-        <h3>Neuer Antrag</h3>
-        <div class="row">
-          <label>Von <input type="date" id="vac-from" required></label>
-          <label>Bis <input type="date" id="vac-to" required></label>
-        </div>
-        <label>Bemerkung (optional) <input id="vac-note" maxlength="300" placeholder="z. B. Familienferien"></label>
-        <div class="actions"><button class="btn primary" type="submit" id="vac-submit">Antrag senden</button><button class="btn" type="button" id="vac-cancel">Abbrechen</button></div>
-      </form>
-      <div class="sub">Meine Anträge</div>
-      <div class="list" id="vac-mine"></div>
-      <div class="sub">Abwesenheiten im Team (freigegeben)</div>
-      <div class="list" id="vac-team"></div>
-    </div>
-  </section>
-
+  <!-- LEITUNG -->
   <section id="sec-leitung" hidden>
-    <h2>Leitung</h2>
-    <p class="lead">Freigaben, Kapitel, Team, Berechtigungen und Einstellungen.</p>
-    <div class="stat" id="lead-stat"></div>
-    <div id="lead-approve" hidden>
-      <div class="sub" style="margin-top:0">Offene Ferienanträge</div>
-      <div class="list" id="chef-vac"></div>
-      <div class="sub">Offene Schichtübernahmen</div>
-      <div class="list" id="chef-swap"></div>
+    <div class="hero"><div><p class="eyebrow">Verwaltung</p><h2>Leitung</h2><p class="lead">Team, Kapitel, Gruppen und Einstellungen an einem Ort.</p></div></div>
+    <div class="kpis" id="lead-stat"></div>
+    <div class="tabs2" role="tablist" id="lead-tabs">
+      <button role="tab" data-lt="team" aria-selected="true">Mitarbeitende <span class="count" id="count-team"></span></button>
+      <button role="tab" data-lt="cats" aria-selected="false">Kapitel</button>
+      <button role="tab" data-lt="groups" aria-selected="false">Gruppen</button>
+      <button role="tab" data-lt="settings" aria-selected="false">Einstellungen</button>
+      <button role="tab" data-lt="help" aria-selected="false">Hilfe</button>
     </div>
-    <div id="lead-cats" hidden>
-      <div class="sub">Kapitel der Infos</div>
-      <form class="panel" id="form-cat">
-        <div class="row"><label style="flex:3">Neues Kapitel <input id="cat-name" required maxlength="60" placeholder="z. B. Sicherheit"></label><label style="flex:1;align-self:end">&nbsp;<button class="btn primary" type="submit">Anlegen</button></label></div>
-        <div class="list" id="cat-list"></div>
-      </form>
-    </div>
-    <div id="lead-team" hidden>
-      <div class="sub">Mitarbeitende</div>
+
+    <div id="lt-team">
       <form class="panel" id="form-user">
-        <h3>Neue Person anlegen</h3>
+        <div class="panel-head"><div><h3>Person anlegen</h3><p>Die Person meldet sich mit genau diesem Namen und der PIN an.</p></div></div>
         <div class="row">
           <label>Name <input id="u-name" required maxlength="60" placeholder="Vorname Nachname"></label>
           <label>PIN (6 Ziffern) <input id="u-pin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required></label>
@@ -446,42 +438,31 @@ html, body { min-height: 100%; }
         <div class="notice" id="u-result" hidden></div>
       </form>
       <div class="panel" id="team-panel">
-        <p class="meta" style="margin:0">Jede Person meldet sich mit ihrem Namen (genau wie hier geschrieben) und ihrer PIN an. Hake an, was die Person zusätzlich darf. «PIN zurücksetzen»: Die Person wählt beim nächsten Anmelden selbst eine neue PIN.</p>
+        <div class="panel-head"><div><h3>Team</h3><p>Rechte vergeben, PIN zurücksetzen oder Zugänge deaktivieren.</p></div></div>
         <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="team-search" placeholder="Person suchen …" aria-label="Person suchen"></div>
         <div id="team-list"></div>
       </div>
-      <div class="sub">Gruppen</div>
-      <form class="panel" id="form-group">
-        <div class="row"><label style="flex:3">Neue Gruppe <input id="group-name" required maxlength="60" placeholder="z. B. Küche, Service, Nachtteam"></label><label style="flex:1;align-self:end">&nbsp;<button class="btn primary" type="submit">Anlegen</button></label></div>
-        <div class="list" id="group-list"></div>
+    </div>
+
+    <div id="lt-cats" hidden>
+      <form class="panel" id="form-cat">
+        <div class="panel-head"><div><h3>Kapitel</h3><p>Kapitel ordnen die Infos, z. B. «Allgemein», «Anleitungen», «Sicherheit».</p></div></div>
+        <div class="inline-form"><label>Neues Kapitel <input id="cat-name" required maxlength="60" placeholder="z. B. Anleitungen"></label><button class="btn primary" type="submit">Anlegen</button></div>
+        <div id="cat-list"></div>
       </form>
     </div>
-    <div id="lead-help" hidden>
-      <div class="sub">Hilfe für die Leitung</div>
-      <div class="panel help">
-        <h3>Wichtige Links</h3>
-        <div class="links">
-          <a class="btn" id="lnk-fs" target="_blank" rel="noopener">Firebase: Daten und Regeln</a>
-          <a class="btn" href="https://app.netlify.com" target="_blank" rel="noopener">Netlify: App hochladen</a>
-          <a class="btn" href="https://console.firebase.google.com" target="_blank" rel="noopener">Firebase-Konsole</a>
-        </div>
-        <h3>Was tun, wenn …</h3>
-        <details><summary>… jemand die PIN vergessen hat?</summary><p>Leitung → Mitarbeitende → bei der Person auf <b>PIN zurücksetzen</b>. Die Person öffnet das Portal, gibt nur ihren Namen ein und wird gefragt, welche neue PIN sie möchte. Fertig.</p></details>
-        <details><summary>… sich jemand neu registriert hat?</summary><p>Unter Leitung → Mitarbeitende erscheint oben «… wartet auf Freischaltung». Auf <b>Freischalten</b> tippen. Erst danach kann sich die Person anmelden.</p></details>
-        <details><summary>… jemand das Team verlässt?</summary><p>Leitung → Mitarbeitende → bei der Person auf <b>Deaktivieren</b>. Sie kann sich dann nicht mehr anmelden. Die Beiträge bleiben.</p></details>
-        <details><summary>… «Name oder PIN stimmt nicht» erscheint?</summary><p>Der Name muss so geschrieben sein, wie er angelegt wurde (Gross-/Kleinschreibung ist egal, Vor- und Nachname müssen passen). Im Zweifel: «PIN zurücksetzen» wie oben.</p></details>
-        <details><summary>… «Dein Zugang ist noch nicht freigeschaltet» erscheint?</summary><p>Die Person hat sich registriert, aber die Leitung hat noch nicht auf «Freischalten» getippt. Oder der Zugang wurde deaktiviert.</p></details>
-        <details><summary>… «Kein Zugriff auf einen Datenbereich» erscheint?</summary><p>Die Sicherheitsregeln in Firebase fehlen oder sind veraltet. Link «Firebase: Daten und Regeln» → Reiter <b>Regeln</b> → Inhalt der Datei <code>firestore.rules</code> einfügen → <b>Veröffentlichen</b>.</p></details>
-        <details><summary>… ein Bild nicht hochgeladen werden kann?</summary><p>Nur Fotos (JPG, PNG, HEIC vom iPhone geht nicht direkt – vorher als JPG teilen). Bei vielen Bildern auf einmal etwas warten, sie werden nacheinander verarbeitet.</p></details>
-        <details><summary>… die App geändert werden soll?</summary><p>Die App ist eine einzige Datei <code>index.html</code>. Neue Version bekommen → bei Netlify unter <b>Deploys</b> den Ordner ins Feld ziehen → Seite mit Strg + F5 neu laden.</p></details>
-        <details><summary>… das Portal aufs Handy soll?</summary><p>Link im Browser öffnen → Teilen → <b>Zum Home-Bildschirm</b>. Dann startet es wie eine App.</p></details>
-        <details><summary>… wer darf was (Teamleitung / Stv. Leitung)?</summary><p><b>Teamleitung:</b> darf alles. Nur sie ernennt oder entfernt eine Stv. Leitung, nur sie kann die Teamleitung weitergeben (<b>Teamleitung übertragen</b>). Sie selbst kann von niemandem verändert werden.<br><b>Stv. Leitung:</b> dieselben Rechte wie die Teamleitung, auch andere zur Stv. Leitung ernennen. Zwei Grenzen: Sie kann die Teamleitung nicht verändern, und sie kann sich selbst weder die Rolle entziehen noch sich deaktivieren – das kann nur die Teamleitung.</p></details>
-        <details><summary>… es Kosten gibt?</summary><p>Firebase (Spark) und Netlify sind in dieser Grösse kostenlos. Grenzen: 1 GB Daten, 50 000 Lesezugriffe pro Tag – für ein Team bis ca. 50 Personen ausreichend. Firebase meldet sich per E-Mail, falls es eng wird.</p></details>
-      </div>
+
+    <div id="lt-groups" hidden>
+      <form class="panel" id="form-group">
+        <div class="panel-head"><div><h3>Gruppen</h3><p>Mit Gruppen lassen sich Beiträge nur für bestimmte Teams sichtbar machen.</p></div></div>
+        <div class="inline-form"><label>Neue Gruppe <input id="group-name" required maxlength="60" placeholder="z. B. Küche, Service, Nachtteam"></label><button class="btn primary" type="submit">Anlegen</button></div>
+      </form>
+      <div class="list" id="group-list"></div>
     </div>
-    <div id="lead-settings" hidden>
-      <div class="sub">Einstellungen</div>
+
+    <div id="lt-settings" hidden>
       <form class="panel" id="form-settings">
+        <div class="panel-head"><div><h3>Erscheinungsbild</h3><p>Name, Untertitel und Farbe des Portals.</p></div></div>
         <div class="row">
           <label>Name des Betriebs <input id="set-name" maxlength="40"></label>
           <label>Untertitel <input id="set-sub" maxlength="60" placeholder="z. B. Team-Portal"></label>
@@ -489,6 +470,32 @@ html, body { min-height: 100%; }
         <label>Farbe <div class="swatches" id="swatches"></div></label>
         <div class="actions"><button class="btn primary" type="submit">Speichern</button></div>
       </form>
+    </div>
+
+    <div id="lt-help" hidden>
+      <div class="panel help">
+        <div class="panel-head"><div><h3>Wichtige Links</h3></div></div>
+        <div class="links">
+          <a class="btn" id="lnk-fs" target="_blank" rel="noopener">Firebase: Daten und Regeln</a>
+          <a class="btn" href="https://app.netlify.com" target="_blank" rel="noopener">Netlify: App hochladen</a>
+          <a class="btn" href="https://console.firebase.google.com" target="_blank" rel="noopener">Firebase-Konsole</a>
+        </div>
+      </div>
+      <div class="panel help">
+        <div class="panel-head"><div><h3>Was tun, wenn …</h3></div></div>
+        <details><summary>… eine Anleitung erstellt werden soll?</summary><p>Infos → <b>Neuer Beitrag</b> → Kapitel wählen (z. B. «Anleitungen»). Mit <b>Schritte</b> entsteht eine nummerierte Schritt-für-Schritt-Liste, mit <b>Bilder</b> kommen Fotos dazu, mit <b>Hinweis</b> und <b>Wichtig</b> farbige Kästen.</p></details>
+        <details><summary>… jemand die PIN vergessen hat?</summary><p>Leitung → Mitarbeitende → bei der Person auf <b>PIN zurücksetzen</b>. Die Person öffnet das Portal, gibt nur ihren Namen ein und wählt eine neue PIN.</p></details>
+        <details><summary>… sich jemand neu registriert hat?</summary><p>Unter Leitung → Mitarbeitende erscheint oben «… wartet auf Freischaltung». Auf <b>Freischalten</b> tippen. Erst danach kann sich die Person anmelden.</p></details>
+        <details><summary>… jemand das Team verlässt?</summary><p>Leitung → Mitarbeitende → bei der Person auf <b>Deaktivieren</b>. Sie kann sich dann nicht mehr anmelden. Die Beiträge bleiben.</p></details>
+        <details><summary>… «Name oder PIN stimmt nicht» erscheint?</summary><p>Der Name muss so geschrieben sein, wie er angelegt wurde (Gross-/Kleinschreibung ist egal, Vor- und Nachname müssen passen). Im Zweifel: «PIN zurücksetzen» wie oben.</p></details>
+        <details><summary>… «Dein Zugang ist noch nicht freigeschaltet» erscheint?</summary><p>Die Person hat sich registriert, aber die Leitung hat noch nicht auf «Freischalten» getippt. Oder der Zugang wurde deaktiviert.</p></details>
+        <details><summary>… «Keine Berechtigung» erscheint?</summary><p>Die Sicherheitsregeln in Firebase fehlen oder sind veraltet. Link «Firebase: Daten und Regeln» → Reiter <b>Regeln</b> → Inhalt der Datei <code>firestore.rules</code> einfügen → <b>Veröffentlichen</b>.</p></details>
+        <details><summary>… ein Bild nicht hochgeladen werden kann?</summary><p>Nur Fotos (JPG, PNG). HEIC vom iPhone geht nicht direkt – vorher als JPG teilen. Bei vielen Bildern etwas warten, sie werden nacheinander verarbeitet.</p></details>
+        <details><summary>… die App geändert werden soll?</summary><p>Die App ist eine einzige Datei <code>index.html</code>. Neue Version bekommen → bei Netlify unter <b>Deploys</b> den Ordner ins Feld ziehen → Seite mit Strg + F5 neu laden.</p></details>
+        <details><summary>… das Portal aufs Handy soll?</summary><p>Link im Browser öffnen → Teilen → <b>Zum Home-Bildschirm</b>. Dann startet es wie eine App.</p></details>
+        <details><summary>… wer darf was?</summary><p><b>Teamleitung:</b> darf alles. Nur sie kann die Teamleitung weitergeben (<b>Teamleitung übertragen</b>) und wird von niemandem verändert.<br><b>Stv. Leitung:</b> dieselben Rechte, ausser die Teamleitung zu verändern oder sich selbst die Rolle zu entziehen.<br><b>Infos schreiben:</b> darf Beiträge und Kapitel erstellen und bearbeiten.<br><b>Team:</b> liest die Infos.</p></details>
+        <details><summary>… es Kosten gibt?</summary><p>Firebase (Spark) und Netlify sind in dieser Grösse kostenlos. Grenzen: 1 GB Daten, 50 000 Lesezugriffe pro Tag – für ein Team bis ca. 50 Personen ausreichend.</p></details>
+      </div>
     </div>
   </section>
 </main>
@@ -514,9 +521,8 @@ html, body { min-height: 100%; }
   // =================================================
 
   const $ = (id) => document.getElementById(id);
-  const SHIFTS = ["Frühdienst", "Spätdienst", "Nachtdienst", "Tagdienst", "Pikett", "Andere"];
-  const S = { uid: null, me: null, users: {}, logins: {}, groups: [], cats: [], posts: [], reqs: [], decs: {}, reads: {}, myReads: {}, settings: {}, cat: "all", sub: "tausch", search: "", teamSearch: "", editingPost: null, openPosts: new Set(), readsOpen: new Set(), unsub: [], imgCache: {} };
-  const STATUS_DE = { pending: "Offen", approved: "Freigegeben", rejected: "Abgelehnt", open: "Sucht Tausch" };
+  const S = { uid: null, me: null, users: {}, logins: {}, groups: [], cats: [], posts: [], reads: {}, myReads: {}, settings: {}, cat: "all", filter: "all", leadTab: "team", search: "", teamSearch: "", editingPost: null, openPosts: new Set(), readsOpen: new Set(), unsub: [], imgCache: {} };
+  try { S.leadTab = localStorage.getItem("leadTab") || "team"; } catch (_) {}
 
   if (firebaseConfig.apiKey === "HIER_EINTRAGEN") { document.body.innerHTML = '<div class="login"><div class="loginbox"><h1>Noch nicht eingerichtet</h1><p>In der Datei <b>index.html</b> fehlen die Firebase-Zugangsdaten (Abschnitt KONFIGURATION ganz oben im Skript).</p></div></div>'; return; }
   firebase.initializeApp(firebaseConfig);
@@ -525,27 +531,20 @@ html, body { min-height: 100%; }
   const emailFor = (id, domain) => id + "@" + (domain || LOGIN_DOMAIN);
   const nextDomain = (d) => { const m = /^v(\d+)\./.exec(d || ""); return "v" + ((m ? +m[1] : 1) + 1) + "." + LOGIN_DOMAIN; };
   async function loginInfo(id) { try { const d = await db.collection("logins").doc(id).get(); return d.exists ? d.data() : {}; } catch (_) { return {}; } }
-  async function loginDomainFor(id) { const i = await loginInfo(id); return i.d || LOGIN_DOMAIN; }
-  const cleanId = (name) => name.toLowerCase().trim().replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, ".").replace(/[^a-z0-9._-]/g, "");
+  const cleanId = (name) => name.toLowerCase().trim().replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, ".").replace(/[^a-z0-9._-]/g, "");
 
-  // ---- permissions
+  // ---- Berechtigungen
   const isOwner = () => !!(S.me && S.me.owner);
   const isLead = () => isOwner() || !!(S.me && S.me.colead);
   const canInfo = () => isLead() || !!(S.me && S.me.infos);
-  const canApprove = () => isLead() || !!(S.me && S.me.approve);
-  const roleLabel = () => isOwner() ? "Teamleitung" : S.me && S.me.colead ? "Stv. Leitung" : S.me && (S.me.infos || S.me.approve) ? "Erweitert" : "Team";
+  const roleLabel = () => isOwner() ? "Teamleitung" : S.me && S.me.colead ? "Stv. Leitung" : S.me && S.me.infos ? "Redaktion" : "Team";
 
-  // ---- helpers
+  // ---- Hilfsfunktionen
   let toastT;
   function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 3200); }
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-  const iso = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-  const today = () => iso(new Date());
-  function fmtDate(s, opts) { if (!s) return ""; const d = new Date(s + (s.length === 10 ? "T12:00:00" : "")); return d.toLocaleDateString("de-CH", opts || { weekday: "short", day: "numeric", month: "short", year: "numeric" }); }
-  const fmtRange = (a, b) => a === b ? fmtDate(a) : fmtDate(a) + " – " + fmtDate(b);
-  function fmtWhen(s) { if (!s) return ""; const d = new Date(s); return d.toLocaleDateString("de-CH", { day: "numeric", month: "short" }) + ", " + d.toLocaleTimeString("de-CH", { hour: "2-digit", minute: "2-digit" }); }
-  const statusOf = (id) => (S.decs[id] && S.decs[id].status) || "pending";
-  const pill = (st) => el("span", "pill " + st, STATUS_DE[st] || st);
+  const svg = (paths) => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("fill", "none"); s.setAttribute("stroke", "currentColor"); s.setAttribute("stroke-width", "2"); s.setAttribute("stroke-linecap", "round"); s.setAttribute("stroke-linejoin", "round"); s.setAttribute("aria-hidden", "true"); s.innerHTML = paths; return s; };
+  function fmtWhen(s) { if (!s) return ""; const d = new Date(s); return d.toLocaleDateString("de-CH", { day: "numeric", month: "short", year: d.getFullYear() === new Date().getFullYear() ? undefined : "numeric" }) + ", " + d.toLocaleTimeString("de-CH", { hour: "2-digit", minute: "2-digit" }); }
   function errMsg(e) {
     const c = e && e.code || "";
     if (c.includes("permission-denied")) return "Keine Berechtigung. Sind die neuesten Regeln in Firebase veröffentlicht? (Leitung → Hilfe)";
@@ -557,9 +556,10 @@ html, body { min-height: 100%; }
   }
   const nameOf = (id) => id === S.uid ? "Du" : ((S.users[id] && S.users[id].name) || "Teammitglied");
   const initials = (n) => (n || "?").split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase();
+  function colorFor(id) { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360; return "hsl(" + h + " 42% 46%)"; }
   function avatar(id) { const a = el("span", "av", initials(S.users[id] && S.users[id].name)); a.style.background = colorFor(id); return a; }
-  function colorFor(id) { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360; return "hsl(" + h + " 45% 45%)"; }
   function person(meta, id) { meta.append(avatar(id), el("span", null, nameOf(id))); }
+  function emptyState(title, text) { const d = el("div", "empty"); d.append(svg('<path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/><path d="M20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/>'), el("b", null, title)); if (text) d.append(el("span", null, text)); return d; }
   function confirmBtn(btn, label, fn) {
     let armed = false, t;
     btn.addEventListener("click", async () => {
@@ -570,6 +570,7 @@ html, body { min-height: 100%; }
   }
   async function act(btn, fn, okMsg) { if (btn) btn.disabled = true; try { await fn(); if (okMsg) toast(okMsg); } catch (e) { console.error(e); toast(errMsg(e)); } finally { if (btn) btn.disabled = false; } }
   const activeMembers = () => Object.keys(S.users).filter(id => S.users[id].active !== false);
+  const pendingMembers = () => Object.keys(S.users).filter(id => S.users[id].pending && S.users[id].active === false);
   const groupsOf = (uid) => S.groups.filter(g => (g.memberIds || []).includes(uid));
   function canSeePost(p) {
     if (canInfo()) return true;
@@ -580,27 +581,32 @@ html, body { min-height: 100%; }
   }
   const now = () => new Date().toISOString();
 
-  // ---- tabs
-  const tabs = ["heute", "infos", "anfragen", "leitung"];
-  function showTab(name, sub) {
-    if (!tabs.includes(name)) name = "heute";
-    if (name === "leitung" && !(canApprove() || canInfo())) name = "heute";
+  // ---- Bereiche
+  const tabs = ["infos", "leitung"];
+  function showTab(name) {
+    if (!tabs.includes(name)) name = "infos";
+    if (name === "leitung" && !canInfo()) name = "infos";
     tabs.forEach(t => { $("sec-" + t).hidden = t !== name; $("tab-" + t).setAttribute("aria-selected", String(t === name)); });
-    if (sub) showSub(sub);
     try { localStorage.setItem("tab", name); } catch (_) {}
     window.scrollTo({ top: 0 });
   }
-  function showSub(sub) { S.sub = sub; $("sec-tausch").hidden = sub !== "tausch"; $("sec-ferien").hidden = sub !== "ferien"; $("subtabs").querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.sub === sub))); }
+  const LEAD_TABS = ["team", "cats", "groups", "settings", "help"];
+  function showLeadTab(t) {
+    const allowed = isLead() ? LEAD_TABS : ["cats"];
+    if (!allowed.includes(t)) t = allowed[0];
+    S.leadTab = t;
+    LEAD_TABS.forEach(k => { $("lt-" + k).hidden = k !== t; const b = $("lead-tabs").querySelector('[data-lt="' + k + '"]'); b.hidden = !allowed.includes(k); b.setAttribute("aria-selected", String(k === t)); });
+    $("lead-tabs").hidden = allowed.length < 2;
+    try { localStorage.setItem("leadTab", t); } catch (_) {}
+  }
   $("tabs").addEventListener("click", (e) => { const b = e.target.closest("button[data-tab]"); if (b) showTab(b.dataset.tab); });
-  $("subtabs").addEventListener("click", (e) => { const b = e.target.closest("button[data-sub]"); if (b) showSub(b.dataset.sub); });
-  $("q-swap").addEventListener("click", () => { showTab("anfragen", "tausch"); openForm("swap", true); });
-  $("q-vac").addEventListener("click", () => { showTab("anfragen", "ferien"); openForm("vac", true); });
+  $("lead-tabs").addEventListener("click", (e) => { const b = e.target.closest("button[data-lt]"); if (b) showLeadTab(b.dataset.lt); });
   $("post-search").addEventListener("input", () => { S.search = $("post-search").value.trim().toLowerCase(); renderInfos(); });
   $("team-search").addEventListener("input", () => { S.teamSearch = $("team-search").value.trim().toLowerCase(); renderTeam(); });
   $("logout").addEventListener("click", () => auth.signOut());
-  function openForm(k, open) { const f = $("form-" + k), b = $("add-" + k); f.hidden = !open; b.setAttribute("aria-expanded", String(open)); b.hidden = open || b.dataset.hide === "1"; if (open) { const first = f.querySelector("input:not([type=checkbox]), textarea, select"); if (first) first.focus(); } }
-  ["post", "swap", "vac"].forEach(k => { $("add-" + k).addEventListener("click", () => { if (k === "post") startPost(null); else openForm(k, true); }); $(k + "-cancel").addEventListener("click", () => { $("form-" + k).reset(); if (k === "post") { S.editingPost = null; ed.innerHTML = ""; } openForm(k, false); }); });
-  SHIFTS.forEach(n => $("swap-shift").append(el("option", null, n)));
+  function openPostForm(open) { $("form-post").hidden = !open; $("add-post").hidden = open || !canInfo(); if (open) { $("form-post").scrollIntoView({ block: "start" }); $("post-title").focus({ preventScroll: true }); } }
+  $("add-post").addEventListener("click", () => startPost(null));
+  $("post-cancel").addEventListener("click", () => { $("form-post").reset(); S.editingPost = null; ed.innerHTML = ""; openPostForm(false); });
 
   // ---- Editor
   const ALLOWED = { P: 1, BR: 1, B: 1, STRONG: 1, I: 1, EM: 1, U: 1, MARK: 1, UL: 1, OL: 1, LI: 1, H3: 1, IMG: 1, SPAN: 1, DIV: 1, HR: 1 };
@@ -638,6 +644,7 @@ html, body { min-height: 100%; }
     const b = e.target.closest("button[data-cmd]"); if (!b) return; const cmd = b.dataset.cmd; ed.focus();
     if (cmd === "bold") document.execCommand("bold");
     else if (cmd === "ul") document.execCommand("insertUnorderedList");
+    else if (cmd === "ol") document.execCommand("insertOrderedList");
     else if (cmd === "h3") document.execCommand("formatBlock", false, "h3");
     else if (cmd === "mark") { const sel = window.getSelection(); const t = sel ? sel.toString() : ""; if (t) insertHTML("<mark>" + esc(t) + "</mark>"); else toast("Zuerst Text markieren, dann «Markieren» tippen."); }
     else if (cmd === "plan") insertHTML('<h3>Tagesablauf</h3><p><span class="time">07:00</span> Übergabe und Tagesplanung</p><p><span class="time">09:30</span> Pause</p><p><span class="time">12:00</span> Mittag</p><p><span class="time">17:00</span> Abschluss und Übergabe</p><p><br></p>');
@@ -721,51 +728,77 @@ html, body { min-height: 100%; }
 
   // ---- INFOS
   function catName(id) { const c = S.cats.find(c => c.id === id); return c ? c.name : "Allgemein"; }
-  async function renderInfos() {
-    $("add-post").dataset.hide = canInfo() ? "0" : "1"; if ($("form-post").hidden) $("add-post").hidden = !canInfo();
+  function renderHero() {
+    const h = new Date().getHours(); const g = h < 11 ? "Guten Morgen" : h < 18 ? "Guten Tag" : "Guten Abend";
+    $("greet").textContent = g + (S.me && S.me.name ? ", " + S.me.name.split(" ")[0] : "");
+    $("today-line").textContent = new Date().toLocaleDateString("de-CH", { weekday: "long", day: "numeric", month: "long" });
+    const n = unreadCount();
+    $("hero-lead").textContent = !S.posts.some(canSeePost) ? "Hier findest du alle wichtigen Infos und Anleitungen für das Team."
+      : n ? (n === 1 ? "1 neuer Beitrag wartet auf dich." : n + " neue Beiträge warten auf dich.") : "Du bist auf dem neuesten Stand – alles gelesen.";
+  }
+  function renderInfos() {
+    if ($("form-post").hidden) $("add-post").hidden = !canInfo();
+    renderHero();
     const visible = S.posts.filter(canSeePost);
-    const chips = $("cat-chips"); chips.replaceChildren();
-    const mk = (id, label) => { const b = el("button", "chip", label); b.type = "button"; b.setAttribute("aria-pressed", String(S.cat === id)); b.addEventListener("click", () => { S.cat = id; renderInfos(); }); return b; };
-    chips.append(mk("all", "Alle")); S.cats.forEach(c => chips.append(mk(c.id, c.name)));
+    const unreadN = unreadCount();
+    const rf = $("read-filter"); rf.replaceChildren();
+    [["all", "Alle", visible.length], ["unread", "Ungelesen", unreadN]].forEach(([k, label, n]) => { const b = el("button"); b.type = "button"; b.setAttribute("aria-pressed", String(S.filter === k)); b.append(el("span", null, label), el("span", "n", String(n))); b.addEventListener("click", () => { S.filter = k; renderInfos(); }); rf.append(b); });
     if (!S.cats.find(c => c.id === S.cat) && S.cat !== "all") S.cat = "all";
+    const chips = $("cat-chips"); chips.replaceChildren();
+    const mk = (id, label, n) => { const b = el("button", "chip"); b.type = "button"; b.setAttribute("aria-pressed", String(S.cat === id)); b.append(el("span", null, label), el("span", "n", String(n))); b.addEventListener("click", () => { S.cat = id; renderInfos(); }); return b; };
+    chips.append(mk("all", "Alle Kapitel", visible.length)); S.cats.forEach(c => chips.append(mk(c.id, c.name, visible.filter(p => p.catId === c.id).length)));
+    chips.hidden = !S.cats.length;
     const q = S.search;
-    const shown = visible.filter(p => (S.cat === "all" || p.catId === S.cat) && (!q || (p.title || "").toLowerCase().includes(q) || (p.text || "").toLowerCase().includes(q))).sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.createdAt || "").localeCompare(a.createdAt || ""));
-    $("count-infos").textContent = unreadCount() ? String(unreadCount()) : "";
+    const shown = visible.filter(p => (S.cat === "all" || p.catId === S.cat) && (S.filter !== "unread" || !S.myReads[p.id] || S.openPosts.has(p.id)) && (!q || (p.title || "").toLowerCase().includes(q) || (p.text || "").toLowerCase().includes(q) || catName(p.catId).toLowerCase().includes(q))).sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.createdAt || "").localeCompare(a.createdAt || ""));
+    $("count-infos").textContent = unreadN ? String(unreadN) : "";
     const list = $("post-list"); list.replaceChildren();
-    if (!shown.length) { list.append(el("div", "empty", q ? "Nichts gefunden." : S.posts.length ? "In diesem Kapitel gibt es noch nichts." : "Noch keine Beiträge. Die Leitung legt Kapitel an und schreibt die ersten Infos.")); return; }
+    if (!shown.length) {
+      list.append(q ? emptyState("Nichts gefunden", "Versuche einen anderen Suchbegriff.")
+        : S.filter === "unread" ? emptyState("Alles gelesen", "Es gibt keine ungelesenen Beiträge.")
+        : visible.length ? emptyState("Dieses Kapitel ist noch leer")
+        : emptyState("Noch keine Beiträge", canInfo() ? "Lege mit «Neuer Beitrag» die erste Info oder Anleitung an." : "Sobald die Leitung Infos veröffentlicht, erscheinen sie hier."));
+      return;
+    }
     for (const p of shown) {
       const open = S.openPosts.has(p.id) || (p.pinned && !S.openPosts.has("!" + p.id));
       const unread = !!S.uid && !S.myReads[p.id];
       if (open && unread) markRead(p.id);
-      const c = el("article", "card post" + (p.pinned ? " pinned" : "")); c.dataset.open = String(open);
+      const restricted = (p.visibleTo || []).length || (p.visibleGroups || []).length;
+      const c = el("article", "card post" + (p.pinned ? " pinned" : "") + (unread && !open ? " unread" : "")); c.dataset.open = String(open);
       const ph = el("div", "ph"); ph.setAttribute("role", "button"); ph.tabIndex = 0; ph.setAttribute("aria-expanded", String(open));
-      const l = el("div"); l.style.minWidth = "0"; l.append(el("div", "title", p.title || "(ohne Titel)"));
-      const metaLine = [catName(p.catId), fmtWhen(p.updatedAt || p.createdAt)]; if (p.pinned) metaLine.push("Angeheftet"); if ((p.visibleTo || []).length || (p.visibleGroups || []).length) metaLine.push("Eingeschränkt");
-      const ml = el("div", "meta"); if (unread && !open) ml.append(el("span", "pill new", "Neu")); ml.append(el("span", null, metaLine.join(" · ")));
+      const l = el("div", "ph-main");
+      const top = el("div", "ph-top"); top.append(el("span", "tag", catName(p.catId)));
+      if (p.pinned) top.append(el("span", "pill open", "Angeheftet"));
+      if (restricted) top.append(el("span", "pill restricted", "Eingeschränkt"));
+      if (unread && !open) top.append(el("span", "pill new", "Neu"));
+      l.append(top, el("div", "title", p.title || "(ohne Titel)"));
+      if (!open && p.text) l.append(el("div", "preview", p.text.replace(/\s+/g, " ").slice(0, 220)));
+      const ml = el("div", "meta"); ml.append(el("span", null, fmtWhen(p.updatedAt || p.createdAt)));
       if (canInfo()) { const r = readStats(p); ml.append(el("span", "pill " + (r.total && r.read === r.total ? "approved" : "pending"), "Gelesen " + r.read + "/" + r.total)); }
       l.append(ml);
-      if (!open) l.append(el("div", "preview", (p.text || "").replace(/\s+/g, " ").slice(0, 120)));
-      ph.append(l, el("span", "chev", "›")); c.append(ph);
+      const chev = el("span", "chev"); chev.append(svg('<path d="M9 6l6 6-6 6"/>'));
+      ph.append(l, chev); c.append(ph);
       const toggle = () => { if (open) { S.openPosts.delete(p.id); if (p.pinned) S.openPosts.add("!" + p.id); } else { S.openPosts.add(p.id); S.openPosts.delete("!" + p.id); } renderInfos(); };
       ph.addEventListener("click", toggle); ph.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
       if (open) {
         const pb = el("div", "pb"); const body = el("div", "body");
         if (p.html) { body.innerHTML = sanitize(p.html); hydrateImages(body); } else body.append(el("p", null, p.text || ""));
         pb.append(body);
-        const meta = el("div", "meta"); person(meta, p.authorId); pb.append(meta);
-        if (canInfo()) { pb.append(readsBox(p)); const a = el("div", "actions"); const e = el("button", "btn small", "Bearbeiten"); e.addEventListener("click", () => startPost(p)); const d = el("button", "btn small bad", "Löschen"); confirmBtn(d, "Löschen", () => db.collection("posts").doc(p.id).delete()); a.append(e, d); pb.append(a); }
-        c.append(pb);
+        if (canInfo()) pb.append(readsBox(p));
+        const foot = el("div", "foot"); const meta = el("div", "meta"); person(meta, p.authorId); foot.append(meta);
+        if (canInfo()) { const a = el("div", "actions"); const e = el("button", "btn small", "Bearbeiten"); e.type = "button"; e.addEventListener("click", () => startPost(p)); const d = el("button", "btn small bad", "Löschen"); d.type = "button"; confirmBtn(d, "Löschen", () => db.collection("posts").doc(p.id).delete()); a.append(e, d); foot.append(a); }
+        pb.append(foot); c.append(pb);
       }
       list.append(c);
     }
   }
   function checkbox(id, label, checked) { const l = el("label", "check"); const i = el("input"); i.type = "checkbox"; i.id = id; i.checked = !!checked; l.append(i, el("span", null, label)); return l; }
-  async function startPost(p) {
+  function startPost(p) {
+    if (!S.cats.length) { toast("Lege zuerst unter «Leitung → Kapitel» ein Kapitel an."); return; }
     S.editingPost = p;
     $("form-post-title").textContent = p ? "Beitrag bearbeiten" : "Neuer Beitrag";
     $("post-submit").textContent = p ? "Speichern" : "Veröffentlichen";
     const sel = $("post-cat"); sel.replaceChildren(); S.cats.forEach(c => { const o = el("option", null, c.name); o.value = c.id; sel.append(o); });
-    if (!S.cats.length) { toast("Lege zuerst unter «Leitung» ein Kapitel an."); return; }
     sel.value = p ? p.catId : (S.cat !== "all" ? S.cat : S.cats[0].id);
     $("post-title").value = p ? p.title : ""; ed.innerHTML = p ? (p.html ? sanitize(p.html) : "<p>" + esc(p.text || "") + "</p>") : ""; if (p) hydrateImages(ed);
     $("post-pin").checked = !!(p && p.pinned); $("imgbar").hidden = true; selImg = null;
@@ -775,7 +808,7 @@ html, body { min-height: 100%; }
     if (!S.groups.length) gb.append(el("span", "meta", "Noch keine Gruppen."));
     const pb = $("post-people"); pb.replaceChildren();
     activeMembers().sort((a, b) => nameOf(a).localeCompare(nameOf(b), "de")).forEach(m => pb.append(checkbox("pp-" + m, nameOf(m), p && (p.visibleTo || []).includes(m))));
-    openForm("post", true);
+    openPostForm(true);
   }
   $("post-vis").addEventListener("change", () => { $("post-vis-box").hidden = $("post-vis").value !== "some"; });
   $("form-post").addEventListener("submit", async (e) => {
@@ -790,16 +823,16 @@ html, body { min-height: 100%; }
     await act($("post-submit"), async () => {
       if (S.editingPost) await db.collection("posts").doc(S.editingPost.id).update(data);
       else await db.collection("posts").add({ ...data, authorId: S.uid, createdAt: now() });
-      e.target.reset(); ed.innerHTML = ""; S.editingPost = null; openForm("post", false);
+      e.target.reset(); ed.innerHTML = ""; S.editingPost = null; openPostForm(false);
     }, S.editingPost ? "Gespeichert." : "Beitrag veröffentlicht.");
   });
 
   // ---- Kapitel
   function renderCats() {
     const list = $("cat-list"); list.replaceChildren();
-    if (!S.cats.length) { list.append(el("div", "empty", "Noch keine Kapitel. Lege oben das erste an, z. B. «Allgemein».")); return; }
+    if (!S.cats.length) { list.append(el("div", "meta", "Noch keine Kapitel. Lege oben das erste an, z. B. «Allgemein» oder «Anleitungen».")); return; }
     S.cats.forEach((c, i) => {
-      const row = el("div", "taker"); const n = el("input"); n.value = c.name; n.maxLength = 60; n.style.flex = "1"; n.setAttribute("aria-label", "Kapitelname");
+      const row = el("div", "cat-row"); const n = el("input"); n.value = c.name; n.maxLength = 60; n.setAttribute("aria-label", "Kapitelname");
       n.addEventListener("change", () => { const v = n.value.trim(); if (v && v !== c.name) db.collection("categories").doc(c.id).update({ name: v }).then(() => toast("Umbenannt.")).catch(e => toast(errMsg(e))); });
       const a = el("div", "actions");
       const up = el("button", "btn icon", "↑"); up.type = "button"; up.disabled = i === 0; up.setAttribute("aria-label", "Nach oben"); up.addEventListener("click", () => moveCat(i, -1));
@@ -807,7 +840,7 @@ html, body { min-height: 100%; }
       const cnt = S.posts.filter(p => p.catId === c.id).length;
       const del = el("button", "btn small bad", "Löschen"); del.type = "button"; del.disabled = cnt > 0; del.title = cnt ? cnt + " Beiträge, zuerst verschieben" : "";
       confirmBtn(del, "Löschen", () => db.collection("categories").doc(c.id).delete());
-      a.append(up, dn, el("span", "meta", cnt + (cnt === 1 ? " Beitrag" : " Beiträge")), del); row.append(n, a); list.append(row);
+      a.append(el("span", "meta", cnt + (cnt === 1 ? " Beitrag" : " Beiträge")), up, dn, del); row.append(n, a); list.append(row);
     });
   }
   async function moveCat(i, d) {
@@ -818,106 +851,6 @@ html, body { min-height: 100%; }
     e.preventDefault(); const name = $("cat-name").value.trim(); if (!name) return;
     const order = (S.cats.reduce((m, c) => Math.max(m, c.order || 0), 0)) + 10;
     await act(e.submitter, async () => { await db.collection("categories").add({ name, order, createdAt: now() }); $("cat-name").value = ""; }, "Kapitel angelegt.");
-  });
-
-  // ---- TAUSCH
-  $("form-swap").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const date = $("swap-date").value, shift = $("swap-shift").value; if (!date) { toast("Bitte ein Datum angeben."); return; }
-    await act($("swap-submit"), async () => { await db.collection("requests").add({ type: "swap", date, shift, note: $("swap-note").value.trim(), userId: S.uid, createdAt: now() }); e.target.reset(); openForm("swap", false); }, "Schicht eingestellt.");
-  });
-  function swapCard(offer, takes, adminMode) {
-    const st = statusOf(offer.id) === "approved" ? "approved" : statusOf(offer.id) === "rejected" ? "rejected" : "open";
-    const c = el("article", "card" + (offer.userId === S.uid ? " mine" : ""));
-    const g = el("div", "swap"); const dd = el("div", "d"); const dt = new Date(offer.date + "T12:00:00");
-    dd.append(document.createTextNode(dt.toLocaleDateString("de-CH", { weekday: "short" })), el("b", null, String(dt.getDate())), document.createTextNode(dt.toLocaleDateString("de-CH", { month: "short" })));
-    const s1 = el("div", "s"); s1.append(document.createTextNode(offer.shift || ""), el("span", "meta", " "), pill(st));
-    const s2 = el("div", "meta"); person(s2, offer.userId); s2.append(el("span", null, "gibt ab" + (offer.note ? " · " + offer.note : "")));
-    g.append(dd, s1, s2); c.append(g);
-    if (!adminMode && takes.length && st === "open" && offer.userId !== S.uid) c.append(el("div", "meta", takes.length === 1 ? "1 Person hat sich gemeldet" : takes.length + " Personen haben sich gemeldet"));
-    const dec = S.decs[offer.id];
-    if (st === "approved" && dec && dec.takerId) { const m = el("div", "meta"); m.append(el("span", null, "Übernimmt:")); person(m, dec.takerId); c.append(m); }
-    if (takes.length && st === "open" && (adminMode || offer.userId === S.uid)) {
-      const box = el("div", "takers"); box.append(el("div", "meta", "Interessierte Übernahmen"));
-      for (const tk of takes) {
-        const row = el("div", "taker"); const m = el("span", "meta"); person(m, tk.userId); row.append(m);
-        const ts = statusOf(tk.id);
-        if (ts === "rejected") row.append(pill("rejected"));
-        else if (adminMode) { const a = el("div", "actions"); const ok = el("button", "btn small ok", "Freigeben"); ok.addEventListener("click", () => decideTake(offer, tk, true, ok)); const no = el("button", "btn small bad", "Ablehnen"); no.addEventListener("click", () => decideTake(offer, tk, false, no)); a.append(ok, no); row.append(a); }
-        else row.append(pill("pending"));
-        box.append(row);
-      }
-      c.append(box);
-    }
-    const a = el("div", "actions");
-    if (st === "open" && !adminMode) {
-      if (offer.userId !== S.uid) { const already = takes.some(t => t.userId === S.uid); const b = el("button", "btn primary small", already ? "Du hast dich gemeldet" : "Ich übernehme diese Schicht"); b.disabled = already; b.addEventListener("click", () => act(b, () => db.collection("requests").add({ type: "take", refId: offer.id, userId: S.uid, createdAt: now() }), "Gemeldet. Die Leitung gibt den Tausch frei.")); a.append(b); }
-      else { const d = el("button", "btn small bad", "Zurückziehen"); confirmBtn(d, "Zurückziehen", () => db.collection("requests").doc(offer.id).delete()); a.append(d); }
-    }
-    if (adminMode && st === "open" && !takes.length) { const no = el("button", "btn small bad", "Ohne Tausch schliessen"); confirmBtn(no, "Ohne Tausch schliessen", () => db.collection("decisions").doc(offer.id).set({ status: "rejected", decidedAt: now(), byId: S.uid })); a.append(no); }
-    if (a.childNodes.length) c.append(a);
-    return c;
-  }
-  async function decideTake(offer, take, approve, btn) {
-    await act(btn, async () => {
-      const batch = db.batch();
-      batch.set(db.collection("decisions").doc(take.id), { status: approve ? "approved" : "rejected", decidedAt: now(), byId: S.uid });
-      if (approve) batch.set(db.collection("decisions").doc(offer.id), { status: "approved", takerId: take.userId, decidedAt: now(), byId: S.uid });
-      await batch.commit();
-    }, approve ? "Tausch freigegeben." : "Übernahme abgelehnt.");
-  }
-  function renderSwaps() {
-    const offers = S.reqs.filter(r => r.type === "swap");
-    const takesBy = {}; S.reqs.filter(r => r.type === "take").forEach(t => (takesBy[t.refId] = takesBy[t.refId] || []).push(t));
-    const open = offers.filter(o => statusOf(o.id) === "pending").sort((a, b) => (a.date || "").localeCompare(b.date || ""));
-    const done = offers.filter(o => statusOf(o.id) !== "pending").sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 8);
-    const L1 = $("swap-open"); L1.replaceChildren(); if (!open.length) L1.append(el("div", "empty", "Zurzeit sucht niemand einen Tausch.")); open.forEach(o => L1.append(swapCard(o, (takesBy[o.id] || []).filter(t => statusOf(t.id) !== "approved"), false)));
-    const L2 = $("swap-done"); L2.replaceChildren(); if (!done.length) L2.append(el("div", "empty", "Noch keine abgeschlossenen Tausche.")); done.forEach(o => L2.append(swapCard(o, [], false)));
-    $("count-tausch").textContent = open.length ? String(open.length) : "";
-    if (!canApprove()) return 0;
-    const L3 = $("chef-swap"); L3.replaceChildren();
-    const needs = open.filter(o => (takesBy[o.id] || []).some(t => statusOf(t.id) === "pending"));
-    if (!needs.length) L3.append(el("div", "empty", "Keine offenen Schichtübernahmen."));
-    needs.forEach(o => L3.append(swapCard(o, (takesBy[o.id] || []).filter(t => statusOf(t.id) !== "approved"), true)));
-    return needs.length;
-  }
-
-  // ---- FERIEN
-  function vacCard(v, adminMode) {
-    const st = statusOf(v.id);
-    const c = el("article", "card" + (v.userId === S.uid ? " mine" : ""));
-    const top = el("div", "top"); const left = el("div"); left.append(el("div", "date", fmtRange(v.from, v.to)));
-    const days = v.from && v.to ? Math.round((new Date(v.to) - new Date(v.from)) / 864e5) + 1 : 0;
-    if (days > 0) left.append(el("div", "meta", days === 1 ? "1 Tag" : days + " Tage"));
-    top.append(left, pill(st)); c.append(top);
-    if (v.note) c.append(el("p", null, v.note));
-    const meta = el("div", "meta"); person(meta, v.userId); meta.append(el("span", null, "· beantragt " + fmtWhen(v.createdAt))); c.append(meta);
-    const a = el("div", "actions");
-    if (adminMode && st === "pending") {
-      const ok = el("button", "btn small ok", "Freigeben"), no = el("button", "btn small bad", "Ablehnen");
-      const dec = (s, b) => () => act(b, () => db.collection("decisions").doc(v.id).set({ status: s, decidedAt: now(), byId: S.uid }), s === "approved" ? "Freigegeben." : "Abgelehnt.");
-      ok.addEventListener("click", dec("approved", ok)); no.addEventListener("click", dec("rejected", no)); a.append(ok, no);
-    } else if (!adminMode && v.userId === S.uid && st === "pending") { const d = el("button", "btn small bad", "Zurückziehen"); confirmBtn(d, "Zurückziehen", () => db.collection("requests").doc(v.id).delete()); a.append(d); }
-    if (a.childNodes.length) c.append(a);
-    return c;
-  }
-  function renderVac() {
-    const vacs = S.reqs.filter(r => r.type === "vacation"); const t = today();
-    const mine = vacs.filter(v => v.userId === S.uid).sort((a, b) => (b.from || "").localeCompare(a.from || ""));
-    const team = vacs.filter(v => statusOf(v.id) === "approved" && v.to >= t).sort((a, b) => (a.from || "").localeCompare(b.from || ""));
-    const L1 = $("vac-mine"); L1.replaceChildren(); if (!mine.length) L1.append(el("div", "empty", "Du hast noch keinen Antrag gestellt.")); mine.forEach(v => L1.append(vacCard(v, false)));
-    const L2 = $("vac-team"); L2.replaceChildren(); if (!team.length) L2.append(el("div", "empty", "Keine freigegebenen Abwesenheiten.")); team.forEach(v => L2.append(vacCard(v, false)));
-    if (!canApprove()) return 0;
-    const pend = vacs.filter(v => statusOf(v.id) === "pending").sort((a, b) => (a.from || "").localeCompare(b.from || ""));
-    const L3 = $("chef-vac"); L3.replaceChildren(); if (!pend.length) L3.append(el("div", "empty", "Keine offenen Ferienanträge.")); pend.forEach(v => L3.append(vacCard(v, true)));
-    return pend.length;
-  }
-  $("vac-from").addEventListener("change", () => { if (!$("vac-to").value || $("vac-to").value < $("vac-from").value) $("vac-to").value = $("vac-from").value; });
-  $("form-vac").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const from = $("vac-from").value, to = $("vac-to").value || from;
-    if (to < from) { toast("Das Enddatum liegt vor dem Startdatum."); return; }
-    await act($("vac-submit"), async () => { await db.collection("requests").add({ type: "vacation", from, to, note: $("vac-note").value.trim(), userId: S.uid, createdAt: now() }); e.target.reset(); openForm("vac", false); }, "Antrag gesendet.");
   });
 
   // ---- TEAM: Personen anlegen (über eine zweite Firebase-Instanz, damit die Leitung angemeldet bleibt)
@@ -934,14 +867,6 @@ html, body { min-height: 100%; }
       throw Object.assign(new Error("exists"), { code: "login-exists" });
     } finally { await a2.signOut().catch(() => {}); }
   }
-  async function setPin(id, pin) {
-    const cur = S.users[id] && S.users[id].loginDomain;
-    const domain = await createLogin(id, pin, nextDomain(cur || LOGIN_DOMAIN));
-    const batch = db.batch();
-    batch.update(db.collection("users").doc(id), { loginDomain: domain });
-    batch.set(db.collection("logins").doc(id), { d: domain });
-    await batch.commit();
-  }
   $("u-gen").addEventListener("click", () => { $("u-pin").value = String(Math.floor(100000 + Math.random() * 900000)); });
   $("form-user").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -953,71 +878,59 @@ html, body { min-height: 100%; }
     await act(e.submitter, async () => {
       const domain = await createLogin(id, pin);
       const batch = db.batch();
-      batch.set(db.collection("users").doc(id), { name, active: true, infos: false, approve: false, colead: false, loginDomain: domain, createdAt: now(), createdBy: S.uid });
+      batch.set(db.collection("users").doc(id), { name, active: true, infos: false, colead: false, loginDomain: domain, createdAt: now(), createdBy: S.uid });
       batch.set(db.collection("logins").doc(id), { d: domain });
       await batch.commit();
       res.hidden = false; res.replaceChildren(); res.append(el("b", null, name + " ist angelegt. "), el("span", null, "Anmelden mit Name "), el("b", null, name), el("span", null, " und PIN "), el("b", null, pin), el("div", "meta", "Gib der Person die PIN persönlich weiter. Sie wird hier nicht mehr angezeigt."));
       e.target.reset();
-    }).catch(() => {});
+    });
   });
   function renderTeam() {
     if (!isLead()) return;
     const list = $("team-list"); list.replaceChildren();
-    const pending = Object.keys(S.users).filter(id => S.users[id].pending && S.users[id].active === false);
+    const pending = pendingMembers();
     if (pending.length) {
-      const box = el("div", "notice"); box.append(el("b", null, pending.length === 1 ? "1 Person wartet auf Freischaltung" : pending.length + " Personen warten auf Freischaltung"));
-      pending.forEach(id => { const r = el("div", "taker"); r.style.marginTop = "6px"; const w = el("span", "member"); person(w, id); r.append(w); const a = el("div", "actions"); const ok = el("button", "btn small ok", "Freischalten"); ok.type = "button"; ok.addEventListener("click", () => act(ok, () => db.collection("users").doc(id).update({ active: true, pending: false }), nameOf(id) + " ist freigeschaltet.")); const no = el("button", "btn small bad", "Ablehnen"); no.type = "button"; confirmBtn(no, "Ablehnen", () => db.collection("users").doc(id).update({ pending: false, active: false })); a.append(ok, no); r.append(a); box.append(r); });
+      const box = el("div", "pending-box"); box.append(el("b", null, pending.length === 1 ? "1 Person wartet auf Freischaltung" : pending.length + " Personen warten auf Freischaltung"));
+      pending.forEach(id => { const r = el("div", "taker"); const w = el("span", "member"); person(w, id); r.append(w); const a = el("div", "actions"); const ok = el("button", "btn small ok", "Freischalten"); ok.type = "button"; ok.addEventListener("click", () => act(ok, () => db.collection("users").doc(id).update({ active: true, pending: false }), nameOf(id) + " ist freigeschaltet.")); const no = el("button", "btn small bad", "Ablehnen"); no.type = "button"; confirmBtn(no, "Ablehnen", () => db.collection("users").doc(id).update({ pending: false, active: false })); a.append(ok, no); r.append(a); box.append(r); });
       list.append(box);
     }
-    const ids = Object.keys(S.users).filter(id => S.users[id].active !== false).sort((a, b) => nameOf(a).localeCompare(nameOf(b), "de")).filter(id => !S.teamSearch || nameOf(id).toLowerCase().includes(S.teamSearch) || id.includes(S.teamSearch));
-    if (!ids.length) list.append(el("div", "empty", "Noch niemand angelegt."));
+    const ids = activeMembers().sort((a, b) => nameOf(a).localeCompare(nameOf(b), "de")).filter(id => !S.teamSearch || nameOf(id).toLowerCase().includes(S.teamSearch) || id.includes(S.teamSearch));
+    if (!ids.length) list.append(el("div", "meta", S.teamSearch ? "Niemand gefunden." : "Noch niemand angelegt."));
+    const rowsBox = el("div");
     for (const id of ids) {
       const u = S.users[id]; const row = el("div", "trow");
-      const left = el("div"); const who = el("span", "member"); person(who, id); left.append(who, el("div", "meta", (groupsOf(id).length ? groupsOf(id).map(g => g.name).join(", ") : "Anmeldename: " + u.name))); row.append(left);
+      const left = el("div", "who-col"); const who = el("span", "member"); person(who, id); left.append(who); if (groupsOf(id).length) left.append(el("span", "meta", groupsOf(id).map(g => g.name).join(", "))); row.append(left);
       const roles = el("div", "roles");
       const isSelf = id === S.uid;
       const mayEdit = isOwner() || (isLead() && !u.owner); // Stv. darf alles ausser Teamleitung ändern
-      if (u.owner) roles.append(el("span", "pill open", "Teamleitung"), el("span", "meta", "kann nicht deaktiviert werden"));
+      if (u.owner) left.append(el("span", "pill open", "Teamleitung"));
       else {
-        [["infos", "Infos schreiben"], ["approve", "Freigaben"], ["colead", "Stv. Leitung"]].forEach(([k, label]) => {
+        [["infos", "Infos schreiben"], ["colead", "Stv. Leitung"]].forEach(([k, label]) => {
           const l = checkbox("role-" + k + "-" + id, label, u[k]); const i = l.querySelector("input"); i.disabled = !mayEdit || (isSelf && k === "colead");
           if (isSelf && k === "colead") l.title = "Die eigene Rolle kann nur die Teamleitung ändern.";
           i.addEventListener("change", () => db.collection("users").doc(id).update({ [k]: i.checked }).then(() => toast("Berechtigung gespeichert.")).catch(e => { toast(errMsg(e)); i.checked = !i.checked; }));
           roles.append(l);
         });
         const li = S.logins[id] || {};
-        if (!mayEdit) { row.append(roles); list.append(row); continue; }
-        if (isSelf) { roles.append(el("span", "meta", "dich selbst kann nur die Teamleitung deaktivieren")); row.append(roles); list.append(row); continue; }
-        if (li.reset) roles.append(el("span", "pill pending", "PIN wird beim nächsten Anmelden neu gewählt"));
-        else { const pinb = el("button", "btn small", "PIN zurücksetzen"); pinb.type = "button"; confirmBtn(pinb, "PIN zurücksetzen", async () => { await db.collection("logins").doc(id).set({ d: u.loginDomain || LOGIN_DOMAIN, reset: true }, { merge: true }); toast(u.name + " wählt beim nächsten Anmelden eine neue PIN."); }); roles.append(pinb); }
-        const off = el("button", "btn small bad", "Deaktivieren"); off.type = "button"; confirmBtn(off, "Deaktivieren", () => db.collection("users").doc(id).update({ active: false })); roles.append(off);
-        if (isOwner()) { const tr = el("button", "btn small", "Teamleitung übertragen"); tr.type = "button"; confirmBtn(tr, "Teamleitung übertragen", async () => { const batch = db.batch(); batch.update(db.collection("users").doc(id), { owner: true, colead: true, infos: true, approve: true, active: true }); batch.update(db.collection("users").doc(S.uid), { owner: false, colead: true }); await batch.commit(); toast(u.name + " ist jetzt Teamleitung, du bist Stv. Leitung."); }); roles.append(tr); }
+        if (mayEdit && !isSelf) {
+          if (li.reset) roles.append(el("span", "pill pending", "Wählt neue PIN"));
+          else { const pinb = el("button", "btn small", "PIN zurücksetzen"); pinb.type = "button"; confirmBtn(pinb, "PIN zurücksetzen", async () => { await db.collection("logins").doc(id).set({ d: u.loginDomain || LOGIN_DOMAIN, reset: true }, { merge: true }); toast(u.name + " wählt beim nächsten Anmelden eine neue PIN."); }); roles.append(pinb); }
+          const off = el("button", "btn small bad", "Deaktivieren"); off.type = "button"; confirmBtn(off, "Deaktivieren", () => db.collection("users").doc(id).update({ active: false })); roles.append(off);
+          if (isOwner()) { const tr = el("button", "btn small ghost", "Teamleitung übertragen"); tr.type = "button"; confirmBtn(tr, "Teamleitung übertragen", async () => { const batch = db.batch(); batch.update(db.collection("users").doc(id), { owner: true, colead: true, infos: true, active: true }); batch.update(db.collection("users").doc(S.uid), { owner: false, colead: true }); await batch.commit(); toast(u.name + " ist jetzt Teamleitung, du bist Stv. Leitung."); }); roles.append(tr); }
+        }
       }
-      row.append(roles); list.append(row);
+      row.append(roles); rowsBox.append(row);
     }
+    list.append(rowsBox);
     const gl = $("group-list"); gl.replaceChildren();
-    if (!S.groups.length) gl.append(el("div", "empty", "Noch keine Gruppen."));
+    if (!S.groups.length) gl.append(emptyState("Noch keine Gruppen", "Lege oben eine Gruppe an und wähle die Mitglieder aus."));
     for (const g of S.groups) {
-      const card = el("div", "card"); const top = el("div", "top"); top.append(el("div", "title", g.name));
+      const card = el("div", "card"); const top = el("div", "top"); const t = el("div"); t.append(el("div", "title", g.name), el("div", "meta", (g.memberIds || []).length + " Mitglieder")); top.append(t);
       const del = el("button", "btn small bad", "Gruppe löschen"); del.type = "button"; confirmBtn(del, "Gruppe löschen", () => db.collection("groups").doc(g.id).delete()); top.append(del); card.append(top);
       const ch = el("div", "checks");
       activeMembers().sort((a, b) => nameOf(a).localeCompare(nameOf(b), "de")).forEach(m => { const l = checkbox("gm-" + g.id + "-" + m, nameOf(m), (g.memberIds || []).includes(m)); const i = l.querySelector("input"); i.addEventListener("change", () => { const ids = new Set(g.memberIds || []); i.checked ? ids.add(m) : ids.delete(m); db.collection("groups").doc(g.id).update({ memberIds: [...ids] }).catch(e => { toast(errMsg(e)); i.checked = !i.checked; }); }); ch.append(l); });
       card.append(ch); gl.append(card);
     }
-  }
-  function showPinForm(row, id, name) {
-    if (row.querySelector(".pinform")) return;
-    const f = el("form", "pinform"); f.style.gridColumn = "1 / -1"; const r = el("div", "row");
-    const l = el("label", null, "Neue PIN für " + name + " (6 Ziffern)"); const i = el("input"); i.inputMode = "numeric"; i.maxLength = 6; i.required = true; i.pattern = "[0-9]{6}"; l.append(i);
-    const lb = el("label"); lb.style.alignSelf = "end"; const b = el("button", "btn primary small", "Speichern"); b.type = "submit"; const c = el("button", "btn small", "Abbrechen"); c.type = "button"; c.addEventListener("click", () => f.remove()); lb.append(b); const lc = el("label"); lc.style.alignSelf = "end"; lc.append(c);
-    r.append(l, lb, lc); f.append(r); row.append(f); i.focus();
-    f.addEventListener("submit", (e) => { e.preventDefault(); const pin = i.value.trim(); if (!/^\d{6}$/.test(pin)) { toast("Die PIN muss aus 6 Ziffern bestehen."); return; } act(b, async () => { await setPin(id, pin); f.remove(); }, "Neue PIN für " + name + " gespeichert: " + pin); });
-  }
-  function showPinHelp(id, name) {
-    const n = $("status-note"); n.hidden = false; n.classList.remove("bad"); n.replaceChildren();
-    n.append(el("b", null, "Neue PIN für " + name), el("div", null, "1. Öffne in der Firebase-Konsole «Authentication» → «Users»."), el("div", null, "2. Lösche den Eintrag " + emailFor(id) + "."), el("div", null, "3. Komm hierher zurück und lege die Person mit genau demselben Namen und einer neuen PIN nochmals an. Alle Daten bleiben erhalten."));
-    const x = el("button", "btn small", "Schliessen"); x.type = "button"; x.addEventListener("click", () => { n.hidden = true; }); n.append(x);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
   $("form-group").addEventListener("submit", async (e) => {
     e.preventDefault(); const name = $("group-name").value.trim(); if (!name) return;
@@ -1025,13 +938,15 @@ html, body { min-height: 100%; }
   });
 
   // ---- Einstellungen
-  const SWATCHES = ["#0f5c6e", "#1f4e79", "#2f6b3a", "#7a3b8f", "#a8411f", "#8a6a00", "#2b2b2b", "#b0276a"];
+  const SWATCHES = ["#0f5c6e", "#1f4e79", "#2f6b3a", "#5b3f9e", "#a8411f", "#8a6a00", "#1f2937", "#b0276a"];
   function applySettings() {
     const st = S.settings || {}; const name = st.name || "Team-Portal";
     ["brand-name", "l-name"].forEach(i => $(i).textContent = name); document.title = name;
     const mark = name.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase() || "TP"; ["brand-mark", "l-mark"].forEach(i => $(i).textContent = mark);
     $("brand-sub").textContent = st.sub || ""; $("brand-sub").hidden = !st.sub; $("l-sub").textContent = st.sub || "";
-    document.documentElement.style.setProperty("--accent-base", /^#[0-9a-f]{6}$/i.test(st.accent || "") ? st.accent : "#0f5c6e");
+    const accent = /^#[0-9a-f]{6}$/i.test(st.accent || "") ? st.accent : "#0f5c6e";
+    document.documentElement.style.setProperty("--accent-base", accent);
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", accent);
   }
   function renderSettings() {
     if (!isLead()) return;
@@ -1045,63 +960,39 @@ html, body { min-height: 100%; }
     await act(e.submitter, () => db.collection("settings").doc("portal").set({ name: $("set-name").value.trim(), sub: $("set-sub").value.trim(), accent: pressed ? pressed.dataset.c : "#0f5c6e", setupDone: true, updatedAt: now() }, { merge: true }), "Einstellungen gespeichert.");
   });
 
-  // ---- Startseite
-  function renderHome(pending) {
-    const h = new Date().getHours(); const g = h < 11 ? "Guten Morgen" : h < 18 ? "Guten Tag" : "Guten Abend";
-    $("greet").textContent = g + (S.me && S.me.name ? ", " + S.me.name.split(" ")[0] : "") + ".";
-    const t = today();
-    $("today-line").textContent = new Date().toLocaleDateString("de-CH", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-    const tiles = $("home-tiles"); tiles.replaceChildren();
-    const tile = (title, linkLabel, go) => { const d = el("div", "tile"); const hh = el("h3"); hh.append(el("span", null, title)); if (linkLabel) { const b = el("button", "lnk", linkLabel); b.type = "button"; b.addEventListener("click", go); hh.append(b); } d.append(hh); return d; };
-    if (canApprove() && pending > 0) { const d = tile("Wartet auf dich", "Zu den Freigaben ›", () => showTab("leitung")); d.classList.add("alert"); d.append(el("div", "big", pending === 1 ? "1 offene Anfrage" : pending + " offene Anfragen")); tiles.append(d); }
-    const vis = S.posts.filter(canSeePost);
-    const pinned = vis.filter(p => p.pinned).slice(0, 4);
-    const unreadP = vis.filter(p => !p.pinned && !S.myReads[p.id]).slice(0, 4);
-    const recent = vis.filter(p => !p.pinned && !unreadP.includes(p)).slice(0, Math.max(0, 3 - unreadP.length));
-    const d3 = tile(unreadCount() ? "Infos · " + unreadCount() + " neu" : "Wichtige Infos", "Alle Infos ›", () => showTab("infos"));
-    if (!pinned.length && !recent.length && !unreadP.length) d3.append(el("div", "meta", "Noch keine Infos."));
-    [...pinned, ...unreadP, ...recent].forEach(p => { const l = el("div", "line"); const b = el("button", "lnk", p.title || "(ohne Titel)"); b.type = "button"; b.style.textAlign = "left"; b.addEventListener("click", () => { S.openPosts.add(p.id); S.openPosts.delete("!" + p.id); S.cat = "all"; showTab("infos"); renderInfos(); }); l.append(b); if (!S.myReads[p.id]) l.append(el("span", "pill new", "Neu")); else if (p.pinned) l.append(el("span", "pill open", "Angeheftet")); d3.append(l); });
-    tiles.append(d3);
-    const open = S.reqs.filter(r => r.type === "swap" && statusOf(r.id) === "pending" && r.userId !== S.uid && r.date >= t).sort((a, b) => a.date.localeCompare(b.date));
-    const d2 = tile("Offene Schichten", "Tausch ›", () => showTab("anfragen", "tausch"));
-    if (!open.length) d2.append(el("div", "meta", "Niemand sucht gerade einen Tausch."));
-    open.slice(0, 5).forEach(o => { const l = el("div", "line"); l.append(el("span", "sn", fmtDate(o.date, { weekday: "short", day: "numeric", month: "short" })), el("span", "pn", o.shift + " · " + nameOf(o.userId))); d2.append(l); });
-    tiles.append(d2);
-    const away = S.reqs.filter(r => r.type === "vacation" && statusOf(r.id) === "approved" && r.from <= t && r.to >= t);
-    const d4 = tile("Heute abwesend", "Ferien ›", () => showTab("anfragen", "ferien"));
-    if (!away.length) d4.append(el("div", "meta", "Alle da."));
-    away.slice(0, 8).forEach(v => { const l = el("div", "line"); l.append(avatar(v.userId), el("span", "pn", nameOf(v.userId)), el("span", "meta", "bis " + fmtDate(v.to, { day: "numeric", month: "short" }))); d4.append(l); });
-    tiles.append(d4);
-  }
-  function renderStat(a, b) {
-    if (!(canApprove() || canInfo())) return;
+  // ---- Kennzahlen Leitung
+  function renderStat() {
+    if (!canInfo()) return;
     const st = $("lead-stat"); st.replaceChildren();
-    const add = (label, n) => { const sp = el("span"); sp.append(el("b", null, String(n)), document.createTextNode(" " + label)); st.append(sp); };
-    add("Mitarbeitende", activeMembers().length); add("Gruppen", S.groups.length); add("Infos", S.posts.length); add("offene Ferienanträge", b); add("offene Übernahmen", a);
+    let read = 0, total = 0; S.posts.forEach(p => { const r = readStats(p); read += r.read; total += r.total; });
+    const kpi = (label, val) => { const d = el("div", "kpi"); d.append(el("div", "kpi-l", label), el("div", "kpi-v", val)); st.append(d); };
+    kpi("Mitarbeitende", String(activeMembers().length)); kpi("Beiträge", String(S.posts.length)); kpi("Kapitel", String(S.cats.length)); kpi("Lesequote", total ? Math.round(100 * read / total) + " %" : "–");
   }
 
-  // ---- render orchestration
+  // ---- Darstellung
   let renderQueued = false;
   function applyRole() {
     $("who-name").textContent = S.me ? S.me.name : ""; $("who-role").textContent = roleLabel();
-    const lead = canApprove() || canInfo();
-    $("tab-leitung").hidden = !lead; $("lead-approve").hidden = !canApprove(); $("lead-cats").hidden = !canInfo(); $("lead-team").hidden = !isLead(); $("lead-settings").hidden = !isLead(); $("lead-help").hidden = !isLead();
+    const av = $("who-av"); av.textContent = initials(S.me && S.me.name); av.style.background = S.uid ? colorFor(S.uid) : ""; av.title = S.me ? S.me.name + " · " + roleLabel() : "";
+    const lead = canInfo();
+    $("tab-leitung").hidden = !lead; document.body.classList.toggle("single", !lead);
     $("lnk-fs").href = "https://console.firebase.google.com/project/" + firebaseConfig.projectId + "/firestore";
-    if ($("sec-leitung").hidden === false && !lead) showTab("heute");
+    if (lead) showLeadTab(S.leadTab);
+    if ($("sec-leitung").hidden === false && !lead) showTab("infos");
   }
   function renderAll() {
     if (renderQueued || !S.me) return; renderQueued = true;
-    queueMicrotask(async () => {
+    queueMicrotask(() => {
       renderQueued = false; applyRole(); applySettings();
-      const a = renderSwaps(), b = renderVac(); await renderInfos(); renderTeam();
+      renderInfos(); renderTeam();
       if (canInfo()) renderCats();
-      renderSettings(); renderStat(a, b);
-      const n = a + b; $("count-leitung").textContent = n ? String(n) : "";
-      renderHome(n);
+      renderSettings(); renderStat();
+      const n = isLead() ? pendingMembers().length : 0;
+      $("count-leitung").textContent = n ? String(n) : ""; $("count-team").textContent = n ? String(n) : "";
     });
   }
 
-  // ---- Login / Setup
+  // ---- Anmeldung / Einrichtung
   const showErr = (id, msg) => { const n = $(id); n.hidden = !msg; n.textContent = msg || ""; };
   function loginErr(e) { const c = e && e.code || ""; if (c.includes("wrong-password") || c.includes("user-not-found") || c.includes("invalid-credential") || c.includes("invalid-login")) return "Name oder PIN stimmt nicht. Der Name muss so geschrieben sein, wie die Leitung ihn angelegt hat."; if (c.includes("too-many-requests")) return "Zu viele Versuche. Bitte kurz warten."; if (c.includes("network")) return "Keine Verbindung."; return "Anmeldung nicht möglich (" + c + ")."; }
   $("form-login").addEventListener("submit", async (e) => {
@@ -1123,10 +1014,11 @@ html, body { min-height: 100%; }
       try { await auth.createUserWithEmailAndPassword(emailFor(id), pin); }
       catch (err) { if (err && err.code === "auth/email-already-in-use") await auth.signInWithEmailAndPassword(emailFor(id), pin); else throw err; }
       const batch = db.batch();
-      batch.set(db.collection("users").doc(id), { name, active: true, owner: true, colead: true, infos: true, approve: true, loginDomain: LOGIN_DOMAIN, createdAt: now() });
+      batch.set(db.collection("users").doc(id), { name, active: true, owner: true, colead: true, infos: true, loginDomain: LOGIN_DOMAIN, createdAt: now() });
       batch.set(db.collection("logins").doc(id), { d: LOGIN_DOMAIN });
       batch.set(db.collection("settings").doc("portal"), { name: org, sub: "", accent: "#0f5c6e", setupDone: true, createdAt: now() });
       batch.set(db.collection("categories").doc("allgemein"), { name: "Allgemein", order: 10, createdAt: now() });
+      batch.set(db.collection("categories").doc("anleitungen"), { name: "Anleitungen", order: 20, createdAt: now() });
       await batch.commit();
       S.settingUp = false; boot(auth.currentUser);
     } catch (err) { console.error(err); S.settingUp = false; showErr("setup-err", "Einrichten fehlgeschlagen: " + (err && err.code || err.message)); b.disabled = false; }
@@ -1166,7 +1058,7 @@ html, body { min-height: 100%; }
       try {
         for (let i = 0; i < 30; i++) { try { await a2.createUserWithEmailAndPassword(emailFor(id, domain), pin); break; } catch (err) { if (err && err.code === "auth/email-already-in-use") domain = nextDomain(domain); else throw err; } }
         const db2 = secondary.firestore(); const batch = db2.batch();
-        batch.set(db2.collection("users").doc(id), { name, active: false, pending: true, infos: false, approve: false, colead: false, loginDomain: domain, createdAt: now() });
+        batch.set(db2.collection("users").doc(id), { name, active: false, pending: true, infos: false, colead: false, loginDomain: domain, createdAt: now() });
         batch.set(db2.collection("logins").doc(id), { d: domain });
         await batch.commit();
       } finally { await a2.signOut().catch(() => {}); }
@@ -1184,6 +1076,7 @@ html, body { min-height: 100%; }
     stopAll();
     $("login").hidden = true; $("setup").hidden = true; $("register").hidden = true; $("app").hidden = true;
     const setupSnap = await db.collection("settings").doc("portal").get().catch(() => null);
+    if (setupSnap && setupSnap.exists) { S.settings = setupSnap.data(); applySettings(); }
     if (!user) {
       if (setupSnap && !setupSnap.exists) { $("setup").hidden = false; return; }
       $("login").hidden = false; $("login-pin").value = ""; return;
@@ -1196,17 +1089,15 @@ html, body { min-height: 100%; }
       $("login").hidden = false; showErr("login-err", "Dein Zugang ist noch nicht freigeschaltet (oder wurde deaktiviert). Bitte die Leitung fragen.");
       return;
     }
-    sub(db.collection("users"), s => { const m = {}; s.docs.forEach(d => m[d.id] = d.data()); S.users = m; S.me = m[S.uid] || null; if (S.me && S.me.active === false) { toast("Dein Zugang ist deaktiviert."); auth.signOut(); } if (S.me) { $("app").hidden = false; let saved = "heute"; try { saved = localStorage.getItem("tab") || "heute"; } catch (_) {} if (!$("app").dataset.booted) { $("app").dataset.booted = "1"; showTab(saved); } } }, (e) => { if (e.code === "permission-denied") { auth.signOut().then(() => showErr("login-err", "Dein Zugang ist noch nicht freigeschaltet (oder wurde deaktiviert). Bitte die Leitung fragen.")); } });
+    sub(db.collection("users"), s => { const m = {}; s.docs.forEach(d => m[d.id] = d.data()); S.users = m; S.me = m[S.uid] || null; if (S.me && S.me.active === false) { toast("Dein Zugang ist deaktiviert."); auth.signOut(); } if (S.me) { $("app").hidden = false; let saved = "infos"; try { saved = localStorage.getItem("tab") || "infos"; } catch (_) {} if (!$("app").dataset.booted) { $("app").dataset.booted = "1"; showTab(saved); } } }, (e) => { if (e.code === "permission-denied") { auth.signOut().then(() => showErr("login-err", "Dein Zugang ist noch nicht freigeschaltet (oder wurde deaktiviert). Bitte die Leitung fragen.")); } });
     sub(db.collection("settings").doc("portal"), s => { S.settings = s.exists ? s.data() : {}; applySettings(); });
     sub(db.collection("logins"), s => { const m = {}; s.docs.forEach(d => m[d.id] = d.data()); S.logins = m; }, () => {});
     sub(db.collection("groups"), s => { S.groups = rows(s).sort((a, b) => a.name.localeCompare(b.name)); });
     sub(db.collection("categories"), s => { S.cats = rows(s).sort((a, b) => (a.order || 0) - (b.order || 0) || (a.createdAt || "").localeCompare(b.createdAt || "")); });
     sub(db.collection("posts").orderBy("createdAt", "desc").limit(500), s => { S.posts = rows(s); });
-    sub(db.collection("requests").orderBy("createdAt", "desc").limit(1000), s => { S.reqs = rows(s); });
-    sub(db.collection("decisions"), s => { const m = {}; s.docs.forEach(d => m[d.id] = d.data()); S.decs = m; });
     sub(db.collection("reads"), s => { const m = {}; s.docs.forEach(d => m[d.id] = d.data()); S.reads = m; if (m[S.uid] && m[S.uid].posts) S.myReads = { ...m[S.uid].posts, ...S.myReads }; });
   }
-  auth.onAuthStateChanged(user => { if (!user) { S.me = null; S.uid = null; delete $("app").dataset.booted; } boot(user); });
+  auth.onAuthStateChanged(user => { if (!user) { S.me = null; S.uid = null; S.myReads = {}; delete $("app").dataset.booted; } boot(user); });
   applySettings();
 })();
 

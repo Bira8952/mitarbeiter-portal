@@ -15,7 +15,6 @@ service cloud.firestore {
     function isOwner()    { return signedIn() && userDoc().get('owner', false) == true; }
     function isLead()     { return signedIn() && (userDoc().get('owner', false) == true || userDoc().get('colead', false) == true); }
     function canInfo()    { return isLead() || (signedIn() && userDoc().get('infos', false) == true); }
-    function canApprove() { return isLead() || (signedIn() && userDoc().get('approve', false) == true); }
     function setupDone()  { return exists(/databases/$(db)/documents/settings/portal); }
 
     // Einstellungen: jeder darf lesen (für die Login-Seite), nur Inhaber ändert
@@ -37,7 +36,7 @@ service cloud.firestore {
       allow create: if request.auth != null && id == myId() && setupDone()
         && request.resource.data.get('active', true) == false && request.resource.data.get('pending', false) == true
         && request.resource.data.get('owner', false) != true && request.resource.data.get('colead', false) != true
-        && request.resource.data.get('infos', false) != true && request.resource.data.get('approve', false) != true
+        && request.resource.data.get('infos', false) != true
         && request.resource.data.get('loginDomain', '') == myDomain();
       // Berechtigungen und Deaktivieren: nur Inhaber; Inhaber-Flag kann nicht vergeben werden
       // Teamleitung darf alles ändern, auch die Leitung übertragen
@@ -101,22 +100,6 @@ service cloud.firestore {
     match /reads/{id} {
       allow read: if signedIn();
       allow write: if signedIn() && id == myId();
-    }
-
-    // Anfragen (Schichttausch, Übernahmen, Ferien): eigene erstellen/löschen
-    match /requests/{id} {
-      allow read: if signedIn();
-      allow create: if signedIn() && request.resource.data.userId == myId();
-      allow delete: if signedIn() && resource.data.userId == myId();
-      allow delete: if canApprove();
-      allow update: if false;
-    }
-
-    // Entscheidungen: nur Freigabe-Berechtigte
-    match /decisions/{id} {
-      allow read: if signedIn();
-      allow create, update: if canApprove() && request.resource.data.byId == myId();
-      allow delete: if canApprove();
     }
 
     match /{document=**} {
