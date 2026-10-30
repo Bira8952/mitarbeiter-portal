@@ -33,13 +33,13 @@ service cloud.firestore {
       allow create: if request.auth != null && !setupDone() && id == myId() && request.resource.data.get('owner', false) == true;
       // Danach: Leitung legt Personen an (nie als Inhaber)
       allow create: if isLead() && request.resource.data.get('owner', false) != true;
-      // Selbst registrieren: nur das eigene Konto, inaktiv und ohne Rechte, bis die Leitung freischaltet
+      // Selbst registrieren: nur das eigene Konto, nur diese Felder, inaktiv und ohne Rechte, bis die Leitung freischaltet
       allow create: if request.auth != null && id == myId() && setupDone()
-        && request.resource.data.get('active', true) == false && request.resource.data.get('pending', false) == true
-        && request.resource.data.get('owner', false) != true && request.resource.data.get('colead', false) != true
-        && request.resource.data.get('infos', false) != true
-        && request.resource.data.get('loginDomain', '') == myDomain();
-      // Berechtigungen und Deaktivieren: nur Inhaber; Inhaber-Flag kann nicht vergeben werden
+        && request.resource.data.keys().hasOnly(['name', 'active', 'pending', 'infos', 'colead', 'loginDomain', 'createdAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 60
+        && request.resource.data.active == false && request.resource.data.pending == true
+        && request.resource.data.get('infos', false) == false && request.resource.data.get('colead', false) == false
+        && request.resource.data.loginDomain == myDomain();
       // Teamleitung darf alles ändern, auch die Leitung übertragen
       allow update: if isOwner();
       // Stv. Leitung darf alle anderen ändern (auch Stv. ernennen), aber nie die Teamleitung und nie das Teamleitungs-Flag
@@ -50,12 +50,8 @@ service cloud.firestore {
         && request.resource.data.get('owner', false) == resource.data.get('owner', false)
         && request.resource.data.get('colead', false) == resource.data.get('colead', false)
         && request.resource.data.get('active', true) == true;
-      // Nach «PIN zurücksetzen» darf die Person ihre eigene Login-Version eintragen
-      allow update: if request.auth != null && id == myId()
-        && get(/databases/$(db)/documents/logins/$(id)).data.get('reset', false) == true
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['loginDomain'])
-        && request.resource.data.get('loginDomain', '') == myDomain();
-      allow delete: if false;
+      // Abgelehnte oder deaktivierte Personen (nie die Teamleitung) darf die Leitung endgültig entfernen
+      allow delete: if isLead() && id != myId() && resource.data.get('owner', false) != true && resource.data.get('active', true) == false;
     }
 
     // Welche Login-Version gilt für einen Namen (nur der Domain-Teil, keine Namen): für die Anmeldeseite lesbar
@@ -64,14 +60,9 @@ service cloud.firestore {
       allow list: if isLead();
       function targetIsOwner() { return get(/databases/$(db)/documents/users/$(id)).data.get('owner', false) == true; }
       allow create: if isLead() || (request.auth != null && id == myId() && !exists(/databases/$(db)/documents/users/$(id)));
-      // PIN zurücksetzen: Leitung bei allen ausser der Teamleitung (die nur bei sich selbst)
+      // Neue PIN festlegen: Leitung bei allen ausser der Teamleitung (die nur bei sich selbst)
       allow update: if isOwner() || (isLead() && !targetIsOwner());
-      // Nach «PIN zurücksetzen»: die Person selbst übernimmt die neue Login-Version
-      allow update: if request.auth != null && id == myId()
-        && resource.data.get('reset', false) == true
-        && request.resource.data.get('d', '') == myDomain()
-        && request.resource.data.get('reset', true) == false;
-      allow delete: if isLead();
+      allow delete: if isLead() && !targetIsOwner();
     }
 
     match /groups/{id} {
@@ -85,21 +76,29 @@ service cloud.firestore {
       allow create: if request.auth != null && !setupDone();
     }
 
+    // Beiträge: Redaktion und Leitung sehen alles, alle anderen nur Beiträge für alle oder für sich selbst
+    // («audience» enthält «all» oder die IDs der Personen, auch die Mitglieder der gewählten Gruppen)
     match /posts/{id} {
-      allow read: if signedIn();
+      allow read: if canInfo() || (signedIn() && ('all' in resource.data.audience || myId() in resource.data.audience));
       allow create: if canInfo() && request.resource.data.authorId == myId();
-      allow update, delete: if canInfo();
+      // Verfasser und Erstelldatum bleiben beim Bearbeiten erhalten
+      allow update: if canInfo() && request.resource.data.authorId == resource.data.authorId
+        && request.resource.data.get('createdAt', '') == resource.data.get('createdAt', '');
+      allow delete: if canInfo();
     }
 
+    // Bilder nur einzeln abrufbar (über ihre ID im Beitrag), nicht als ganze Liste
     match /images/{id} {
-      allow read: if signedIn();
+      allow get: if signedIn();
+      allow list: if canInfo();
       allow create: if canInfo() && request.resource.data.by == myId() && request.resource.data.data.size() < 900000;
       allow delete: if canInfo();
     }
 
-    // Lesebestätigungen: jeder nur die eigene
+    // Lesebestätigungen: jeder schreibt nur die eigene; alle lesen dürfen nur Redaktion und Leitung
     match /reads/{id} {
-      allow read: if signedIn();
+      allow get: if signedIn() && (id == myId() || canInfo());
+      allow list: if canInfo();
       allow write: if signedIn() && id == myId();
     }
 

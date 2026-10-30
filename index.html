@@ -186,6 +186,7 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible { outline: 
 .body ol ol > li::before, .editor ol ol > li::before { content: counter(step, lower-alpha); }
 .body blockquote, .editor blockquote { margin: 14px 0; padding: 4px 0 4px 18px; border-left: 3px solid var(--line); color: var(--muted); font-style: italic; font-size: 1.05em; }
 .body .ind, .editor .ind { margin: 0 0 0 36px; }
+.editor blockquote[style*="margin"] { font-style: normal; color: inherit; font-size: inherit; border-left: 0; padding: 0; margin: 0 0 0 36px !important; }
 .body mark, .editor mark { background: var(--hl-yellow); color: #111827; padding: 1px 3px; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .body mark.hl-green, .editor mark.hl-green { background: var(--hl-green); } .body mark.hl-blue, .editor mark.hl-blue { background: var(--hl-blue); }
 .body mark.hl-pink, .editor mark.hl-pink { background: var(--hl-pink); } .body mark.hl-orange, .editor mark.hl-orange { background: var(--hl-orange); }
@@ -390,7 +391,7 @@ mark.q { background: color-mix(in srgb, var(--hl-yellow) 70%, transparent); colo
 .editor { position: relative; min-height: 48vh; outline: none; }
 .editor.is-empty::before { content: attr(data-placeholder); position: absolute; top: 0; left: 0; color: #9aa4b2; pointer-events: none; }
 .editor font[size="1"] { font-size: .7em; } .editor font[size="2"] { font-size: .875em; } .editor font[size="4"] { font-size: 1.2em; }
-.editor font[size="5"] { font-size: 1.5em; } .editor font[size="6"] { font-size: 2em; } .editor font[size="7"] { font-size: 2.6em; }
+.editor font[size="3"] { font-size: inherit; } .editor font[size="5"] { font-size: 1.5em; } .editor font[size="6"] { font-size: 2em; } .editor font[size="7"] { font-size: 2.6em; }
 .cmp-side { position: sticky; top: 0; display: grid; gap: 14px; }
 .side-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: grid; gap: 12px; box-shadow: var(--shadow-sm); }
 .side-card h4 { margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
@@ -559,6 +560,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
 .titem.warn .ti { color: var(--warn); } .titem.read .ti { color: var(--accent); }
 .alldone .ei { width: 48px; height: 48px; border-radius: 16px; display: grid; place-items: center; margin: 0 auto 6px; background: var(--ok-soft); color: var(--ok); }
 .alldone .ei svg { width: 24px; height: 24px; }
+.pin-show { font-size: 30px; font-weight: 800; letter-spacing: .14em; font-variant-numeric: tabular-nums; text-align: center; padding: 4px 0; }
 .body ul.checklist, .editor ul.checklist { list-style: none; padding-left: 0; display: grid; gap: 8px; }
 .body ul.checklist > li, .editor ul.checklist > li { position: relative; padding-left: 32px; margin: 0; }
 .body ul.checklist > li::before, .editor ul.checklist > li::before { content: ""; position: absolute; left: 0; top: 4px; width: 18px; height: 18px; border: 2px solid var(--accent); border-radius: 5px; }
@@ -650,6 +652,14 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   .sheet-head::before { content: ""; position: absolute; left: 50%; top: -6px; width: 40px; height: 4px; border-radius: 2px; background: var(--line); transform: translateX(-50%); }
   .sheet-head b { font-size: 17px; }
   #toast { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+  .cmp-scroll { scroll-padding-bottom: 150px; }
+  .split .rb.caret { min-width: 32px; }
+  .composer .iconbtn, .reader .iconbtn { width: 42px; height: 42px; }
+  .composer .btn.small, .pop .btn.small, .ctxbar .btn, .tpl { height: 40px; }
+  .pop-form input { font-size: 16px; height: 42px; }
+  .pop-item { min-height: 44px; }
+  .editor table { display: block; overflow-x: auto; }
+  .editor th, .editor td { overflow-wrap: normal; min-width: 90px; }
   .bstat.minor { display: none; }
   .banner { padding: 20px 18px; }
   .banner-stats { margin-top: 14px; }
@@ -680,16 +690,6 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
         <div class="notice bad" id="login-err" hidden></div>
       </form>
       <p class="alt">Neu im Team? <button type="button" id="to-register">Zugang beantragen</button></p>
-    </div>
-    <div class="authbox" id="newpin" hidden>
-      <div><h2>Neue PIN wählen</h2><p class="lead">Deine PIN wurde zurückgesetzt. Wähle jetzt eine neue PIN mit 6 Ziffern.</p></div>
-      <form id="form-newpin">
-        <label>Neue PIN <input id="np-pin" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
-        <label>Neue PIN wiederholen <input id="np-pin2" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
-        <button class="btn primary" type="submit">Speichern und anmelden</button>
-        <button class="btn" type="button" id="np-back">Abbrechen</button>
-        <div class="notice bad" id="np-err" hidden></div>
-      </form>
     </div>
     <div class="authbox" id="register" hidden>
       <div><h2>Zugang beantragen</h2><p class="lead">Wähle deinen Namen und eine PIN. Die Leitung schaltet dich danach frei.</p></div>
@@ -843,10 +843,10 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
         <details><summary>… ich einen Beitrag oder eine Anleitung schreiben will?</summary><p>Infos → <b>Neuer Beitrag</b> (auf dem Handy: der runde <b>Plus-Knopf</b> unten rechts). Oben wählst du eine <b>Vorlage</b> (z. B. «Anleitung»), dann schreibst du wie in Word: Text markieren und im Menüband <b>Fett</b>, <b>Farbe</b>, <b>Textmarker</b>, <b>Grösse</b> usw. wählen. Bilder kannst du einfach hineinziehen. Rechts (auf dem Handy über den Knopf <b>Optionen</b> oben) wählst du Kapitel, <b>Titelbild</b> und wer den Beitrag sehen darf. Dein Entwurf wird automatisch gespeichert.</p></details>
         <details><summary>… ich Bilder verwenden will?</summary><p>Im Editor auf <b>Bild</b> tippen – auf dem Handy kannst du direkt ein Foto machen oder aus der Galerie wählen. Mehrere Bilder auf einmal werden als Galerie angezeigt. Ein <b>Titelbild</b> erscheint gross in der Leseansicht und klein in der Übersicht.</p></details>
         <details><summary>… ich sehen will, wer einen Beitrag gelesen hat?</summary><p>Beitrag öffnen → unten «Gelesen von …» → <b>Wer hat gelesen?</b>. In der Leitung → Übersicht stehen Beiträge, die noch viele nicht gelesen haben.</p></details>
-        <details><summary>… jemand die PIN vergessen hat?</summary><p>Leitung → Mitarbeitende → bei der Person auf <b>⋯</b> → <b>PIN zurücksetzen</b>. Die Person gibt beim nächsten Öffnen nur ihren Namen ein und wählt eine neue PIN.</p></details>
-        <details><summary>… sich jemand neu registriert hat?</summary><p>Es erscheint in der Leitung → Übersicht unter «Zu erledigen». Auf <b>Freischalten</b> tippen. Erst danach kann sich die Person anmelden.</p></details>
+        <details><summary>… jemand die PIN vergessen hat?</summary><p>Leitung → Mitarbeitende → bei der Person auf <b>⋯</b> → <b>Neue PIN festlegen</b> → <b>Speichern</b>. Gib die angezeigte PIN der Person persönlich weiter. Die alte PIN gilt danach nicht mehr.</p></details>
+        <details><summary>… sich jemand neu registriert hat?</summary><p>Es erscheint in der Leitung → Übersicht unter «Zu erledigen». Auf <b>Freischalten</b> tippen – erst danach kann sich die Person anmelden. Kennst du die Person nicht, tippe auf <b>Ablehnen</b>.</p></details>
         <details><summary>… jemand das Team verlässt?</summary><p>Leitung → Mitarbeitende → <b>⋯</b> → <b>Deaktivieren</b>. Die Person kann sich nicht mehr anmelden. Unter «Deaktiviert» kannst du sie später wieder aktivieren.</p></details>
-        <details><summary>… «Name oder PIN stimmt nicht» erscheint?</summary><p>Der Name muss so geschrieben sein, wie er angelegt wurde (Gross-/Kleinschreibung ist egal). Im Zweifel: «PIN zurücksetzen» wie oben.</p></details>
+        <details><summary>… «Name oder PIN stimmt nicht» erscheint?</summary><p>Der Name muss so geschrieben sein, wie er angelegt wurde (Gross-/Kleinschreibung ist egal). Im Zweifel: «Neue PIN festlegen» wie oben.</p></details>
         <details><summary>… «Keine Berechtigung» erscheint?</summary><p>Die Sicherheitsregeln in Firebase fehlen oder sind veraltet. Link «Firebase: Daten und Regeln» → Reiter <b>Regeln</b> → Inhalt der Datei <code>firestore.rules</code> einfügen → <b>Veröffentlichen</b>.</p></details>
         <details><summary>… ein Bild nicht hochgeladen werden kann?</summary><p>Nur Fotos (JPG, PNG). HEIC vom iPhone geht nicht direkt – vorher als JPG teilen. Bei vielen Bildern etwas warten, sie werden nacheinander verarbeitet.</p></details>
         <details><summary>… die App geändert werden soll?</summary><p>Die App ist eine einzige Datei <code>index.html</code>. Neue Version bekommen → bei Netlify unter <b>Deploys</b> den Ordner ins Feld ziehen → Seite mit Strg + F5 neu laden.</p></details>
@@ -1039,7 +1039,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   // =================================================
 
   const $ = (id) => document.getElementById(id);
-  const S = { uid: null, me: null, users: {}, logins: {}, groups: [], cats: [], posts: [], reads: {}, myReads: {}, settings: {}, cat: "all", leadTab: "overview", search: "", teamSearch: "", editingPost: null, readsOpen: new Set(), unsub: [], imgCache: {}, readerId: null, pushed: false, listOrder: [], postsLoaded: false, needRoute: false, lastColor: "red", lastHl: "yellow", dirty: false, design: null, designDirty: false, offOpen: false, pop: null, popAnchor: null };
+  const S = { sessionUploads: new Set(), draftHold: false, roleUnsub: [], roleMode: null, groupsLoaded: false, syncingAud: false, uploading: 0, uid: null, me: null, users: {}, logins: {}, groups: [], cats: [], posts: [], reads: {}, myReads: {}, settings: {}, cat: "all", leadTab: "overview", search: "", teamSearch: "", editingPost: null, readsOpen: new Set(), unsub: [], imgCache: {}, readerId: null, pushed: false, listOrder: [], postsLoaded: false, needRoute: false, lastColor: "red", lastHl: "yellow", dirty: false, design: null, designDirty: false, offOpen: false, pop: null, popAnchor: null };
   try { S.leadTab = localStorage.getItem("leadTab") || "overview"; } catch (_) {}
 
   if (firebaseConfig.apiKey === "HIER_EINTRAGEN") { document.body.innerHTML = '<div class="auth-main"><div class="authbox"><h2>Noch nicht eingerichtet</h2><p>In der Datei <b>index.html</b> fehlen die Firebase-Zugangsdaten (Abschnitt KONFIGURATION ganz oben im Skript).</p></div></div>'; return; }
@@ -1171,8 +1171,8 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     if (c === "auth/network-request-failed" || c.includes("unavailable")) return "Keine Verbindung. Bitte Internet prüfen.";
     return "Speichern hat nicht geklappt" + (c ? " (" + c + ")" : "") + ". Bitte nochmals versuchen.";
   }
-  const nameOf = (id) => id === S.uid ? "Du" : ((S.users[id] && S.users[id].name) || "Teammitglied");
-  const initials = (n) => (n || "?").split(/\s+/).filter(Boolean).map(w => w[0]).join("").slice(0, 2).toUpperCase() || "?";
+  const nameOf = (id) => id === S.uid ? "Du" : String((S.users[id] && S.users[id].name) || "Teammitglied");
+  const initials = (n) => String(n || "?").split(/\s+/).map(w => Array.from(w).find(ch => /[\p{L}\p{N}]/u.test(ch)) || "").join("").slice(0, 2).toUpperCase() || "?";
   function colorFor(id) { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360; return "hsl(" + h + " 42% 46%)"; }
   function avatar(id) { const a = el("span", "av", initials(S.users[id] && S.users[id].name)); a.style.background = colorFor(id); return a; }
   function person(meta, id) { meta.append(avatar(id), el("span", null, nameOf(id))); }
@@ -1186,14 +1186,14 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   }
   async function act(btn, fn, okMsg) { if (btn) btn.disabled = true; try { await fn(); if (okMsg) toast(okMsg); } catch (e) { console.error(e); toast(errMsg(e)); } finally { if (btn) btn.disabled = false; } }
   const activeMembers = () => Object.keys(S.users).filter(id => S.users[id].active !== false);
-  const pendingMembers = () => Object.keys(S.users).filter(id => S.users[id].pending && S.users[id].active === false);
+  const pendingMembers = () => Object.keys(S.users).filter(id => S.users[id].pending === true && S.users[id].active === false);
   const groupsOf = (uid) => S.groups.filter(g => (g.memberIds || []).includes(uid));
 
   // ---- Berechtigungen
-  const isOwner = () => !!(S.me && S.me.owner);
-  const isLead = () => isOwner() || !!(S.me && S.me.colead);
-  const canInfo = () => isLead() || !!(S.me && S.me.infos);
-  const roleLabel = () => isOwner() ? "Teamleitung" : S.me && S.me.colead ? "Stv. Leitung" : S.me && S.me.infos ? "Redaktion" : "Team";
+  const isOwner = () => !!S.me && S.me.owner === true;
+  const isLead = () => isOwner() || (!!S.me && S.me.colead === true);
+  const canInfo = () => isLead() || (!!S.me && S.me.infos === true);
+  const roleLabel = () => isOwner() ? "Teamleitung" : isLead() ? "Stv. Leitung" : canInfo() ? "Redaktion" : "Team";
   function canSeePost(p) {
     if (canInfo()) return true;
     const people = p.visibleTo || [], groups = p.visibleGroups || [];
@@ -1214,19 +1214,24 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   const DIV_CLS = new Set(["gallery", "callout", "warn", "tip", "ind"]);
   const UL_CLS = new Set(["checklist"]);
   const IMG_CLS = new Set(["size-s", "size-m", "size-l"]);
+  const NAMED = { black: "#000000", white: "#ffffff", red: "#ff0000", maroon: "#800000", darkred: "#8b0000", orange: "#ffa500", yellow: "#ffff00", olive: "#808000", lime: "#00ff00", green: "#008000", darkgreen: "#006400", teal: "#008080", aqua: "#00ffff", cyan: "#00ffff", darkcyan: "#008b8b", blue: "#0000ff", navy: "#000080", darkblue: "#00008b", purple: "#800080", fuchsia: "#ff00ff", magenta: "#ff00ff", darkmagenta: "#8b008b", pink: "#ffc0cb", gray: "#808080", grey: "#808080", silver: "#c0c0c0", darkgray: "#a9a9a9", lightgray: "#d3d3d3", gold: "#ffd700", brown: "#a52a2a" };
+  // Textmarker-Namen aus Word (mso-highlight) → eigene Marker
+  const HL_WORD = { yellow: "yellow", darkyellow: "orange", green: "green", brightgreen: "green", lime: "green", darkgreen: "green", turquoise: "blue", cyan: "blue", aqua: "blue", teal: "blue", blue: "blue", darkblue: "blue", pink: "pink", magenta: "pink", fuchsia: "pink", violet: "purple", purple: "purple", darkmagenta: "purple", red: "red", darkred: "red", gray: "gray", lightgray: "gray", darkgray: "gray", gray25: "gray", gray50: "gray" };
   function rgbOf(v) {
     v = String(v || "").trim().toLowerCase(); let m;
+    if (NAMED[v]) v = NAMED[v];
     if ((m = /^#([0-9a-f]{3})$/.exec(v))) return [...m[1]].map(c => parseInt(c + c, 16));
     if ((m = /^#([0-9a-f]{6})$/.exec(v))) return [0, 2, 4].map(i => parseInt(m[1].slice(i, i + 2), 16));
     if ((m = /^rgba?\(\s*(\d+)[\s,]+(\d+)[\s,]+(\d+)(?:[\s,/]+([\d.]+%?))?\s*\)$/.exec(v))) { if (m[4] !== undefined && parseFloat(m[4]) === 0) return null; return [+m[1], +m[2], +m[3]]; }
     return null;
   }
-  function nearest(v, list) {
+  function nearest(v, list, tol) {
     const c = rgbOf(v); if (!c) return null;
-    if (Math.min(...c) > 232 || Math.max(...c) < 48) return null; // fast weiss oder schwarz = keine Farbe
     let best = null, bd = 1e9;
     for (const [k, , hex] of list) { const p = rgbOf(hex); const d = Math.hypot(p[0] - c[0], p[1] - c[1], p[2] - c[2]); if (d < bd) { bd = d; best = k; } }
-    return bd <= 100 ? best : null;
+    if (bd <= 6) return best; // genau eine Farbe aus dem Menü
+    if (Math.min(...c) > 232 || Math.max(...c) < 48 || Math.max(...c) - Math.min(...c) < 40) return null; // weiss, schwarz, grau = Standardtext
+    return bd <= (tol || 100) ? best : null;
   }
   function fontKey(face) { const first = String(face || "").split(",")[0].replace(/["']/g, "").trim().toLowerCase(); const f = FONTS.find(x => x[0] && (x[2].toLowerCase() === first || x[1].toLowerCase() === first)); return f ? f[0] : null; }
   function sizeFromCss(v) {
@@ -1246,8 +1251,8 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     else if (css("font-size")) { dropPrefix(spanCls, "fs-"); const k = sizeFromCss(css("font-size")); if (k) spanCls.add(k); }
     const face = raw === "FONT" ? ch.getAttribute("face") : css("font-family");
     if (face) { dropPrefix(spanCls, "ff-"); const k = fontKey(face); if (k) spanCls.add("ff-" + k); }
-    const bg = css("background-color");
-    if (bg) { const k = nearest(bg, HIGHLIGHTS); hl = k ? "hl-" + k : null; plainMark = false; }
+    const mso = /mso-highlight:\s*([a-z0-9]+)/i.exec(ch.getAttribute("style") || ""), bg = css("background-color");
+    if (mso || bg) { const k = mso && HL_WORD[mso[1].toLowerCase()] || (bg && HL_WORD[bg]) || nearest(bg, HIGHLIGHTS, 160); hl = k ? "hl-" + k : null; plainMark = false; }
     const wr = [];
     if (/^(bold|bolder|[6-9]00)$/.test(css("font-weight"))) wr.push("B");
     if (css("font-style") === "italic") wr.push("I");
@@ -1345,7 +1350,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   // ---- Logo, App-Symbol und Farbe
   const validLogo = (s) => typeof s === "string" && s.length < 420000 && /^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(s);
   const validHex = (s) => /^#[0-9a-f]{6}$/i.test(s || "") ? s : null;
-  const orgInitials = (n) => (n || "Team Portal").split(/[\s-]+/).filter(Boolean).map(w => w[0]).join("").slice(0, 2).toUpperCase() || "TP";
+  const orgInitials = (n) => String(n || "Team Portal").split(/[\s-]+/).map(w => Array.from(w).find(ch => /[\p{L}\p{N}]/u.test(ch)) || "").join("").slice(0, 2).toUpperCase() || "TP";
   function paintMark(m, st) {
     const logo = validLogo(st.logo), key = [logo ? st.logo.length + st.logo.slice(-24) : "", st.logoIcon || "", st.name || ""].join("|");
     if (m.dataset.k === key) return; m.dataset.k = key;
@@ -1365,7 +1370,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   function updateFavicon(st) {
     const logo = validLogo(st.logo), key = [logo ? st.logo.length + st.logo.slice(-24) : "", st.logoIcon || "", st.accent || "", st.name || ""].join("|");
     if (key === favKey) return; favKey = key;
-    const href = logo ? st.logo : "data:image/svg+xml," + encodeURIComponent(logoSvg(st));
+    let href; try { href = logo ? st.logo : "data:image/svg+xml," + encodeURIComponent(logoSvg(st)); } catch (_) { return; }
     $("fav").href = href;
     const img = new Image();
     img.onload = () => {
@@ -1394,16 +1399,21 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   function openPop(anchor, build) {
     closePop();
     const p = el("div", "pop"); build(p); document.body.append(p);
-    const r = anchor.getBoundingClientRect(), w = p.offsetWidth, h = p.offsetHeight;
-    let top = r.bottom + 6; if (top + h > innerHeight - 8) top = Math.max(8, r.top - h - 6);
-    p.style.left = Math.min(Math.max(8, r.left), innerWidth - w - 8) + "px"; p.style.top = top + "px";
-    S.pop = p; S.popAnchor = anchor; anchor.setAttribute("aria-expanded", "true");
+    S.pop = p; S.popAnchor = anchor; anchor.setAttribute("aria-expanded", "true"); placePop();
     return p;
+  }
+  // Menü neben dem Knopf halten, immer ganz im Bild (auch wenn sich der Inhalt ändert)
+  function placePop() {
+    const p = S.pop, a = S.popAnchor; if (!p || !a) return;
+    const r = a.getBoundingClientRect(), w = p.offsetWidth, h = p.offsetHeight;
+    let top = r.bottom + 6; if (top + h > innerHeight - 8) top = r.top - h - 6;
+    p.style.left = Math.min(Math.max(8, r.left), innerWidth - w - 8) + "px"; p.style.top = Math.max(8, Math.min(top, innerHeight - h - 8)) + "px";
   }
   function closePop() { if (!S.pop) return; S.pop.remove(); S.pop = null; if (S.popAnchor) S.popAnchor.setAttribute("aria-expanded", "false"); S.popAnchor = null; }
   const togglePop = (anchor, fn) => { if (S.popAnchor === anchor) closePop(); else fn(anchor); };
   document.addEventListener("mousedown", (e) => { if (S.pop && !S.pop.contains(e.target) && !(S.popAnchor && S.popAnchor.contains(e.target))) closePop(); }, true);
-  window.addEventListener("resize", () => closePop());
+  let lastW = innerWidth;
+  window.addEventListener("resize", () => { if (innerWidth !== lastW) { lastW = innerWidth; closePop(); } else placePop(); });
 
   // ---- Bereiche
   const tabs = ["infos", "leitung"];
@@ -1473,6 +1483,24 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   const byUpdated = (a, b) => (b.updatedAt || b.createdAt || "").localeCompare(a.updatedAt || a.createdAt || "");
   const visiblePosts = () => S.posts.filter(canSeePost);
   const restricted = (p) => (p.visibleTo || []).length || (p.visibleGroups || []).length;
+  // Wer einen Beitrag lesen darf: «all» oder die IDs der Personen inkl. Gruppenmitglieder (prüfen auch die Firebase-Regeln)
+  function audienceOf(visibleTo, visibleGroups, authorId) {
+    if (!(visibleTo || []).length && !(visibleGroups || []).length) return ["all"];
+    const set = new Set(visibleTo || []); S.groups.filter(g => (visibleGroups || []).includes(g.id)).forEach(g => (g.memberIds || []).forEach(id => set.add(id)));
+    if (authorId) set.add(authorId);
+    return [...set].sort();
+  }
+  const sameList = (a, b) => Array.isArray(a) && a.length === b.length && a.every((x, i) => x === b[i]);
+  // Redaktion/Leitung: Empfängerlisten nachführen (ältere Beiträge, geänderte Gruppen)
+  async function syncAudience() {
+    if (!canInfo() || S.syncingAud || !S.postsLoaded || !S.groupsLoaded) return;
+    const todo = S.posts.filter(p => !sameList(p.audience, audienceOf(p.visibleTo, p.visibleGroups, p.authorId)));
+    if (!todo.length) return;
+    S.syncingAud = true;
+    try {
+      for (let i = 0; i < todo.length; i += 400) { const batch = db.batch(); todo.slice(i, i + 400).forEach(p => batch.update(db.collection("posts").doc(p.id), { audience: audienceOf(p.visibleTo, p.visibleGroups, p.authorId) })); await batch.commit(); }
+    } catch (e) { console.error(e); } finally { S.syncingAud = false; }
+  }
   function hlText(text, q) {
     const f = document.createDocumentFragment(); if (!q) { f.append(text); return f; }
     const low = text.toLowerCase(); let i = 0, j;
@@ -1518,7 +1546,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   }
   function renderBanner(vis, unread, pinned) {
     const h = new Date().getHours(), g = h < 11 ? "Guten Morgen" : h < 18 ? "Guten Tag" : "Guten Abend";
-    $("greet").textContent = g + (S.me && S.me.name ? ", " + S.me.name.split(" ")[0] : "");
+    $("greet").textContent = g + (S.me && S.me.name ? ", " + String(S.me.name).split(" ")[0] : "");
     $("today-line").textContent = new Date().toLocaleDateString("de-CH", { weekday: "long", day: "numeric", month: "long" });
     const n = unread.length;
     $("hero-lead").textContent = !vis.length ? "Hier findest du alle wichtigen Infos und Anleitungen für das Team." : n ? (n === 1 ? "1 neuer Beitrag wartet auf dich." : n + " neue Beiträge warten auf dich.") : "Du bist auf dem neuesten Stand – alles gelesen.";
@@ -1692,7 +1720,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     if (canInfo()) {
       btn("pen", "Bearbeiten", "primary").addEventListener("click", () => { closeReader(); startPost(p); });
       btn("copy", "Duplizieren").addEventListener("click", () => { closeReader(); startPost(p, true); });
-      confirmBtn(btn("trash", "Löschen", "bad"), "Löschen", async () => { await db.collection("posts").doc(p.id).delete(); toast("Beitrag gelöscht."); closeReader(); });
+      confirmBtn(btn("trash", "Löschen", "bad"), "Löschen", async () => { await db.collection("posts").doc(p.id).delete(); dropImages(postImageIds(p), p.id); toast("Beitrag gelöscht."); closeReader(); });
     }
     const order = readerOrder(), i = order.indexOf(id);
     $("r-prev").disabled = i <= 0; $("r-next").disabled = i < 0 || i >= order.length - 1;
@@ -1753,6 +1781,14 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   function afterEdit() { const s = getSelection(); if (s.rangeCount && ed.contains(s.anchorNode)) savedRange = s.getRangeAt(0).cloneRange(); markDirty(); updateRibbon(); }
   function exec(cmd, val) { restoreSel(); try { document.execCommand(cmd, false, val); } catch (_) {} afterEdit(); }
   function insertHTML(html) { restoreSel(); if (!document.execCommand("insertHTML", false, html)) ed.insertAdjacentHTML("beforeend", html); afterEdit(); }
+  function insertBlock(html) {
+    restoreSel();
+    const sel = getSelection(), n = sel.rangeCount ? sel.getRangeAt(0).startContainer : null, e = n && (n.nodeType === 1 ? n : n.parentElement);
+    const blk = e && e.closest("p, h2, h3, li, blockquote, div, td, th"), inside = blk && blk !== ed && ed.contains(blk);
+    if (inside ? (blk.textContent || "").trim() : n && n.nodeType === 3 && n.nodeValue.trim()) { try { document.execCommand("insertParagraph"); } catch (_) {} }
+    if (!document.execCommand("insertHTML", false, html)) ed.insertAdjacentHTML("beforeend", html);
+    afterEdit();
+  }
   function withCss(on, fn) { try { document.execCommand("styleWithCSS", false, on); } catch (_) {} fn(); try { document.execCommand("styleWithCSS", false, false); } catch (_) {} }
   // «Automatisch» = fast schwarz; wird beim Speichern zu «keine Farbe»
   function applyColor(k) { restoreSel(); withCss(false, () => document.execCommand("foreColor", false, k ? hexOf(COLORS, k) : "#0f172a")); afterEdit(); }
@@ -1762,13 +1798,32 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   function applySize(v) { restoreSel(); withCss(false, () => document.execCommand("fontSize", false, v)); afterEdit(); }
   function stepSize(d) { restoreSel(); const v = String(Math.min(7, Math.max(1, +curSize() + d))); withCss(false, () => document.execCommand("fontSize", false, v)); afterEdit(); }
   function applyCase(mode) {
-    restoreSel(); const t = getSelection().toString();
-    if (!t) { toast("Zuerst Text markieren."); return; }
-    const L = "de-CH", low = t.toLocaleLowerCase(L);
-    const out = mode === "upper" ? t.toLocaleUpperCase(L) : mode === "lower" ? low
-      : mode === "title" ? low.replace(/(^|[\s\-–(«"„])(\p{L})/gu, (m, a, b) => a + b.toLocaleUpperCase(L))
-      : low.replace(/(^\s*|[.!?]\s+)(\p{L})/gu, (m, a, b) => a + b.toLocaleUpperCase(L));
-    document.execCommand("insertText", false, out); afterEdit();
+    restoreSel(); const sel = getSelection();
+    if (!sel.rangeCount || sel.isCollapsed) { toast("Zuerst Text markieren."); return; }
+    const r = sel.getRangeAt(0), L = "de-CH", root = r.commonAncestorContainer.nodeType === 3 ? r.commonAncestorContainer.parentNode : r.commonAncestorContainer;
+    const nodes = [], w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n;
+    while ((n = w.nextNode())) if (r.intersectsNode(n)) nodes.push(n);
+    const sc = r.startContainer, so = r.startOffset, ec = r.endContainer, eo = r.endOffset;
+    const blockOf = (x) => { const e = x.nodeType === 1 ? x : x.parentElement; return (e && e.closest("p, h2, h3, li, blockquote, div, td, th")) || ed; };
+    const pre = document.createRange(); pre.setStart(blockOf(sc), 0); pre.setEnd(sc, so);
+    let ctx = pre.toString(), endShift = 0, prevBlock = blockOf(sc);
+    nodes.forEach(t => {
+      if (blockOf(t) !== prevBlock) { prevBlock = blockOf(t); ctx = ""; }
+      const a = t === sc ? so : 0, b = t === ec ? eo : t.nodeValue.length, seg = t.nodeValue.slice(a, b); let out = "";
+      for (const ch of seg) {
+        const wordStart = !ctx || /[\s\-–(«"„/]$/.test(ctx), sentStart = !ctx.trim() || /[.!?:]\s*$/.test(ctx);
+        const up = mode === "upper" || (mode === "title" && wordStart) || (mode === "sentence" && sentStart && /\p{L}/u.test(ch));
+        const c = up ? ch.toLocaleUpperCase(L) : ch.toLocaleLowerCase(L); out += c; ctx += c;
+      }
+      t.nodeValue = t.nodeValue.slice(0, a) + out + t.nodeValue.slice(b);
+      if (t === ec) endShift = out.length - seg.length;
+    });
+    try { const nr = document.createRange(); nr.setStart(sc, so); nr.setEnd(ec, eo + endShift); sel.removeAllRanges(); sel.addRange(nr); } catch (_) {}
+    afterEdit();
+  }
+  function deleteNode(node) {
+    ed.focus({ preventScroll: true }); const r = document.createRange(); r.selectNode(node); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    if (!document.execCommand("delete") && node.isConnected) node.remove();
   }
   function cellCtx() {
     const n = savedRange && savedRange.startContainer, e = n && (n.nodeType === 1 ? n : n.parentElement), cell = e && e.closest("td, th");
@@ -1789,6 +1844,11 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       let face = ""; try { face = String(document.queryCommandValue("fontName") || ""); } catch (_) {}
       $("fmt-font").value = fontKey(face) || "";
       $("tablebar").hidden = !cellCtx();
+      if (phone.matches) {
+        const rr = s.getRangeAt(0), rect = rr.getClientRects()[0] || (rr.startContainer.nodeType === 1 ? rr.startContainer : rr.startContainer.parentElement).getBoundingClientRect();
+        const limit = ribbon.getBoundingClientRect().top - 16 - ($("imgbar").hidden && $("tablebar").hidden ? 0 : 54);
+        if (rect && rect.bottom > limit) $("cmp-scroll").scrollBy({ top: rect.bottom - limit + 24 });
+      }
     });
   }
   document.addEventListener("selectionchange", () => {
@@ -1819,11 +1879,11 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   }
   const casePop = (a) => menuPop(a, "Gross-/Kleinschreibung", [["Aa", "Satzanfang gross", () => applyCase("sentence")], ["aa", "kleinbuchstaben", () => applyCase("lower")], ["AA", "GROSSBUCHSTABEN", () => applyCase("upper")], ["Ab", "Jedes Wort Gross", () => applyCase("title")]]);
   const insertPop = (a) => menuPop(a, "Einfügen", [
-    ["info", "Hinweis-Box", () => insertHTML('<div class="callout"><b>Hinweis:</b>&nbsp;</div><p><br></p>')],
-    ["bulb", "Tipp-Box", () => insertHTML('<div class="callout tip"><b>Tipp:</b>&nbsp;</div><p><br></p>')],
-    ["alert", "Wichtig-Box", () => insertHTML('<div class="callout warn"><b>Wichtig:</b>&nbsp;</div><p><br></p>')],
-    ["clock", "Tagesablauf", () => insertHTML(PLAN)],
-    ["minus", "Trennlinie", () => insertHTML("<hr><p><br></p>")]
+    ["info", "Hinweis-Box", () => insertBlock('<div class="callout"><b>Hinweis:</b>&nbsp;</div><p><br></p>')],
+    ["bulb", "Tipp-Box", () => insertBlock('<div class="callout tip"><b>Tipp:</b>&nbsp;</div><p><br></p>')],
+    ["alert", "Wichtig-Box", () => insertBlock('<div class="callout warn"><b>Wichtig:</b>&nbsp;</div><p><br></p>')],
+    ["clock", "Tagesablauf", () => insertBlock(PLAN)],
+    ["minus", "Trennlinie", () => insertBlock("<hr><p><br></p>")]
   ]);
   function linkAt() { const n = savedRange && savedRange.startContainer, e = n && (n.nodeType === 1 ? n : n.parentElement), a = e && e.closest("a"); return a && ed.contains(a) ? a : null; }
   function normUrl(v) {
@@ -1839,7 +1899,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       keepSel(p, true); p.append(el("div", "pop-h", cur ? "Link bearbeiten" : "Link einfügen"));
       const f = el("form", "pop-form"), i = el("input"); i.type = "text"; i.inputMode = "url"; i.placeholder = "www.beispiel.ch, E-Mail oder Telefon"; i.value = cur ? cur.getAttribute("href") : "";
       const ok = el("button", "btn small primary", "OK"); ok.type = "submit"; f.append(i, ok); p.append(f);
-      if (cur) { const rm = el("button", "pop-item bad", "Link entfernen"); rm.type = "button"; rm.addEventListener("click", () => { cur.replaceWith(...cur.childNodes); closePop(); markDirty(); }); p.append(rm); }
+      if (cur) { const rm = el("button", "pop-item bad", "Link entfernen"); rm.type = "button"; rm.addEventListener("click", () => { closePop(); ed.focus({ preventScroll: true }); const r = document.createRange(); r.selectNodeContents(cur); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(r); if (!document.execCommand("unlink")) cur.replaceWith(...cur.childNodes); afterEdit(); }); p.append(rm); }
       f.addEventListener("submit", (e) => {
         e.preventDefault(); const url = normUrl(i.value);
         if (!url) { toast("Bitte eine gültige Adresse eingeben."); return; }
@@ -1865,7 +1925,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     else if (c === "grow") stepSize(1);
     else if (c === "shrink") stepSize(-1);
     else if (c === "img") $("img-file").click();
-    else if (c === "table") insertHTML(TABLE_HTML);
+    else if (c === "table") insertBlock(TABLE_HTML);
     else if (c) exec(c);
   });
   ribbon.addEventListener("scroll", () => closePop(), { passive: true });
@@ -1877,7 +1937,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   $("imgbar").addEventListener("mousedown", (e) => { if (e.target.closest("button")) e.preventDefault(); });
   $("imgbar").addEventListener("click", (e) => {
     const b = e.target.closest("button[data-size]"); if (!b || !selImg) return;
-    if (b.dataset.size === "remove") { const g = selImg.closest(".gallery"); selImg.remove(); if (g && !g.querySelector("img")) g.remove(); selImg = null; $("imgbar").hidden = true; markDirty(); return; }
+    if (b.dataset.size === "remove") { const g = selImg.closest(".gallery"); deleteNode(selImg); if (g && g.isConnected && !g.querySelector("img")) g.remove(); selImg = null; $("imgbar").hidden = true; markDirty(); return; }
     if (selImg.closest(".gallery")) { const g = selImg.closest(".gallery"); g.parentNode.insertBefore(selImg, g); if (!g.querySelector("img")) g.remove(); }
     selImg.classList.remove("size-s", "size-m", "size-l"); selImg.classList.add(b.dataset.size); markDirty();
   });
@@ -1889,7 +1949,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     else if (t === "col") rows.forEach(tr => { const ref = tr.children[ci], c = document.createElement(ref && ref.tagName === "TH" ? "th" : "td"); c.innerHTML = "<br>"; if (ref) ref.after(c); else tr.append(c); });
     else if (t === "delrow") { if (rows.length > 1) row.remove(); else table.remove(); }
     else if (t === "delcol") { if (row.children.length > 1) rows.forEach(tr => { if (tr.children[ci]) tr.children[ci].remove(); }); else table.remove(); }
-    else if (t === "del") table.remove();
+    else if (t === "del") deleteNode(table);
     if (t !== "row" && t !== "col") { savedRange = null; $("tablebar").hidden = true; }
     markDirty();
   });
@@ -1901,16 +1961,30 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       img.src = url;
     });
   }
+  function setUploading(d) {
+    S.uploading = Math.max(0, S.uploading + d); const b = $("post-submit");
+    b.disabled = S.uploading > 0; b.textContent = S.uploading > 0 ? "Bild lädt …" : S.editingPost ? "Speichern" : "Veröffentlichen";
+  }
   async function uploadImages(files) {
-    const st = $("img-status"); st.hidden = false; const ids = [];
-    for (let i = 0; i < files.length; i++) {
-      st.textContent = files.length > 1 ? "Bild " + (i + 1) + " von " + files.length + " wird hochgeladen …" : "Bild wird hochgeladen …";
-      try { const data = await shrinkImage(files[i]); const ref = await db.collection("images").add({ data, by: S.uid, createdAt: now() }); S.imgCache[ref.id] = data; ids.push(ref.id); }
-      catch (e) { console.error(e); toast("Ein Bild konnte nicht hochgeladen werden."); break; }
-    }
-    st.hidden = true; if (!ids.length) return;
+    const st = $("img-status"); st.hidden = false; const ids = []; setUploading(1); toast(files.length > 1 ? files.length + " Bilder werden hochgeladen …" : "Bild wird hochgeladen …");
+    try {
+      for (let i = 0; i < files.length; i++) {
+        st.textContent = files.length > 1 ? "Bild " + (i + 1) + " von " + files.length + " wird hochgeladen …" : "Bild wird hochgeladen …";
+        try { const data = await shrinkImage(files[i]); const ref = await db.collection("images").add({ data, by: S.uid, createdAt: now() }); S.imgCache[ref.id] = data; S.sessionUploads.add(ref.id); ids.push(ref.id); }
+        catch (e) { console.error(e); toast("Ein Bild konnte nicht hochgeladen werden."); break; }
+      }
+    } finally { st.hidden = true; setUploading(-1); }
+    if (!ids.length || $("composer").hidden) return;
     const tag = (id, cls) => '<img data-id="' + id + '" src="' + S.imgCache[id] + '" alt=""' + (cls ? ' class="' + cls + '"' : "") + ">";
     insertHTML(ids.length === 1 ? tag(ids[0], "size-l") + "<p><br></p>" : '<div class="gallery">' + ids.map(id => tag(id)).join("") + "</div><p><br></p>");
+  }
+  // Bilder, die kein Beitrag und kein Entwurf mehr verwendet, werden gelöscht
+  const imageIdsOf = (html) => [...new DOMParser().parseFromString(String(html || ""), "text/html").querySelectorAll("img[data-id]")].map(i => i.getAttribute("data-id")).filter(validId);
+  const postImageIds = (p) => [...imageIdsOf(p.html), p.cover, p.coverThumb].filter(validId);
+  function draftImageIds() { const d = readDraft(); return d ? [...imageIdsOf(d.html), d.cover && d.cover.id, d.cover && d.cover.thumb].filter(validId) : []; }
+  function dropImages(ids, skipPostId) {
+    const used = new Set(draftImageIds()); S.posts.forEach(p => { if (p.id !== skipPostId) postImageIds(p).forEach(x => used.add(x)); });
+    [...new Set(ids)].filter(x => validId(x) && !used.has(x)).forEach(x => { delete S.imgCache[x]; db.collection("images").doc(x).delete().catch(e => console.error(e)); });
   }
   // Titelbild: grosses Bild für die Leseansicht, kleines für Listen und Karten
   function paintCover() {
@@ -1923,14 +1997,15 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   $("cover-remove").addEventListener("click", () => { S.cover = null; paintCover(); markDirty(); });
   $("cover-file").addEventListener("change", async () => {
     const f = $("cover-file").files[0]; $("cover-file").value = ""; if (!f) return;
-    const st = $("cover-state"); st.hidden = false; st.textContent = "Titelbild wird hochgeladen …"; $("cover-pick").disabled = true;
+    const st = $("cover-state"); st.hidden = false; st.textContent = "Titelbild wird hochgeladen …"; $("cover-pick").disabled = true; setUploading(1); toast("Titelbild wird hochgeladen …");
     try {
       const big = await shrinkImage(f, 1600, .82), small = await shrinkImage(f, 480, .74);
       const r1 = await db.collection("images").add({ data: big, by: S.uid, createdAt: now() });
       const r2 = await db.collection("images").add({ data: small, by: S.uid, createdAt: now() });
-      S.imgCache[r1.id] = big; S.imgCache[r2.id] = small; S.cover = { id: r1.id, thumb: r2.id }; paintCover(); markDirty();
+      S.imgCache[r1.id] = big; S.imgCache[r2.id] = small; S.sessionUploads.add(r1.id); S.sessionUploads.add(r2.id);
+      if (!$("composer").hidden) { S.cover = { id: r1.id, thumb: r2.id }; paintCover(); markDirty(); toast("Titelbild hochgeladen."); }
     } catch (e) { console.error(e); toast("Das Titelbild konnte nicht hochgeladen werden."); }
-    st.hidden = true; $("cover-pick").disabled = false;
+    finally { st.hidden = true; $("cover-pick").disabled = false; setUploading(-1); }
   });
   $("img-file").addEventListener("change", () => { const files = [...$("img-file").files]; $("img-file").value = ""; if (files.length) uploadImages(files); });
   ed.addEventListener("paste", (e) => {
@@ -1961,11 +2036,14 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const row = $("tpl-row"); row.replaceChildren(el("span", null, "Vorlage:"));
     TEMPLATES.forEach(t => {
       const b = el("button", "tpl"), lab = el("span", null, t.label); b.type = "button"; b.append(icon(t.e), lab);
-      let armed = false, tm;
+      let armed = false, armedAt = 0, tm;
       b.addEventListener("click", () => {
-        if (((ed.textContent || "").trim() || ed.querySelector("img, table")) && !armed) { armed = true; lab.textContent = "Inhalt ersetzen?"; tm = setTimeout(() => { armed = false; lab.textContent = t.label; }, 3500); return; }
+        if (((ed.textContent || "").trim() || ed.querySelector("img, table")) && !armed) { armed = true; armedAt = Date.now(); lab.textContent = "Inhalt ersetzen?"; tm = setTimeout(() => { armed = false; lab.textContent = t.label; }, 4000); return; }
+        if (armed && Date.now() - armedAt < 700) return;
         clearTimeout(tm); armed = false; lab.textContent = t.label;
-        ed.innerHTML = t.html; if (!$("post-title").value.trim() && t.title) $("post-title").value = t.title;
+        ed.focus(); const r = document.createRange(); r.selectNodeContents(ed); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(r);
+        if (!document.execCommand("insertHTML", false, t.html)) ed.innerHTML = t.html;
+        if (!$("post-title").value.trim() && t.title) $("post-title").value = t.title;
         const c = t.cat && S.cats.find(x => t.cat.test(x.name)); if (c) $("post-cat").value = c.id;
         savedRange = null; markDirty(); ed.focus();
       });
@@ -1979,11 +2057,12 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   const clearDraft = () => { try { localStorage.removeItem(draftKey()); } catch (_) {} };
   function stripSrc(html) { const doc = new DOMParser().parseFromString(html, "text/html"); doc.querySelectorAll("img").forEach(i => i.removeAttribute("src")); return doc.body.innerHTML; }
   function saveDraft() {
-    if (S.editingPost || $("composer").hidden) return;
+    if (S.editingPost || S.draftHold || $("composer").hidden) return;
     try {
       const html = stripSrc(ed.innerHTML), title = $("post-title").value;
       if (!title.trim() && !(ed.textContent || "").trim() && !/<img|<table/.test(html) && !S.cover) { clearDraft(); return; }
-      localStorage.setItem(draftKey(), JSON.stringify({ title, html, catId: $("post-cat").value, cover: S.cover, at: now() }));
+      const vis = $("post-vis").value, groups = S.groups.filter(g => $("pg-" + g.id) && $("pg-" + g.id).checked).map(g => g.id), people = activeMembers().filter(m => $("pp-" + m) && $("pp-" + m).checked);
+      localStorage.setItem(draftKey(), JSON.stringify({ title, html, catId: $("post-cat").value, cover: S.cover, vis, groups, people, pinned: $("post-pin").checked, at: now() }));
       $("draft-state").textContent = "Entwurf gespeichert · " + new Date().toLocaleTimeString("de-CH", { hour: "2-digit", minute: "2-digit" });
     } catch (_) {}
   }
@@ -1992,7 +2071,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     $("wc").textContent = String(w); $("rt").textContent = w ? "ca. " + Math.max(1, Math.round(w / 200)) + " Min." : "–";
     ed.classList.toggle("is-empty", !t && !ed.querySelector("img, table, hr"));
   }
-  function markDirty() { S.dirty = true; $("draft-banner").hidden = true; updateCount(); clearTimeout(draftT); draftT = setTimeout(saveDraft, 700); }
+  function markDirty() { S.dirty = true; updateCount(); if (S.draftHold) return; clearTimeout(draftT); draftT = setTimeout(saveDraft, 700); }
   ed.addEventListener("input", () => { markDirty(); updateRibbon(); });
   $("post-title").addEventListener("input", markDirty);
   $("post-title").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); ed.focus(); } });
@@ -2001,9 +2080,18 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     $("post-title").value = d.title || ""; ed.innerHTML = toEditorHTML(sanitize(d.html || "")); hydrateImages(ed);
     if (d.catId && catOf(d.catId)) $("post-cat").value = d.catId;
     S.cover = d.cover && validId(d.cover.id) ? { id: d.cover.id, thumb: validId(d.cover.thumb) ? d.cover.thumb : d.cover.id } : null; paintCover();
-    $("draft-banner").hidden = true; S.dirty = true; updateCount();
+    const some = d.vis === "some"; $("post-vis").value = some ? "some" : "all"; $("post-vis-box").hidden = !some;
+    S.groups.forEach(g => { const i = $("pg-" + g.id); if (i) i.checked = some && (d.groups || []).includes(g.id); });
+    activeMembers().forEach(m => { const i = $("pp-" + m); if (i) i.checked = some && (d.people || []).includes(m); });
+    $("post-pin").checked = !!d.pinned;
+    S.draftHold = false; $("draft-banner").hidden = true; S.dirty = true; updateCount();
   });
-  $("draft-discard").addEventListener("click", () => { clearDraft(); $("draft-banner").hidden = true; });
+  $("draft-discard").addEventListener("click", () => {
+    const ids = draftImageIds(); clearDraft(); dropImages(ids, null);
+    S.draftHold = false; $("draft-banner").hidden = true; if (S.dirty) saveDraft();
+  });
+  ["post-vis", "post-pin", "post-cat"].forEach(id => $(id).addEventListener("change", () => { if (!$("composer").hidden) markDirty(); }));
+  $("post-vis-box").addEventListener("change", () => markDirty());
 
   // Öffnen, schliessen, speichern
   function checkbox(id, label, checked) { const l = el("label", "check"), i = el("input"); i.type = "checkbox"; i.id = id; i.checked = !!checked; l.append(i, el("span", null, label)); return l; }
@@ -2017,7 +2105,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const sel = $("post-cat"); sel.replaceChildren(); S.cats.forEach(c => { const o = el("option", null, c.name); o.value = c.id; sel.append(o); });
     sel.value = p && catOf(p.catId) ? p.catId : (catOf(S.cat) ? S.cat : S.cats[0].id);
     $("post-title").value = p ? (dup ? (p.title || "") + " (Kopie)" : p.title || "") : "";
-    ed.innerHTML = p ? toEditorHTML(sanitize(p.html || ("<p>" + esc(p.text || "") + "</p>"))) : "";
+    ed.innerHTML = p ? toEditorHTML(sanitize(p.html || ("<p>" + esc(p.text || "") + "</p>"))) : "<p><br></p>";
     if (p) hydrateImages(ed);
     S.cover = p && validId(p.cover) ? { id: p.cover, thumb: validId(p.coverThumb) ? p.coverThumb : p.cover } : null; paintCover();
     $("composer").classList.remove("opts");
@@ -2029,7 +2117,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     if (!S.groups.length) gb.append(el("span", "meta", "Noch keine Gruppen."));
     const pb = $("post-people"); pb.replaceChildren();
     activeMembers().sort((a, b) => nameOf(a).localeCompare(nameOf(b), "de")).forEach(m => pb.append(checkbox("pp-" + m, nameOf(m), p && (p.visibleTo || []).includes(m))));
-    const d = p ? null : readDraft();
+    const d = S.editingPost ? null : readDraft(); S.draftHold = !!d; S.sessionUploads = new Set(); setUploading(0);
     $("draft-banner").hidden = !d; if (d) $("draft-text").textContent = "Du hast einen Entwurf" + (d.title ? " «" + d.title + "»" : "") + " vom " + fmtWhen(d.at) + ".";
     $("tpl-row").hidden = !!S.editingPost; renderTemplates();
     S.dirty = false; updateCount();
@@ -2037,8 +2125,12 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     setTimeout(() => (p ? ed : $("post-title")).focus({ preventScroll: true }), 30);
   }
   function closeComposer(force) {
-    if (!force && S.editingPost && S.dirty && !window.confirm("Änderungen verwerfen?")) return;
-    if (!force && !S.editingPost && S.dirty) { saveDraft(); toast("Entwurf gespeichert – du kannst später weiterschreiben."); }
+    if (!force && S.dirty) {
+      if (S.editingPost && !window.confirm("Änderungen verwerfen?")) return;
+      if (!S.editingPost && S.draftHold && !window.confirm("Dieser Text wird nicht gespeichert, weil schon ein anderer Entwurf existiert. Trotzdem schliessen?")) return;
+      if (!S.editingPost && !S.draftHold) { saveDraft(); toast("Entwurf gespeichert – du kannst später weiterschreiben."); }
+    }
+    if (!force && S.sessionUploads) dropImages([...S.sessionUploads], null);
     clearTimeout(draftT); closePop();
     $("composer").hidden = true; $("composer").classList.remove("opts"); S.editingPost = null; S.dirty = false; savedRange = null; unlock();
   }
@@ -2066,12 +2158,15 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const visibleTo = some ? activeMembers().filter(m => $("pp-" + m) && $("pp-" + m).checked) : [];
     if (some && !visibleGroups.length && !visibleTo.length) { $("composer").classList.add("opts"); toast("Wähle mindestens eine Person oder Gruppe."); return; }
     const html = sanitize(ed.innerHTML), text = (ed.innerText || "").replace(/\s+/g, " ").trim();
+    if (S.uploading) { toast("Bitte warten – ein Bild wird noch hochgeladen."); return; }
     if (!text && !/<img|<table/.test(html) && !S.cover) { toast("Der Beitrag ist noch leer."); ed.focus(); return; }
-    const data = { catId: $("post-cat").value, title, text: text.slice(0, 400), html, cover: S.cover ? S.cover.id : "", coverThumb: S.cover ? (S.cover.thumb || S.cover.id) : "", pinned: $("post-pin").checked, visibleTo, visibleGroups, updatedAt: now() };
+    const data = { catId: $("post-cat").value, title, text: text.slice(0, 400), html, audience: audienceOf(visibleTo, visibleGroups, S.editingPost ? S.editingPost.authorId : S.uid), cover: S.cover ? S.cover.id : "", coverThumb: S.cover ? (S.cover.thumb || S.cover.id) : "", pinned: $("post-pin").checked, visibleTo, visibleGroups, updatedAt: now() };
     const editing = S.editingPost;
     await act($("post-submit"), async () => {
       if (editing) await db.collection("posts").doc(editing.id).update(data);
-      else { await db.collection("posts").add({ ...data, authorId: S.uid, createdAt: now() }); clearDraft(); }
+      else { await db.collection("posts").add({ ...data, authorId: S.uid, createdAt: now() }); if (!S.draftHold) clearDraft(); }
+      const keep = new Set([...imageIdsOf(html), data.cover, data.coverThumb]);
+      dropImages([...S.sessionUploads, ...(editing ? postImageIds(editing) : [])].filter(x => !keep.has(x)), editing ? editing.id : null);
       closeComposer(true);
     }, editing ? "Gespeichert." : "Beitrag veröffentlicht.");
   });
@@ -2099,12 +2194,11 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     };
     if (isLead()) pendingMembers().forEach(id => item("warn", "userPlus", nameOf(id) + " möchte ins Team", "Hat sich registriert und wartet auf deine Freischaltung.", [
       btn("Freischalten", "ok", (b) => act(b, () => db.collection("users").doc(id).update({ active: true, pending: false }), nameOf(id) + " ist freigeschaltet.")),
-      btn("Ablehnen", "bad", () => db.collection("users").doc(id).update({ pending: false, active: false }), true)]));
+      btn("Ablehnen", "bad", () => rejectMember(id), true)]));
     if (!S.cats.length) item("info", "folder", "Lege ein erstes Kapitel an", "Kapitel ordnen die Infos, z. B. «Allgemein» und «Anleitungen».", [btn("Kapitel anlegen", "primary", () => showLeadTab("cats"))]);
     else if (!S.posts.length) item("info", "pen", "Schreibe den ersten Beitrag", "Mit der Vorlage «Anleitung» geht das in wenigen Minuten.", [btn("Beitrag schreiben", "primary", () => startPost(null))]);
     const st2 = S.settings || {};
     if (isLead() && !validLogo(st2.logo) && !SYMBOLS[st2.logoIcon]) item("info", "palette", "Gib dem Portal euer Logo", "Eigenes Logo hochladen oder ein Symbol wählen – erscheint auch als App-Symbol auf dem Handy.", [btn("Logo wählen", "", () => { showLeadTab("design"); renderDesign(); })]);
-    if (isLead()) Object.keys(S.logins).filter(id => S.logins[id].reset && S.users[id] && S.users[id].active !== false).forEach(id => item("info", "key", nameOf(id) + " wählt eine neue PIN", "Passiert automatisch beim nächsten Anmelden – du musst nichts tun.", []));
     const day = Date.now() - 864e5;
     S.posts.map(p => ({ p, r: readStats(p) })).filter(x => x.r.total && x.r.read < x.r.total && new Date(x.p.createdAt || 0).getTime() < day)
       .sort((a, b) => a.r.read / a.r.total - b.r.read / b.r.total).slice(0, 5)
@@ -2115,15 +2209,20 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   // ---- LEITUNG: Mitarbeitende (Rolle per Auswahl, weitere Aktionen im «⋯»-Menü)
   const ROLES = [["team", "Team"], ["redaktion", "Redaktion"], ["stv", "Stv. Leitung"]];
   const ROLE_DATA = { team: { infos: false, colead: false }, redaktion: { infos: true, colead: false }, stv: { infos: true, colead: true } };
-  const roleOf = (u) => u.colead ? "stv" : u.infos ? "redaktion" : "team";
+  const roleOf = (u) => u.colead === true ? "stv" : u.infos === true ? "redaktion" : "team";
   const byName = (a, b) => nameOf(a).localeCompare(nameOf(b), "de");
+  async function rejectMember(id) {
+    const name = nameOf(id), batch = db.batch();
+    batch.delete(db.collection("users").doc(id)); batch.delete(db.collection("logins").doc(id));
+    await batch.commit(); toast("Anmeldung von " + name + " abgelehnt.");
+  }
   function renderTeam() {
     if (!isLead()) return;
     const list = $("team-list"); list.replaceChildren();
     const pending = pendingMembers();
     if (pending.length) {
       const box = el("div", "pending-box"); box.append(el("b", null, pending.length === 1 ? "1 Person wartet auf Freischaltung" : pending.length + " Personen warten auf Freischaltung"));
-      pending.forEach(id => { const r = el("div", "taker"), w = el("span", "member"), a = el("div", "actions"); person(w, id); const ok = el("button", "btn small ok", "Freischalten"); ok.type = "button"; ok.addEventListener("click", () => act(ok, () => db.collection("users").doc(id).update({ active: true, pending: false }), nameOf(id) + " ist freigeschaltet.")); const no = el("button", "btn small bad", "Ablehnen"); no.type = "button"; confirmBtn(no, "Ablehnen", () => db.collection("users").doc(id).update({ pending: false, active: false })); a.append(ok, no); r.append(w, a); box.append(r); });
+      pending.forEach(id => { const r = el("div", "taker"), w = el("span", "member"), a = el("div", "actions"); person(w, id); const ok = el("button", "btn small ok", "Freischalten"); ok.type = "button"; ok.addEventListener("click", () => act(ok, () => db.collection("users").doc(id).update({ active: true, pending: false }), nameOf(id) + " ist freigeschaltet.")); const no = el("button", "btn small bad", "Ablehnen"); no.type = "button"; confirmBtn(no, "Ablehnen", () => rejectMember(id)); a.append(ok, no); r.append(w, a); box.append(r); });
       list.append(box);
     }
     const ids = activeMembers().sort(byName).filter(id => !S.teamSearch || nameOf(id).toLowerCase().includes(S.teamSearch) || id.includes(S.teamSearch));
@@ -2131,7 +2230,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const box = el("div");
     for (const id of ids) {
       const u = S.users[id], row = el("div", "trow"), left = el("div", "who-col"), who = el("span", "member"); person(who, id); left.append(who);
-      const info = []; if (groupsOf(id).length) info.push(groupsOf(id).map(g => g.name).join(", ")); if ((S.logins[id] || {}).reset) info.push("wählt beim nächsten Anmelden eine neue PIN");
+      const info = []; if (groupsOf(id).length) info.push(groupsOf(id).map(g => g.name).join(", ")); 
       if (info.length) left.append(el("div", "meta", info.join(" · ")));
       row.append(left);
       const isSelf = id === S.uid, mayEdit = isOwner() || (isLead() && !u.owner);
@@ -2155,12 +2254,30 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       list.append(d);
     }
   }
+  function pinForm(p, id) {
+    const u = S.users[id], name = String(u.name);
+    p.replaceChildren(el("div", "pop-h", "Neue PIN für " + name));
+    const f = el("form", "pop-form"), i = el("input"), ok = el("button", "btn small primary", "Speichern");
+    i.inputMode = "numeric"; i.maxLength = 6; i.autocomplete = "off"; i.setAttribute("aria-label", "Neue PIN, 6 Ziffern"); i.value = String(Math.floor(100000 + Math.random() * 900000)); ok.type = "submit";
+    f.append(i, ok); p.append(f, el("div", "meta", "Die alte PIN gilt danach nicht mehr.")); placePop();
+    f.addEventListener("submit", async (e) => {
+      e.preventDefault(); const pin = i.value.trim(); if (!/^\d{6}$/.test(pin)) { toast("Die PIN muss aus 6 Ziffern bestehen."); return; }
+      ok.disabled = true;
+      try {
+        const domain = await createLogin(id, pin, nextDomain(u.loginDomain || LOGIN_DOMAIN));
+        const batch = db.batch(); batch.update(db.collection("users").doc(id), { loginDomain: domain }); batch.set(db.collection("logins").doc(id), { d: domain }); await batch.commit();
+        const done = el("button", "btn small primary", "Fertig"); done.type = "button"; done.addEventListener("click", closePop);
+        p.replaceChildren(el("div", "pop-h", "Neue PIN gespeichert"), el("div", "pin-show", pin), el("div", "meta", "Gib diese PIN " + name + " persönlich weiter. Sie wird nicht mehr angezeigt."), done); placePop();
+      } catch (err) { console.error(err); toast(errMsg(err)); ok.disabled = false; }
+    });
+    setTimeout(() => i.select(), 0);
+  }
   function personMenu(anchor, id) {
-    const u = S.users[id], li = S.logins[id] || {};
+    const u = S.users[id];
     openPop(anchor, p => {
-      p.append(el("div", "pop-h", u.name));
+      p.append(el("div", "pop-h", String(u.name)));
       const item = (label, cls, fn) => { const b = el("button", "pop-item" + (cls ? " " + cls : ""), label); b.type = "button"; confirmBtn(b, label, async () => { await fn(); closePop(); }); p.append(b); };
-      if (!li.reset) item("PIN zurücksetzen", "", async () => { await db.collection("logins").doc(id).set({ d: u.loginDomain || LOGIN_DOMAIN, reset: true }, { merge: true }); toast(u.name + " wählt beim nächsten Anmelden eine neue PIN."); });
+      const pinBtn = el("button", "pop-item", "Neue PIN festlegen"); pinBtn.type = "button"; pinBtn.addEventListener("click", () => pinForm(p, id)); p.append(pinBtn);
       item("Deaktivieren", "bad", async () => { await db.collection("users").doc(id).update({ active: false }); toast(u.name + " ist deaktiviert."); });
       if (isOwner()) item("Teamleitung übertragen", "", async () => { const batch = db.batch(); batch.update(db.collection("users").doc(id), { owner: true, colead: true, infos: true, active: true }); batch.update(db.collection("users").doc(S.uid), { owner: false, colead: true }); await batch.commit(); toast(u.name + " ist jetzt Teamleitung, du bist Stv. Leitung."); });
     });
@@ -2312,7 +2429,8 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   $("form-settings").addEventListener("submit", async (e) => {
     e.preventDefault(); const d = designState();
     await act($("set-save"), async () => {
-      await db.collection("settings").doc("portal").set({ name: d.name.trim(), sub: d.sub.trim(), accent: d.accent, logo: d.logo || "", logoIcon: d.logoIcon || "", setupDone: true, updatedAt: now() }, { merge: true });
+      const noEmoji = (t) => t.replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu, "").replace(/\s+/g, " ").trim();
+      await db.collection("settings").doc("portal").set({ name: noEmoji(d.name), sub: noEmoji(d.sub), accent: d.accent, logo: d.logo || "", logoIcon: d.logoIcon || "", setupDone: true, updatedAt: now() }, { merge: true });
       S.designDirty = false; S.design = null; renderDesign();
     }, "Design gespeichert.");
   });
@@ -2338,18 +2456,18 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       const n = isLead() ? pendingMembers().length : 0;
       ["count-leitung", "count-team", "count-todo"].forEach(i => { $(i).textContent = n ? String(n) : ""; });
       if (S.needRoute) { S.needRoute = false; routeHash(); }
+      syncAudience();
     });
   }
 
   // ---- Anmeldung / Einrichtung
   const showErr = (id, msg) => { const n = $(id); n.hidden = !msg; n.textContent = msg || ""; };
-  function showAuth(which) { $("auth").hidden = !which; ["login", "newpin", "register", "setup"].forEach(k => { $(k).hidden = k !== which; }); if (which) $("app").hidden = true; }
+  function showAuth(which) { $("auth").hidden = !which; ["login", "register", "setup"].forEach(k => { $(k).hidden = k !== which; }); if (which) $("app").hidden = true; }
   function loginErr(e) { const c = e && e.code || ""; if (c.includes("wrong-password") || c.includes("user-not-found") || c.includes("invalid-credential") || c.includes("invalid-login")) return "Name oder PIN stimmt nicht. Der Name muss so geschrieben sein, wie die Leitung ihn angelegt hat."; if (c.includes("too-many-requests")) return "Zu viele Versuche. Bitte kurz warten."; if (c.includes("network")) return "Keine Verbindung."; return "Anmeldung nicht möglich (" + c + ")."; }
   $("form-login").addEventListener("submit", async (e) => {
     e.preventDefault(); showErr("login-err", ""); const b = $("login-btn"); b.disabled = true;
     try {
       const id = cleanId($("login-id").value), info = await loginInfo(id);
-      if (info.reset) { S.resetId = id; S.resetDomain = info.d || LOGIN_DOMAIN; showAuth("newpin"); $("np-pin").focus(); b.disabled = false; return; }
       await auth.signInWithEmailAndPassword(emailFor(id, info.d || LOGIN_DOMAIN), $("login-pin").value.trim());
     } catch (err) { showErr("login-err", loginErr(err)); }
     b.disabled = false;
@@ -2372,26 +2490,6 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       S.settingUp = false; boot(auth.currentUser);
     } catch (err) { console.error(err); S.settingUp = false; showErr("setup-err", "Einrichten fehlgeschlagen: " + (err && err.code || err.message)); b.disabled = false; }
   });
-  $("np-back").addEventListener("click", () => showAuth("login"));
-  $("form-newpin").addEventListener("submit", async (e) => {
-    e.preventDefault(); showErr("np-err", "");
-    const pin = $("np-pin").value.trim(); if (!/^\d{6}$/.test(pin)) { showErr("np-err", "Die PIN muss aus 6 Ziffern bestehen."); return; }
-    if (pin !== $("np-pin2").value.trim()) { showErr("np-err", "Die beiden PINs sind nicht gleich."); return; }
-    const b = e.submitter; b.disabled = true; const id = S.resetId;
-    try {
-      const a2 = secondaryAuth(); let domain = nextDomain(S.resetDomain);
-      try {
-        for (let i = 0; i < 30; i++) { try { await a2.createUserWithEmailAndPassword(emailFor(id, domain), pin); break; } catch (err) { if (err && err.code === "auth/email-already-in-use") domain = nextDomain(domain); else throw err; } }
-        const db2 = secondary.firestore(), batch = db2.batch();
-        batch.update(db2.collection("users").doc(id), { loginDomain: domain });
-        batch.update(db2.collection("logins").doc(id), { d: domain, reset: false });
-        await batch.commit();
-      } finally { await a2.signOut().catch(() => {}); }
-      $("form-newpin").reset();
-      await auth.signInWithEmailAndPassword(emailFor(id, domain), pin);
-    } catch (err) { console.error(err); showErr("np-err", "Das hat nicht geklappt (" + (err && err.code || "") + "). Bitte die Leitung fragen."); }
-    b.disabled = false;
-  });
   $("to-register").addEventListener("click", () => showAuth("register"));
   $("to-login").addEventListener("click", () => showAuth("login"));
   $("form-register").addEventListener("submit", async (e) => {
@@ -2402,7 +2500,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     if (pin !== $("reg-pin2").value.trim()) { showErr("reg-err", "Die beiden PINs sind nicht gleich."); return; }
     const b = e.submitter; b.disabled = true;
     try {
-      if (S.users[id]) throw Object.assign(new Error("taken"), { code: "auth/email-already-in-use" });
+      if (S.users[id] || (await loginInfo(id)).d) throw Object.assign(new Error("taken"), { code: "auth/email-already-in-use" });
       const a2 = secondaryAuth(); let domain = LOGIN_DOMAIN;
       try {
         for (let i = 0; i < 30; i++) { try { await a2.createUserWithEmailAndPassword(emailFor(id, domain), pin); break; } catch (err) { if (err && err.code === "auth/email-already-in-use") domain = nextDomain(domain); else throw err; } }
@@ -2414,7 +2512,8 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       $("form-register").reset(); const ok = $("reg-ok"); ok.hidden = false; ok.textContent = "Danke, " + name + "! Sobald die Leitung dich freigeschaltet hat, kannst du dich mit Name und PIN anmelden.";
     } catch (err) {
       console.error(err);
-      showErr("reg-err", err && err.code === "auth/email-already-in-use" ? "Diesen Namen gibt es schon. Ergänze z. B. einen Buchstaben oder frag die Leitung." : "Registrieren hat nicht geklappt (" + (err && err.code || "") + ").");
+      const taken = err && (err.code === "auth/email-already-in-use" || String(err.code).includes("permission-denied"));
+      showErr("reg-err", taken ? "Diesen Namen gibt es schon. Bitte melde dich an oder frag die Leitung." : "Registrieren hat nicht geklappt (" + (err && err.code || "") + ").");
     }
     b.disabled = false;
   });
@@ -2422,11 +2521,28 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   // ---- Start und Live-Daten
   function sub(q, fn, onErr) { S.unsub.push(q.onSnapshot(s => { fn(s); renderAll(); }, (e) => { console.error(e); if (onErr) onErr(e); else if (e.code === "permission-denied") toast("Kein Zugriff auf einen Datenbereich. Regeln prüfen."); })); }
   const rows = (s) => s.docs.map(d => ({ id: d.id, ...d.data() }));
-  function stopAll() { S.unsub.forEach(u => u()); S.unsub = []; }
+  function stopAll() { S.unsub.forEach(u => u()); S.unsub = []; S.roleUnsub.forEach(u => u()); S.roleUnsub = []; S.roleMode = null; }
+  function postsReady() { if (!S.postsLoaded) { S.postsLoaded = true; S.needRoute = true; } }
+  function mergeMyReads() { const mine = S.reads[S.uid]; if (mine && mine.posts) S.myReads = { ...mine.posts, ...S.myReads }; }
+  function subRoleData() {
+    S.roleUnsub.forEach(u => u()); S.roleUnsub = [];
+    const editor = canInfo(), lead = isLead(); S.roleMode = (editor ? "e" : "t") + (lead ? "l" : "");
+    const add = (q, fn, onErr) => S.roleUnsub.push(q.onSnapshot(snap => { fn(snap); renderAll(); }, (e) => { console.error(e); if (onErr) onErr(e); else if (e.code === "permission-denied") toast("Kein Zugriff auf einen Datenbereich. Regeln prüfen."); }));
+    if (editor) {
+      add(db.collection("posts").orderBy("createdAt", "desc").limit(500), snap => { S.posts = rows(snap); postsReady(); });
+      add(db.collection("reads"), snap => { const m = {}; snap.docs.forEach(d => { m[d.id] = d.data(); }); S.reads = m; mergeMyReads(); });
+    } else {
+      const part = { all: null, me: null }, merge = () => { if (!part.all || !part.me) return; const m = new Map(); [...part.all, ...part.me].forEach(x => m.set(x.id, x)); S.posts = [...m.values()].sort(byCreated); postsReady(); };
+      add(db.collection("posts").where("audience", "array-contains", "all").limit(500), snap => { part.all = rows(snap); merge(); });
+      add(db.collection("posts").where("audience", "array-contains", S.uid).limit(500), snap => { part.me = rows(snap); merge(); });
+      add(db.collection("reads").doc(S.uid), snap => { S.reads = snap.exists ? { [S.uid]: snap.data() } : {}; mergeMyReads(); });
+    }
+    if (lead) add(db.collection("logins"), snap => { const m = {}; snap.docs.forEach(d => { m[d.id] = d.data(); }); S.logins = m; }, () => {});
+  }
   async function boot(user) {
     stopAll(); showAuth(null); $("app").hidden = true;
     const setupSnap = await db.collection("settings").doc("portal").get().catch(() => null);
-    if (setupSnap && setupSnap.exists) { S.settings = setupSnap.data(); applySettings(); }
+    if (setupSnap && setupSnap.exists) { S.settings = setupSnap.data(); try { applySettings(); } catch (e) { console.error(e); } }
     if (!user) {
       if (setupSnap && !setupSnap.exists) { showAuth("setup"); return; }
       showAuth("login"); $("login-pin").value = ""; return;
@@ -2439,20 +2555,19 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       showAuth("login"); showErr("login-err", "Dein Zugang ist noch nicht freigeschaltet (oder wurde deaktiviert). Bitte die Leitung fragen.");
       return;
     }
+    S.me = meSnap.data(); S.users = { [S.uid]: S.me }; subRoleData();
     sub(db.collection("users"), s => {
       const m = {}; s.docs.forEach(d => { m[d.id] = d.data(); }); S.users = m; S.me = m[S.uid] || null;
       if (S.me && S.me.active === false) { toast("Dein Zugang ist deaktiviert."); auth.signOut(); return; }
+      if (S.me && S.roleMode !== (canInfo() ? "e" : "t") + (isLead() ? "l" : "")) { S.postsLoaded = false; subRoleData(); }
       if (S.me) { showAuth(null); $("app").hidden = false; if (!$("app").dataset.booted) { $("app").dataset.booted = "1"; let saved = "infos"; try { saved = localStorage.getItem("tab") || "infos"; } catch (_) {} showTab(saved); } }
     }, (e) => { if (e.code === "permission-denied") auth.signOut().then(() => showErr("login-err", "Dein Zugang ist noch nicht freigeschaltet (oder wurde deaktiviert). Bitte die Leitung fragen.")); });
     sub(db.collection("settings").doc("portal"), s => { S.settings = s.exists ? s.data() : {}; if (!S.designDirty) S.design = null; applySettings(); });
-    sub(db.collection("logins"), s => { const m = {}; s.docs.forEach(d => { m[d.id] = d.data(); }); S.logins = m; }, () => {});
-    sub(db.collection("groups"), s => { S.groups = rows(s).sort((a, b) => (a.name || "").localeCompare(b.name || "")); });
+    sub(db.collection("groups"), s => { S.groups = rows(s).sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""))); S.groupsLoaded = true; });
     sub(db.collection("categories"), s => { S.cats = rows(s).sort((a, b) => (a.order || 0) - (b.order || 0) || (a.createdAt || "").localeCompare(b.createdAt || "")); });
-    sub(db.collection("posts").orderBy("createdAt", "desc").limit(500), s => { S.posts = rows(s); if (!S.postsLoaded) { S.postsLoaded = true; S.needRoute = true; } });
-    sub(db.collection("reads"), s => { const m = {}; s.docs.forEach(d => { m[d.id] = d.data(); }); S.reads = m; if (m[S.uid] && m[S.uid].posts) S.myReads = { ...m[S.uid].posts, ...S.myReads }; });
   }
   auth.onAuthStateChanged(user => {
-    if (!user) { S.me = null; S.uid = null; S.myReads = {}; S.postsLoaded = false; delete $("app").dataset.booted; closeComposer(true); hideReader(); }
+    if (!user) { S.me = null; S.uid = null; S.myReads = {}; S.reads = {}; S.posts = []; S.postsLoaded = false; S.groupsLoaded = false; delete $("app").dataset.booted; closeComposer(true); hideReader(); }
     boot(user);
   });
   applySettings();
