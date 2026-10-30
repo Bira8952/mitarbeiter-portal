@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#0f5c6e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -76,12 +76,12 @@ button { -webkit-tap-highlight-color: transparent; }
 .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
 .brand-name { font-weight: 700; font-size: 16px; letter-spacing: -.015em; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .brand-sub { font-size: 12px; color: var(--muted); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-nav { display: flex; gap: 4px; margin-right: auto; }
-nav button { appearance: none; font: inherit; font-size: 14px; font-weight: 600; color: var(--muted); background: none; border: 0; border-radius: 9px; padding: 0 12px; height: 38px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; position: relative; transition: background .15s, color .15s; }
-nav button svg { width: 18px; height: 18px; }
-nav button:hover { color: var(--fg); background: var(--surface-2); }
-nav button[aria-selected="true"] { color: var(--accent); background: var(--accent-soft); }
-body.single nav { display: none; }
+#tabs { display: flex; gap: 4px; margin-right: auto; }
+#tabs button { appearance: none; font: inherit; font-size: 14px; font-weight: 600; color: var(--muted); background: none; border: 0; border-radius: 9px; padding: 0 12px; height: 38px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; position: relative; transition: background .15s, color .15s; }
+#tabs button svg { width: 18px; height: 18px; }
+#tabs button:hover { color: var(--fg); background: var(--surface-2); }
+#tabs button[aria-selected="true"] { color: var(--accent); background: var(--accent-soft); }
+body.single #tabs { display: none; }
 body.single .brand { margin-right: auto; }
 .count { background: var(--bad); color: #fff; font-size: 11px; font-weight: 700; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; display: inline-grid; place-items: center; font-variant-numeric: tabular-nums; line-height: 1; }
 .count:empty { display: none; }
@@ -95,20 +95,13 @@ body.single .brand { margin-right: auto; }
 .iconbtn:disabled { opacity: .4; cursor: default; }
 .iconbtn svg { width: 18px; height: 18px; }
 main { padding-block: 26px 72px; }
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   :root { --hdr: 58px; }
   .wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-  /* backdrop-filter würde die fixierte Leiste unten an die Kopfzeile binden */
-  .topbar { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--surface); }
   .user-txt { display: none; }
   .brand { margin-right: auto; }
-  nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; margin: 0; gap: 0; background: color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--line); padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px)); }
-  nav button { flex: 1; flex-direction: column; height: auto; min-height: 52px; gap: 2px; font-size: 11px; padding: 6px 4px; }
-  nav button svg { width: 22px; height: 22px; }
-  nav button[aria-selected="true"] { background: none; }
-  nav .count { position: absolute; top: 2px; left: calc(50% + 6px); }
-  main { padding-block: 16px calc(96px + env(safe-area-inset-bottom, 0px)); }
-  body.single main { padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)); }
+  nav#tabs { display: none; }
+  main { padding-block: 16px calc(104px + env(safe-area-inset-bottom, 0px)); }
   #toast { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
 }
 
@@ -162,7 +155,8 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible { outline: 
 .pill.new { background: var(--bad); color: #fff; }
 .taker { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 .empty { color: var(--muted); padding: 40px 20px; text-align: center; border: 1px dashed var(--line); border-radius: var(--radius); background: var(--surface); display: grid; gap: 6px; justify-items: center; }
-.empty .ei { font-size: 34px; line-height: 1; margin-bottom: 6px; }
+.empty .ei { width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); margin-bottom: 8px; }
+.empty .ei svg { width: 26px; height: 26px; }
 .empty b { color: var(--fg); font-weight: 700; font-size: 16px; }
 .empty .btn { margin-top: 10px; }
 .sub { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; margin: 26px 0 10px; }
@@ -239,7 +233,7 @@ mark [class^="tc-"] { color: #111827; }
 .bstat:hover { background: rgba(255, 255, 255, .22); }
 .bstat b { font-size: 15px; font-variant-numeric: tabular-nums; }
 .bstat .dot { width: 8px; height: 8px; border-radius: 50%; background: #ff6b6b; box-shadow: 0 0 0 3px rgba(255, 107, 107, .3); }
-@media (max-width: 680px) { .banner { padding: 22px 20px; border-radius: 18px; margin-bottom: 18px; } .banner h2 { font-size: 25px; } .banner-act, .banner-act .btn { width: 100%; } }
+@media (max-width: 760px) { .banner { padding: 22px 20px; border-radius: 18px; margin-bottom: 18px; } .banner h2 { font-size: 25px; } .banner-act, .banner-act .btn { width: 100%; } }
 
 /* ---------- Infos: Aufbau ---------- */
 .infos-grid { display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 28px; align-items: start; }
@@ -264,7 +258,7 @@ mark [class^="tc-"] { color: #111827; }
 .chip .n.hot { background: var(--bad); color: #fff; opacity: 1; border-radius: 999px; padding: 0 6px; }
 @media (min-width: 961px) { .chips, .mobile-only { display: none !important; } }
 @media (max-width: 960px) { .infos-grid { grid-template-columns: 1fr; } .side { display: none; } }
-.sec { margin-bottom: 28px; animation: rise .3s ease-out; }
+.sec { margin-bottom: 28px; }
 .sec-h { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; }
 .sec-h h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
 .sec-h .n { font-size: 12px; color: var(--muted); background: var(--surface-3); border-radius: 999px; padding: 0 8px; font-weight: 700; line-height: 20px; }
@@ -340,7 +334,7 @@ mark.q { background: color-mix(in srgb, var(--hl-yellow) 70%, transparent); colo
 .reads .col .av { width: 20px; height: 20px; font-size: 8px; }
 .reads .col .t { color: var(--muted); font-size: 11px; margin-left: auto; white-space: nowrap; }
 .reads .toggle { font: inherit; font-size: 13px; font-weight: 600; background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; }
-@media (max-width: 680px) { .r-doc { padding: 22px 18px calc(44px + env(safe-area-inset-bottom, 0px)); } .r-doc h1 { font-size: 25px; } .reads .cols { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .r-doc { padding: 22px 18px calc(44px + env(safe-area-inset-bottom, 0px)); } .r-doc h1 { font-size: 25px; } .reads .cols { grid-template-columns: 1fr; } }
 
 /* ---------- Editor (Vollbild, Menüband wie Word) ---------- */
 .composer { position: fixed; inset: 0; z-index: 70; background: var(--bg); animation: fade .15s; }
@@ -356,11 +350,11 @@ mark.q { background: color-mix(in srgb, var(--hl-yellow) 70%, transparent); colo
 .rrows { display: grid; gap: 4px; align-content: start; }
 .rrow { display: flex; align-items: center; gap: 2px; }
 .rlabel { font-size: 11px; color: var(--muted); text-align: center; padding: 5px 0 6px; white-space: nowrap; }
-.rb { height: 30px; min-width: 30px; padding: 0 6px; display: inline-grid; place-items: center; border: 1px solid transparent; background: none; border-radius: 5px; color: var(--fg-2); cursor: pointer; font: inherit; font-size: 14px; line-height: 1; }
+.rb { height: 30px; min-width: 30px; padding: 0 6px; display: inline-grid; grid-auto-flow: column; place-items: center; border: 1px solid transparent; background: none; border-radius: 5px; color: var(--fg-2); cursor: pointer; font: inherit; font-size: 14px; line-height: 1; }
 .rb:hover { background: var(--surface-3); }
 .rb[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent); }
 .rb svg { width: 18px; height: 18px; }
-.rb.big { height: 64px; min-width: 54px; display: inline-grid; grid-template-rows: auto auto; gap: 4px; font-size: 11.5px; font-weight: 500; padding: 4px 6px; }
+.rb.big { height: 64px; min-width: 54px; display: inline-grid; grid-auto-flow: row; grid-template-rows: auto auto; gap: 4px; font-size: 11.5px; font-weight: 500; padding: 4px 6px; }
 .rb.big svg { width: 24px; height: 24px; }
 .rb .g { font-weight: 700; font-size: 15px; }
 .split { display: inline-flex; align-items: stretch; border-radius: 5px; }
@@ -440,7 +434,7 @@ mark.q { background: color-mix(in srgb, var(--hl-yellow) 70%, transparent); colo
 .kpi-v { font-size: 28px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.2; }
 .kpi .bar { height: 5px; border-radius: 3px; background: var(--line); overflow: hidden; margin-top: 6px; }
 .kpi .bar i { display: block; height: 100%; background: var(--ok); }
-@media (max-width: 680px) { .kpis { grid-template-columns: 1fr 1fr; gap: 10px; } .kpi { padding: 14px; } .kpi-v { font-size: 23px; } }
+@media (max-width: 760px) { .kpis { grid-template-columns: 1fr 1fr; gap: 10px; } .kpi { padding: 14px; } .kpi-v { font-size: 23px; } }
 .tabs2 { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-bottom: 22px; overflow-x: auto; scrollbar-width: none; }
 .tabs2::-webkit-scrollbar { display: none; }
 .tabs2 button { font: inherit; font-size: 14px; font-weight: 600; color: var(--muted); background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 14px; margin-bottom: -1px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 7px; }
@@ -541,9 +535,131 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   .auth-feat { display: none; }
   .auth-main { align-items: flex-start; padding: 28px 20px 40px; }
 }
-@media (max-width: 680px) { .btn.block-sm { width: 100%; height: 46px; } }
+@media (max-width: 760px) { .btn.block-sm { width: 100%; height: 46px; } }
 .pv-login .mark:not(.img) { background: #fff; color: color-mix(in srgb, var(--accent-base) 85%, #000); }
 .pv-login .mark::after { display: none; }
+/* ---------- Symbole statt Emojis ---------- */
+.rb .mini { width: 10px; height: 10px; margin-left: -1px; }
+.g.it { font-style: italic; font-family: Georgia, serif; font-weight: 600; } .g.ul { text-decoration: underline; }
+.g.st { text-decoration: line-through; font-size: 12.5px; font-weight: 600; } .g.sm { font-size: 12.5px; font-weight: 600; }
+.split .rb.caret svg { width: 12px; height: 12px; }
+.rb.img-btn { color: var(--accent); }
+.sty .s { display: none; }
+.cico svg { width: 54%; height: 54%; color: var(--cc); }
+.chip .cico { width: 22px; height: 22px; border-radius: 6px; }
+.tpl svg { width: 16px; height: 16px; color: var(--accent); }
+.pop-item .e { display: grid; place-items: center; width: 22px; color: var(--muted); font-weight: 700; font-size: 13px; }
+.pop-item .e svg { width: 18px; height: 18px; }
+.icon-grid { display: grid; grid-template-columns: repeat(8, 36px); gap: 4px; }
+.icon-grid button { width: 36px; height: 36px; border: 0; border-radius: 9px; background: none; cursor: pointer; color: var(--fg-2); display: grid; place-items: center; padding: 0; }
+.icon-grid button:hover, .icon-grid button[aria-pressed="true"] { background: var(--surface-3); color: var(--accent); }
+.icon-grid svg { width: 20px; height: 20px; }
+@media (max-width: 380px) { .icon-grid { grid-template-columns: repeat(6, 36px); } .sw-grid { grid-template-columns: repeat(6, 28px); } }
+.titem .ti { color: var(--fg-2); } .titem .ti svg { width: 19px; height: 19px; }
+.titem.warn .ti { color: var(--warn); } .titem.read .ti { color: var(--accent); }
+.alldone .ei { width: 48px; height: 48px; border-radius: 16px; display: grid; place-items: center; margin: 0 auto 6px; background: var(--ok-soft); color: var(--ok); }
+.alldone .ei svg { width: 24px; height: 24px; }
+.body ul.checklist, .editor ul.checklist { list-style: none; padding-left: 0; display: grid; gap: 8px; }
+.body ul.checklist > li, .editor ul.checklist > li { position: relative; padding-left: 32px; margin: 0; }
+.body ul.checklist > li::before, .editor ul.checklist > li::before { content: ""; position: absolute; left: 0; top: 4px; width: 18px; height: 18px; border: 2px solid var(--accent); border-radius: 5px; }
+
+/* ---------- Bilder: Titelbild, Vorschaubilder ---------- */
+.thumb { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; flex: none; background: var(--surface-3); border: 1px solid var(--line-2); }
+.pcard::before { z-index: 1; }
+.pcard .pc-cover { margin: -18px -18px 6px; aspect-ratio: 16 / 9; background: var(--surface-3); overflow: hidden; }
+.pcard .pc-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.r-cover { margin: -34px -28px 26px; aspect-ratio: 16 / 9; background: var(--surface-3); overflow: hidden; border-radius: 0 0 var(--radius) var(--radius); }
+.r-cover img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; }
+.r-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+.r-nav button { font: inherit; text-align: left; display: grid; gap: 2px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); color: var(--fg); cursor: pointer; min-height: 64px; min-width: 0; }
+.r-nav button:hover { border-color: var(--accent-line); }
+.r-nav button span { font-size: 12px; color: var(--muted); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.r-nav button span svg { width: 14px; height: 14px; }
+.r-nav button b { font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.r-nav button.next { text-align: right; } .r-nav button.next span { justify-content: flex-end; }
+.r-nav button:disabled { visibility: hidden; }
+.cover-prev { aspect-ratio: 16 / 9; border-radius: var(--radius-sm); overflow: hidden; background: var(--surface-2); border: 1px dashed var(--line); display: grid; place-items: center; align-content: center; gap: 6px; color: var(--muted); font-size: 13px; }
+.cover-prev svg { width: 26px; height: 26px; }
+.cover-prev img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cover-prev.has { border-style: solid; display: block; }
+.opts-bg { display: none; }
+.tabbar, .fab { display: none; }
+
+/* ---------- Handy: App-Aufbau ---------- */
+@media (min-width: 761px) { .only-mob { display: none !important; } }
+@media (max-width: 760px) {
+  .only-desk { display: none !important; }
+  input, select, textarea { font-size: 16px; }
+  .tabbar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: color-mix(in srgb, var(--surface) 94%, transparent); -webkit-backdrop-filter: saturate(180%) blur(14px); backdrop-filter: saturate(180%) blur(14px); border-top: 1px solid var(--line); padding: 4px max(6px, env(safe-area-inset-right, 0px)) calc(4px + env(safe-area-inset-bottom, 0px)) max(6px, env(safe-area-inset-left, 0px)); }
+  .tabbar button { flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 58px; border: 0; background: none; font: inherit; font-size: 11.5px; font-weight: 600; color: var(--muted); cursor: pointer; padding: 0; }
+  .tabbar .tb { width: 58px; height: 30px; border-radius: 999px; display: grid; place-items: center; transition: background .2s, color .2s; }
+  .tabbar svg { width: 22px; height: 22px; }
+  .tabbar button[aria-current="true"] { color: var(--fg); }
+  .tabbar button[aria-current="true"] .tb { background: var(--accent-soft); color: var(--accent); }
+  .tabbar .count { position: absolute; top: 2px; left: calc(50% + 8px); }
+  .fab { display: grid; place-items: center; position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(80px + env(safe-area-inset-bottom, 0px)); width: 58px; height: 58px; border-radius: 18px; border: 0; background: var(--accent); color: var(--accent-fg); box-shadow: 0 12px 28px -10px color-mix(in srgb, var(--accent-base) 80%, transparent), 0 2px 6px rgba(0, 0, 0, .15); z-index: 19; cursor: pointer; padding: 0; }
+  .fab svg { width: 26px; height: 26px; }
+  .banner-act { display: none; }
+  body.searching .banner { display: none; }
+  .toolbar-row { flex-wrap: nowrap; }
+  #read-all { width: 46px; height: 46px; padding: 0; flex: none; }
+  #read-all .lbl { display: none; }
+  .pin-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; margin: 0 -16px; padding: 2px 16px 8px; scrollbar-width: none; }
+  .pin-grid::-webkit-scrollbar { display: none; }
+  .pin-grid .pcard { flex: 0 0 84%; scroll-snap-align: start; }
+  .pin-grid .pcard:only-child { flex-basis: 100%; }
+  .prow { min-height: 74px; }
+  .hero { margin-bottom: 14px; }
+  .hero h2 { font-size: 23px; }
+  .tabs2 { gap: 6px; border-bottom: 0; margin: 0 -16px 18px; padding: 0 16px 2px; }
+  .tabs2 button { border: 1px solid var(--line); border-radius: 999px; background: var(--surface); padding: 0 14px; height: 38px; margin: 0; }
+  .tabs2 button[aria-selected="true"] { background: var(--fg); color: var(--surface); border-color: var(--fg); }
+  .qa-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .qa { padding: 14px; gap: 8px; }
+  .qa span { font-size: 12px; }
+  .trow select { flex: 1 1 140px; }
+  .panel { padding: 16px; }
+  .r-cover { margin: -22px -18px 20px; border-radius: 0; }
+  /* Editor: Werkzeugleiste unten, über der Tastatur */
+  .cmp-body { padding-bottom: 130px; }
+  .paper { box-shadow: none; border-radius: 14px; border: 1px solid var(--line-2); }
+  .ribbon { position: fixed; left: 0; right: 0; bottom: var(--kb, 0px); z-index: 6; flex-wrap: nowrap; gap: 2px; padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); border-bottom: 0; box-shadow: 0 -8px 20px -14px rgba(0, 0, 0, .35); overflow-x: auto; scrollbar-width: none; align-items: center; }
+  .ribbon::-webkit-scrollbar { display: none; }
+  .rgroup, .rrows, .rrow, .styles { display: contents; }
+  .rlabel { display: none; }
+  .ribbon .rb, .ribbon .split, .ribbon .rsel, .ribbon .sty { order: var(--o, 50); flex: none; }
+  .rb { height: 42px; min-width: 42px; }
+  .rb svg { width: 20px; height: 20px; }
+  .rb.big { height: 42px; grid-auto-flow: column; grid-template-rows: none; gap: 6px; font-size: 13px; padding: 0 10px; }
+  .rb.big span:last-child { display: none; }
+  .rb.img-btn { background: var(--accent); color: var(--accent-fg); border-radius: 10px; padding: 0 12px; }
+  .rb.img-btn span:last-child { display: inline; font-weight: 600; }
+  .rsel { height: 42px; font-size: 16px; }
+  #fmt-font { width: 140px; } #fmt-size { width: 76px; }
+  .sty { height: 42px; padding: 0 12px; border-radius: 10px; }
+  .sty .l { display: none; } .sty .s { display: inline; }
+  .ctxbar { position: fixed; left: 0; right: 0; bottom: calc(var(--kb, 0px) + 54px + env(safe-area-inset-bottom, 0px)); z-index: 6; padding: 8px 12px; overflow-x: auto; flex-wrap: nowrap; border-top: 1px solid var(--accent-line); }
+  .ctxbar .btn { flex: none; height: 36px; }
+  .cmp-top .btn.primary { height: 40px; padding: 0 14px; }
+  .cmp-title span { display: none; }
+  .opts-bg { position: fixed; inset: 0; z-index: 7; background: rgba(8, 12, 20, .45); }
+  .composer.opts .opts-bg { display: block; animation: fade .2s; }
+  .cmp-side { position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 8; max-height: 86dvh; overflow: auto; overscroll-behavior: contain; background: var(--bg); border-radius: 22px 22px 0 0; padding: 12px 14px calc(18px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -24px 48px -12px rgba(0, 0, 0, .4); transform: translateY(105%); visibility: hidden; transition: transform .25s cubic-bezier(.2, .8, .2, 1), visibility .25s; }
+  .composer.opts .cmp-side { transform: none; visibility: visible; }
+  .sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 2px 4px; position: relative; }
+  .sheet-head::before { content: ""; position: absolute; left: 50%; top: -6px; width: 40px; height: 4px; border-radius: 2px; background: var(--line); transform: translateX(-50%); }
+  .sheet-head b { font-size: 17px; }
+  #toast { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+  .bstat.minor { display: none; }
+  .banner { padding: 20px 18px; }
+  .banner-stats { margin-top: 14px; }
+  .tpl-row { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -8px; padding: 0 8px 2px; }
+  .tpl-row::-webkit-scrollbar { display: none; }
+  .tpl-row > * { flex: none; }
+  .prow:active, .ctile:active, .pcard:active, .qa:active, .r-nav button:active { transform: scale(.985); background: var(--surface-2); }
+  .btn:active, .fab:active { transform: scale(.97); }
+  .tabbar button:active .tb { background: var(--surface-3); }
+}
 </style>
 </head>
 <body>
@@ -627,7 +743,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       <div style="min-width:0">
         <div class="toolbar-row">
           <div class="search"><span data-i="search"></span><input type="search" id="post-search" placeholder="Infos und Anleitungen durchsuchen …" aria-label="Infos durchsuchen"></div>
-          <button class="btn" id="read-all" type="button" hidden><span data-i="check"></span>Alle als gelesen markieren</button>
+          <button class="btn" id="read-all" type="button" hidden title="Alle als gelesen markieren" aria-label="Alle als gelesen markieren"><span data-i="checkAll"></span><span class="lbl">Alle als gelesen markieren</span></button>
         </div>
         <div class="chips" id="cat-chips"></div>
         <div id="post-list"></div>
@@ -724,7 +840,8 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       </div>
       <div class="panel help">
         <div class="panel-head"><div><h3>Was tun, wenn …</h3></div></div>
-        <details><summary>… ich einen Beitrag oder eine Anleitung schreiben will?</summary><p>Infos → <b>Neuer Beitrag</b>. Oben wählst du eine <b>Vorlage</b> (z. B. «Anleitung»), dann schreibst du wie in Word: Text markieren und im Menüband <b>Fett</b>, <b>Farbe</b>, <b>Textmarker</b>, <b>Grösse</b> usw. wählen. Bilder kannst du einfach hineinziehen. Rechts wählst du Kapitel und wer den Beitrag sehen darf. Dein Entwurf wird automatisch gespeichert.</p></details>
+        <details><summary>… ich einen Beitrag oder eine Anleitung schreiben will?</summary><p>Infos → <b>Neuer Beitrag</b> (auf dem Handy: der runde <b>Plus-Knopf</b> unten rechts). Oben wählst du eine <b>Vorlage</b> (z. B. «Anleitung»), dann schreibst du wie in Word: Text markieren und im Menüband <b>Fett</b>, <b>Farbe</b>, <b>Textmarker</b>, <b>Grösse</b> usw. wählen. Bilder kannst du einfach hineinziehen. Rechts (auf dem Handy über den Knopf <b>Optionen</b> oben) wählst du Kapitel, <b>Titelbild</b> und wer den Beitrag sehen darf. Dein Entwurf wird automatisch gespeichert.</p></details>
+        <details><summary>… ich Bilder verwenden will?</summary><p>Im Editor auf <b>Bild</b> tippen – auf dem Handy kannst du direkt ein Foto machen oder aus der Galerie wählen. Mehrere Bilder auf einmal werden als Galerie angezeigt. Ein <b>Titelbild</b> erscheint gross in der Leseansicht und klein in der Übersicht.</p></details>
         <details><summary>… ich sehen will, wer einen Beitrag gelesen hat?</summary><p>Beitrag öffnen → unten «Gelesen von …» → <b>Wer hat gelesen?</b>. In der Leitung → Übersicht stehen Beiträge, die noch viele nicht gelesen haben.</p></details>
         <details><summary>… jemand die PIN vergessen hat?</summary><p>Leitung → Mitarbeitende → bei der Person auf <b>⋯</b> → <b>PIN zurücksetzen</b>. Die Person gibt beim nächsten Öffnen nur ihren Namen ein und wählt eine neue PIN.</p></details>
         <details><summary>… sich jemand neu registriert hat?</summary><p>Es erscheint in der Leitung → Übersicht unter «Zu erledigen». Auf <b>Freischalten</b> tippen. Erst danach kann sich die Person anmelden.</p></details>
@@ -740,6 +857,13 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     </div>
   </section>
 </main>
+<nav class="tabbar" id="tabbar" aria-label="Navigation">
+  <button type="button" data-go="home"><span class="tb"><span data-i="home"></span></span><span>Start</span><span class="count" id="count-home"></span></button>
+  <button type="button" data-go="chapters"><span class="tb"><span data-i="grid"></span></span><span>Kapitel</span></button>
+  <button type="button" data-go="search"><span class="tb"><span data-i="search"></span></span><span>Suche</span></button>
+  <button type="button" data-go="leitung" id="go-leitung" hidden><span class="tb"><span data-i="shield"></span></span><span>Leitung</span><span class="count" id="count-lead2"></span></button>
+</nav>
+<button type="button" class="fab" id="fab-new" hidden aria-label="Neuer Beitrag" title="Neuer Beitrag"><span data-i="plus"></span></button>
 </div>
 
 <!-- LESEANSICHT -->
@@ -747,21 +871,24 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   <div class="reader-bg" id="reader-bg"></div>
   <article class="reader-panel" role="dialog" aria-modal="true" aria-labelledby="r-title">
     <div class="r-top">
-      <button class="iconbtn" type="button" id="r-close" aria-label="Schliessen" title="Schliessen (Esc)"><span data-i="x"></span></button>
+      <button class="iconbtn" type="button" id="r-close" aria-label="Schliessen" title="Schliessen (Esc)"><span data-i="x" class="only-desk"></span><span data-i="arrowLeft" class="only-mob"></span></button>
       <span class="r-chap" id="r-chap"></span>
       <span class="grow"></span>
-      <span class="meta" id="r-pos"></span>
-      <button class="iconbtn" type="button" id="r-prev" aria-label="Vorheriger Beitrag" title="Vorheriger Beitrag"><span data-i="chevL"></span></button>
-      <button class="iconbtn" type="button" id="r-next" aria-label="Nächster Beitrag" title="Nächster Beitrag"><span data-i="chevR"></span></button>
+      <span class="meta only-desk" id="r-pos"></span>
+      <button class="iconbtn only-desk" type="button" id="r-prev" aria-label="Vorheriger Beitrag" title="Vorheriger Beitrag"><span data-i="chevL"></span></button>
+      <button class="iconbtn only-desk" type="button" id="r-next" aria-label="Nächster Beitrag" title="Nächster Beitrag"><span data-i="chevR"></span></button>
+      <button class="iconbtn" type="button" id="r-share" aria-label="Teilen" title="Teilen"><span data-i="share"></span></button>
     </div>
     <div class="r-scroll" id="r-scroll">
       <div class="r-doc">
+        <figure class="r-cover" id="r-cover" hidden></figure>
         <div class="r-badges" id="r-badges"></div>
         <h1 id="r-title"></h1>
         <div class="r-meta" id="r-meta"></div>
         <div class="body" id="r-body"></div>
         <div id="r-reads"></div>
         <div class="r-actions" id="r-actions"></div>
+        <div class="r-nav" id="r-nav"></div>
       </div>
     </div>
   </article>
@@ -773,35 +900,36 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     <div class="cmp-top">
       <button type="button" class="iconbtn" id="post-cancel" aria-label="Schliessen" title="Schliessen"><span data-i="x"></span></button>
       <div class="cmp-title"><b id="form-post-title">Neuer Beitrag</b><span id="draft-state">Entwurf wird automatisch gespeichert</span></div>
+      <button type="button" class="iconbtn only-mob" id="post-opts" aria-label="Optionen: Kapitel, Titelbild, Sichtbarkeit" title="Optionen"><span data-i="sliders"></span></button>
       <button class="btn primary" type="submit" id="post-submit">Veröffentlichen</button>
     </div>
     <div class="ribbon" id="ribbon" role="toolbar" aria-label="Formatierung">
       <div class="rgroup">
         <div class="rrows">
-          <div class="rrow"><button type="button" class="rb" data-cmd="undo" title="Rückgängig (Strg+Z)" aria-label="Rückgängig"><span data-i="undo"></span></button></div>
-          <div class="rrow"><button type="button" class="rb" data-cmd="redo" title="Wiederholen (Strg+Y)" aria-label="Wiederholen"><span data-i="redo"></span></button></div>
+          <div class="rrow"><button type="button" class="rb" style="--o:40" data-cmd="undo" title="Rückgängig (Strg+Z)" aria-label="Rückgängig"><span data-i="undo"></span></button></div>
+          <div class="rrow"><button type="button" class="rb" style="--o:41" data-cmd="redo" title="Wiederholen (Strg+Y)" aria-label="Wiederholen"><span data-i="redo"></span></button></div>
         </div>
         <div class="rlabel">Verlauf</div>
       </div>
       <div class="rgroup">
         <div class="rrows">
           <div class="rrow">
-            <select class="rsel" id="fmt-font" title="Schriftart" aria-label="Schriftart"></select>
-            <select class="rsel" id="fmt-size" title="Schriftgrad" aria-label="Schriftgrad"></select>
-            <button type="button" class="rb" data-cmd="grow" title="Schriftgrad vergrössern" aria-label="Schriftgrad vergrössern"><span class="g">A<sup style="font-size:9px">▲</sup></span></button>
-            <button type="button" class="rb" data-cmd="shrink" title="Schriftgrad verkleinern" aria-label="Schriftgrad verkleinern"><span class="g" style="font-size:12.5px">A<sup style="font-size:8px">▼</sup></span></button>
-            <button type="button" class="rb" data-pop="case" title="Gross-/Kleinschreibung" aria-label="Gross-/Kleinschreibung"><span class="g">Aa</span></button>
-            <button type="button" class="rb" data-cmd="removeFormat" title="Alle Formatierungen löschen" aria-label="Alle Formatierungen löschen"><span data-i="eraser"></span></button>
+            <select class="rsel" style="--o:61" id="fmt-font" title="Schriftart" aria-label="Schriftart"></select>
+            <select class="rsel" style="--o:7" id="fmt-size" title="Schriftgrad" aria-label="Schriftgrad"></select>
+            <button type="button" class="rb" style="--o:50" data-cmd="grow" title="Schriftgrad vergrössern" aria-label="Schriftgrad vergrössern"><span class="g">A</span><span data-i="chevUp" class="mini"></span></button>
+            <button type="button" class="rb" style="--o:51" data-cmd="shrink" title="Schriftgrad verkleinern" aria-label="Schriftgrad verkleinern"><span class="g sm">A</span><span data-i="chevDown" class="mini"></span></button>
+            <button type="button" class="rb" style="--o:52" data-pop="case" title="Gross-/Kleinschreibung" aria-label="Gross-/Kleinschreibung"><span class="g">Aa</span></button>
+            <button type="button" class="rb" style="--o:53" data-cmd="removeFormat" title="Alle Formatierungen löschen" aria-label="Alle Formatierungen löschen"><span data-i="eraser"></span></button>
           </div>
           <div class="rrow">
-            <button type="button" class="rb" data-cmd="bold" data-state="bold" title="Fett (Strg+B)" aria-label="Fett"><span class="g">F</span></button>
-            <button type="button" class="rb" data-cmd="italic" data-state="italic" title="Kursiv (Strg+I)" aria-label="Kursiv"><span class="g" style="font-style:italic;font-family:Georgia,serif;font-weight:600">K</span></button>
-            <button type="button" class="rb" data-cmd="underline" data-state="underline" title="Unterstrichen (Strg+U)" aria-label="Unterstrichen"><span class="g" style="text-decoration:underline">U</span></button>
-            <button type="button" class="rb" data-cmd="strikeThrough" data-state="strikeThrough" title="Durchgestrichen" aria-label="Durchgestrichen"><span class="g" style="text-decoration:line-through;font-size:12.5px;font-weight:600">abc</span></button>
-            <button type="button" class="rb" data-cmd="subscript" data-state="subscript" title="Tiefgestellt" aria-label="Tiefgestellt"><span class="g" style="font-size:13px;font-weight:600">x<sub>2</sub></span></button>
-            <button type="button" class="rb" data-cmd="superscript" data-state="superscript" title="Hochgestellt" aria-label="Hochgestellt"><span class="g" style="font-size:13px;font-weight:600">x<sup>2</sup></span></button>
-            <span class="split"><button type="button" class="rb" data-cmd="hilite" title="Textmarkerfarbe" aria-label="Textmarker"><span class="glyph"><span data-i="marker"></span><i id="hl-bar"></i></span></button><button type="button" class="rb caret" data-pop="hilite" title="Textmarkerfarbe wählen" aria-label="Textmarkerfarbe wählen">▼</button></span>
-            <span class="split"><button type="button" class="rb" data-cmd="color" title="Schriftfarbe" aria-label="Schriftfarbe"><span class="glyph"><span class="g">A</span><i id="color-bar"></i></span></button><button type="button" class="rb caret" data-pop="color" title="Schriftfarbe wählen" aria-label="Schriftfarbe wählen">▼</button></span>
+            <button type="button" class="rb" style="--o:2" data-cmd="bold" data-state="bold" title="Fett (Strg+B)" aria-label="Fett"><span class="g">F</span></button>
+            <button type="button" class="rb" style="--o:3" data-cmd="italic" data-state="italic" title="Kursiv (Strg+I)" aria-label="Kursiv"><span class="g it">K</span></button>
+            <button type="button" class="rb" style="--o:4" data-cmd="underline" data-state="underline" title="Unterstrichen (Strg+U)" aria-label="Unterstrichen"><span class="g ul">U</span></button>
+            <button type="button" class="rb" style="--o:42" data-cmd="strikeThrough" data-state="strikeThrough" title="Durchgestrichen" aria-label="Durchgestrichen"><span class="g st">abc</span></button>
+            <button type="button" class="rb" style="--o:43" data-cmd="subscript" data-state="subscript" title="Tiefgestellt" aria-label="Tiefgestellt"><span class="g sm">x<sub>2</sub></span></button>
+            <button type="button" class="rb" style="--o:44" data-cmd="superscript" data-state="superscript" title="Hochgestellt" aria-label="Hochgestellt"><span class="g sm">x<sup>2</sup></span></button>
+            <span class="split" style="--o:6"><button type="button" class="rb" data-cmd="hilite" title="Textmarkerfarbe" aria-label="Textmarker"><span class="glyph"><span data-i="marker"></span><i id="hl-bar"></i></span></button><button type="button" class="rb caret" data-pop="hilite" title="Textmarkerfarbe wählen" aria-label="Textmarkerfarbe wählen"><span data-i="chevDown"></span></button></span>
+            <span class="split" style="--o:5"><button type="button" class="rb" data-cmd="color" title="Schriftfarbe" aria-label="Schriftfarbe"><span class="glyph"><span class="g">A</span><i id="color-bar"></i></span></button><button type="button" class="rb caret" data-pop="color" title="Schriftfarbe wählen" aria-label="Schriftfarbe wählen"><span data-i="chevDown"></span></button></span>
           </div>
         </div>
         <div class="rlabel">Schriftart</div>
@@ -809,35 +937,35 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       <div class="rgroup">
         <div class="rrows">
           <div class="rrow">
-            <button type="button" class="rb" data-cmd="insertUnorderedList" data-state="insertUnorderedList" title="Aufzählungszeichen" aria-label="Aufzählung"><span data-i="ul"></span></button>
-            <button type="button" class="rb" data-cmd="insertOrderedList" data-state="insertOrderedList" title="Nummerierung (Schritte)" aria-label="Nummerierung"><span data-i="ol"></span></button>
-            <button type="button" class="rb" data-cmd="outdent" title="Einzug verkleinern" aria-label="Einzug verkleinern"><span data-i="outdent"></span></button>
-            <button type="button" class="rb" data-cmd="indent" title="Einzug vergrössern" aria-label="Einzug vergrössern"><span data-i="indent"></span></button>
+            <button type="button" class="rb" style="--o:11" data-cmd="insertUnorderedList" data-state="insertUnorderedList" title="Aufzählungszeichen" aria-label="Aufzählung"><span data-i="ul"></span></button>
+            <button type="button" class="rb" style="--o:12" data-cmd="insertOrderedList" data-state="insertOrderedList" title="Nummerierung (Schritte)" aria-label="Nummerierung"><span data-i="ol"></span></button>
+            <button type="button" class="rb" style="--o:45" data-cmd="outdent" title="Einzug verkleinern" aria-label="Einzug verkleinern"><span data-i="outdent"></span></button>
+            <button type="button" class="rb" style="--o:46" data-cmd="indent" title="Einzug vergrössern" aria-label="Einzug vergrössern"><span data-i="indent"></span></button>
           </div>
           <div class="rrow">
-            <button type="button" class="rb" data-cmd="justifyLeft" data-state="justifyLeft" title="Linksbündig" aria-label="Linksbündig"><span data-i="alLeft"></span></button>
-            <button type="button" class="rb" data-cmd="justifyCenter" data-state="justifyCenter" title="Zentriert" aria-label="Zentriert"><span data-i="alCenter"></span></button>
-            <button type="button" class="rb" data-cmd="justifyRight" data-state="justifyRight" title="Rechtsbündig" aria-label="Rechtsbündig"><span data-i="alRight"></span></button>
-            <button type="button" class="rb" data-cmd="justifyFull" data-state="justifyFull" title="Blocksatz" aria-label="Blocksatz"><span data-i="alJustify"></span></button>
+            <button type="button" class="rb" style="--o:30" data-cmd="justifyLeft" data-state="justifyLeft" title="Linksbündig" aria-label="Linksbündig"><span data-i="alLeft"></span></button>
+            <button type="button" class="rb" style="--o:31" data-cmd="justifyCenter" data-state="justifyCenter" title="Zentriert" aria-label="Zentriert"><span data-i="alCenter"></span></button>
+            <button type="button" class="rb" style="--o:32" data-cmd="justifyRight" data-state="justifyRight" title="Rechtsbündig" aria-label="Rechtsbündig"><span data-i="alRight"></span></button>
+            <button type="button" class="rb" style="--o:33" data-cmd="justifyFull" data-state="justifyFull" title="Blocksatz" aria-label="Blocksatz"><span data-i="alJustify"></span></button>
           </div>
         </div>
         <div class="rlabel">Absatz</div>
       </div>
       <div class="rgroup">
         <div class="rrows styles" id="styles">
-          <button type="button" class="sty" data-block="p">Standard</button>
-          <button type="button" class="sty h2" data-block="h2">Überschrift 1</button>
-          <button type="button" class="sty h3" data-block="h3">Überschrift 2</button>
-          <button type="button" class="sty q" data-block="blockquote">Zitat</button>
+          <button type="button" class="sty" style="--o:10" data-block="p"><span class="l">Standard</span><span class="s">Text</span></button>
+          <button type="button" class="sty h2" style="--o:8" data-block="h2"><span class="l">Überschrift 1</span><span class="s">Titel</span></button>
+          <button type="button" class="sty h3" style="--o:9" data-block="h3"><span class="l">Überschrift 2</span><span class="s">Untertitel</span></button>
+          <button type="button" class="sty q" style="--o:47" data-block="blockquote"><span class="l">Zitat</span><span class="s">Zitat</span></button>
         </div>
         <div class="rlabel">Formatvorlagen</div>
       </div>
       <div class="rgroup">
         <div class="rrows"><div class="rrow">
-          <button type="button" class="rb big" data-cmd="img" title="Bild einfügen"><span data-i="image"></span>Bild</button>
-          <button type="button" class="rb big" data-cmd="table" title="Tabelle einfügen"><span data-i="table"></span>Tabelle</button>
-          <button type="button" class="rb big" data-pop="link" title="Link einfügen (Strg+K)" id="btn-link"><span data-i="link"></span>Link</button>
-          <button type="button" class="rb big" data-pop="insert" title="Hinweis-Box, Linie oder Tagesablauf einfügen"><span data-i="box"></span>Box ▾</button>
+          <button type="button" class="rb big img-btn" style="--o:1" data-cmd="img" title="Bilder einfügen (Foto oder Kamera)" aria-label="Bild einfügen"><span data-i="image"></span><span>Bild</span></button>
+          <button type="button" class="rb big" style="--o:14" data-cmd="table" title="Tabelle einfügen" aria-label="Tabelle einfügen"><span data-i="table"></span><span>Tabelle</span></button>
+          <button type="button" class="rb big" style="--o:13" data-pop="link" title="Link einfügen (Strg+K)" aria-label="Link einfügen" id="btn-link"><span data-i="link"></span><span>Link</span></button>
+          <button type="button" class="rb big" style="--o:15" data-pop="insert" title="Hinweis-Box, Linie oder Tagesablauf einfügen" aria-label="Box einfügen"><span data-i="box"></span><span>Box</span></button>
         </div></div>
         <div class="rlabel">Einfügen</div>
       </div>
@@ -856,7 +984,16 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
           </div>
           <div class="meta" id="img-status" hidden></div>
         </div>
-        <aside class="cmp-side">
+        <div class="opts-bg" id="opts-bg"></div>
+        <aside class="cmp-side" id="cmp-side" aria-label="Optionen">
+          <div class="sheet-head only-mob"><b>Optionen</b><button type="button" class="btn small primary" id="opts-done">Fertig</button></div>
+          <div class="side-card">
+            <h4>Titelbild</h4>
+            <div class="cover-prev" id="cover-prev"></div>
+            <div class="actions"><button type="button" class="btn small" id="cover-pick"><span data-i="camera"></span><span>Titelbild wählen</span></button><button type="button" class="btn small ghost" id="cover-remove" hidden>Entfernen</button></div>
+            <div class="meta" id="cover-state" hidden></div>
+            <input type="file" id="cover-file" accept="image/*" hidden>
+          </div>
           <div class="side-card">
             <h4>Veröffentlichen</h4>
             <label>Kapitel <select id="post-cat"></select></label>
@@ -869,7 +1006,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
             <div class="stat2"><span>Wörter</span><b id="wc">0</b></div>
             <div class="stat2"><span>Lesezeit</span><b id="rt">–</b></div>
           </div>
-          <div class="side-card tips">
+          <div class="side-card tips only-desk">
             <h4>Tipps</h4>
             <div>Text markieren, dann oben Farbe, Textmarker oder Grösse wählen.</div>
             <div><kbd>Strg</kbd>+<kbd>B</kbd> fett · <kbd>Strg</kbd>+<kbd>I</kbd> kursiv · <kbd>Strg</kbd>+<kbd>U</kbd> unterstrichen</div>
@@ -967,8 +1104,39 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   const SYMBOL_LABELS = { "": "Initialen", star: "Stern", house: "Hotel / Haus", cup: "Café", cutlery: "Restaurant", heart: "Pflege", cross: "Medizin", wrench: "Werkstatt", leaf: "Natur", bag: "Laden", shield: "Sicherheit", people: "Team", bolt: "Energie" };
   const NS = "http://www.w3.org/2000/svg";
   function svgOf(paths, cls) { const s = document.createElementNS(NS, "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("fill", "none"); s.setAttribute("stroke", "currentColor"); s.setAttribute("stroke-width", "2"); s.setAttribute("stroke-linecap", "round"); s.setAttribute("stroke-linejoin", "round"); s.setAttribute("aria-hidden", "true"); if (cls) s.setAttribute("class", cls); s.innerHTML = paths; return s; }
+  Object.assign(I, {
+    chevUp: '<path d="m6 15 6-6 6 6"/>', chevDown: '<path d="m6 9 6 6 6-6"/>', arrowLeft: '<path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>',
+    share: '<path d="M12 3v13"/><path d="m7 8 5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>',
+    sliders: '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>', minus: '<path d="M5 12h14"/>',
+    grid: '<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
+    camera: '<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',
+    checkAll: '<path d="m2 13 4 4 8-9"/><path d="m11 16 1.5 1.5L22 8"/>', eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    megaphone: '<path d="M3 10v4a1 1 0 0 0 1 1h3l6 4V5L7 9H4a1 1 0 0 0-1 1z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 5.5a9 9 0 0 1 0 13"/>',
+    clipboard: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M9 10h6M9 14h6M9 18h3"/>',
+    checkCircle: '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+    alert: '<path d="M10.3 3.9 2.4 17.6A2 2 0 0 0 4.1 20.6h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
+    info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>',
+    bulb: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3z"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    sparkle: '<path d="M11 3l1.8 5.2L18 10l-5.2 1.8L11 17l-1.8-5.2L4 10l5.2-1.8z"/><path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8z"/>',
+    bed: '<path d="M3 19V6M21 19v-6a3 3 0 0 0-3-3h-8v5"/><path d="M3 15h18"/><circle cx="6.5" cy="11.5" r="1.5"/>',
+    receipt: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+    money: '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/>',
+    flame: '<path d="M12 21a6.5 6.5 0 0 0 6.5-6.5c0-3.8-2.8-5.6-3.8-9.5-1.9 1.8-2.8 3.7-2.8 5.6-.9-.9-1.9-1.9-1.9-3.7-1.9 1.9-4.6 4.6-4.6 7.6A6.5 6.5 0 0 0 12 21z"/>',
+    phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+    graduation: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/><path d="M22 9v5"/>',
+    car: '<path d="M5 17h14v-5l-2-5H7l-2 5z"/><path d="M3 12h18"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/>',
+    package: '<path d="M21 8l-9-5-9 5 9 5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/>',
+    key: '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3M17 6l3 3M14 9l2 2"/>',
+    file: '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/>',
+    mapPin: '<path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+    users: SYMBOLS.people, utensils: SYMBOLS.cutlery, coffee: SYMBOLS.cup, heart: SYMBOLS.heart, wrench: SYMBOLS.wrench, cross: SYMBOLS.cross,
+    leaf: SYMBOLS.leaf, star: SYMBOLS.star, bag: SYMBOLS.bag, shieldPlain: SYMBOLS.shield, house: SYMBOLS.house
+  });
   const icon = (name, cls) => svgOf(I[name] || "", cls);
-  document.querySelectorAll("[data-i]").forEach(n => n.replaceWith(icon(n.dataset.i)));
+  document.querySelectorAll("[data-i]").forEach(n => n.replaceWith(icon(n.dataset.i, n.getAttribute("class"))));
 
   // ---- Farben, Schriften und Grössen des Editors (nur diese überleben das Speichern)
   const COLORS = [["red", "Rot", "#d92d20"], ["darkred", "Dunkelrot", "#991b1b"], ["orange", "Orange", "#e8590c"], ["gold", "Gold", "#b45309"], ["green", "Grün", "#15803d"], ["teal", "Türkis", "#0e7490"], ["blue", "Blau", "#1d4ed8"], ["navy", "Dunkelblau", "#1e3a8a"], ["purple", "Lila", "#7c3aed"], ["pink", "Pink", "#db2777"], ["gray", "Grau", "#6b7280"]];
@@ -985,6 +1153,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
   const esc = (t) => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const now = () => new Date().toISOString();
+  const validId = (v) => typeof v === "string" && /^[A-Za-z0-9_-]{4,64}$/.test(v);
   function fmtWhen(s) { if (!s) return ""; const d = new Date(s); return d.toLocaleDateString("de-CH", { day: "numeric", month: "short", year: d.getFullYear() === new Date().getFullYear() ? undefined : "numeric" }) + ", " + d.toLocaleTimeString("de-CH", { hour: "2-digit", minute: "2-digit" }); }
   function fmtRel(s) {
     if (!s) return ""; const d = new Date(s), n = new Date();
@@ -1043,6 +1212,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   const SPAN_CLS = new Set(["time", ...COLORS.map(c => "tc-" + c[0]), ...Object.values(SIZE_CLS), ...FONTS.filter(f => f[0]).map(f => "ff-" + f[0])]);
   const MARK_CLS = new Set(HIGHLIGHTS.map(h => "hl-" + h[0]));
   const DIV_CLS = new Set(["gallery", "callout", "warn", "tip", "ind"]);
+  const UL_CLS = new Set(["checklist"]);
   const IMG_CLS = new Set(["size-s", "size-m", "size-l"]);
   function rgbOf(v) {
     v = String(v || "").trim().toLowerCase(); let m;
@@ -1104,7 +1274,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       const given = (ch.getAttribute("class") || "").split(/\s+/).filter(Boolean);
       if (tag === "SPAN" || tag === "MARK") { inlineInto(ch, raw, given, css, dst, doc); continue; }
       const e = doc.createElement(tag), cls = new Set();
-      const allowed = tag === "DIV" ? DIV_CLS : tag === "IMG" ? IMG_CLS : null;
+      const allowed = tag === "DIV" ? DIV_CLS : tag === "IMG" ? IMG_CLS : tag === "UL" ? UL_CLS : null;
       given.forEach(c => { if ((allowed && allowed.has(c)) || (ALIGNABLE.has(tag) && AL.includes(c))) cls.add(c); });
       if (ind) cls.add("ind");
       if (ALIGNABLE.has(tag)) { const ta = css("text-align") || (ch.getAttribute("align") || "").toLowerCase(); if (ta) { AL.forEach(c => cls.delete(c)); if (["center", "right", "justify"].includes(ta)) cls.add("al-" + ta); } }
@@ -1159,12 +1329,18 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
 
   // ---- Kapitel: Symbol und Farbe
   const CHAPTER_COLORS = { teal: "#0d9488", blue: "#2563eb", green: "#16a34a", purple: "#7c3aed", orange: "#ea580c", red: "#dc2626", pink: "#db2777", amber: "#d97706", gray: "#64748b" };
-  const EMOJIS = ["📢", "📌", "📘", "📋", "✅", "⚠️", "🛡️", "🧹", "🍽️", "☕", "🛏️", "🧾", "💶", "🕒", "📅", "🎉", "❤️", "🔧", "🚨", "📞", "🩺", "🌿", "⭐", "💡", "🎓", "🚗", "📦", "🔑"];
+  const CHAPTER_ICONS = ["megaphone", "book", "clipboard", "checkCircle", "alert", "shieldPlain", "info", "bulb", "sparkle", "utensils", "coffee", "bed", "receipt", "money", "clock", "calendar", "heart", "cross", "flame", "wrench", "phone", "users", "house", "mapPin", "car", "package", "key", "graduation", "leaf", "star", "bag", "file"];
+  const OLD_EMOJI = { "📢": "megaphone", "📌": "info", "📘": "book", "📋": "clipboard", "✅": "checkCircle", "⚠️": "alert", "🛡️": "shieldPlain", "🧹": "sparkle", "🍽️": "utensils", "☕": "coffee", "🛏️": "bed", "🧾": "receipt", "💶": "money", "🕒": "clock", "📅": "calendar", "🎉": "star", "❤️": "heart", "🔧": "wrench", "🚨": "flame", "📞": "phone", "🩺": "cross", "🌿": "leaf", "⭐": "star", "💡": "bulb", "🎓": "graduation", "🚗": "car", "📦": "package", "🔑": "key" };
   const catOf = (id) => S.cats.find(c => c.id === id) || null;
   const catName = (id) => { const c = catOf(id); return c ? c.name : "Allgemein"; };
-  function catIcon(c) { if (c && c.icon) return c.icon; const n = (c && c.name || "").toLowerCase(); return /anleit|schritt/.test(n) ? "📘" : /allgem|news|neu/.test(n) ? "📢" : /sicher|notfall/.test(n) ? "🛡️" : /regel/.test(n) ? "📋" : "📄"; }
+  function catIcon(c) {
+    const v = c && c.icon; if (CHAPTER_ICONS.includes(v)) return v; if (OLD_EMOJI[v]) return OLD_EMOJI[v];
+    const n = (c && c.name || "").toLowerCase();
+    return /anleit|schritt|how/.test(n) ? "book" : /allgem|news|neu|info/.test(n) ? "megaphone" : /sicher|notfall|brand/.test(n) ? "shieldPlain" : /regel|richtlin/.test(n) ? "clipboard"
+      : /küche|kueche|essen|restaurant|service/.test(n) ? "utensils" : /reinig|putz|hygien/.test(n) ? "sparkle" : /zimmer|hotel|etage/.test(n) ? "bed" : /kasse|geld|lohn/.test(n) ? "money" : /termin|plan|dienst/.test(n) ? "calendar" : "file";
+  }
   function catColor(c) { if (c && CHAPTER_COLORS[c.color]) return CHAPTER_COLORS[c.color]; const keys = Object.keys(CHAPTER_COLORS); let h = 0; for (const ch of (c ? c.id : "x")) h = (h * 31 + ch.charCodeAt(0)) % keys.length; return CHAPTER_COLORS[keys[h]]; }
-  function chapIco(c, size) { const s = el("span", "cico" + (size ? " " + size : ""), catIcon(c)); s.style.setProperty("--cc", catColor(c)); s.setAttribute("aria-hidden", "true"); return s; }
+  function chapIco(c, size) { const s = el("span", "cico" + (size ? " " + size : "")); s.append(icon(catIcon(c))); s.style.setProperty("--cc", catColor(c)); s.setAttribute("aria-hidden", "true"); return s; }
 
   // ---- Logo, App-Symbol und Farbe
   const validLogo = (s) => typeof s === "string" && s.length < 420000 && /^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(s);
@@ -1237,6 +1413,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     tabs.forEach(t => { $("sec-" + t).hidden = t !== name; $("tab-" + t).setAttribute("aria-selected", String(t === name)); });
     try { localStorage.setItem("tab", name); } catch (_) {}
     window.scrollTo({ top: 0 });
+    renderTabbar();
   }
   const LEAD_TABS = ["overview", "team", "cats", "groups", "design", "help"];
   function showLeadTab(t) {
@@ -1248,6 +1425,9 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   }
   $("tabs").addEventListener("click", (e) => { const b = e.target.closest("button[data-tab]"); if (b) showTab(b.dataset.tab); });
   $("lead-tabs").addEventListener("click", (e) => { const b = e.target.closest("button[data-lt]"); if (b) { showLeadTab(b.dataset.lt); renderAll(); } });
+  const phone = window.matchMedia("(max-width: 760px)");
+  const placeSearch = () => { $("post-search").placeholder = phone.matches ? "Suchen …" : "Infos und Anleitungen durchsuchen …"; };
+  phone.addEventListener("change", placeSearch); placeSearch();
   $("post-search").addEventListener("input", () => { S.search = $("post-search").value.trim().toLowerCase(); renderInfos(); });
   $("team-search").addEventListener("input", () => { S.teamSearch = $("team-search").value.trim().toLowerCase(); renderTeam(); });
   $("logout").addEventListener("click", () => auth.signOut());
@@ -1304,7 +1484,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   function postRow(p, q) {
     const c = catOf(p.catId), unread = isUnread(p);
     const a = el("a", "prow" + (unread ? " unread" : "")); a.href = "#beitrag/" + p.id; a.dataset.id = p.id; track(a);
-    a.append(chapIco(c));
+    if (validId(p.coverThumb)) { const t = el("img", "thumb"); t.alt = ""; t.dataset.id = p.coverThumb; a.append(t); } else a.append(chapIco(c));
     const m = el("div", "pm"), t = el("div", "pt"), ts = el("span");
     ts.append(hlText(p.title || "(ohne Titel)", q)); t.append(ts); if (p.pinned) t.append(icon("pin"));
     const pp = el("div", "pp"); pp.append(hlText(snippet(p, q), q));
@@ -1319,6 +1499,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   }
   function pinCard(p) {
     const c = catOf(p.catId), a = el("a", "pcard"); a.href = "#beitrag/" + p.id; a.dataset.id = p.id; a.style.setProperty("--cc", catColor(c)); track(a);
+    if (validId(p.coverThumb)) { const f = el("div", "pc-cover"), i = el("img"); i.alt = ""; i.dataset.id = p.coverThumb; f.append(i); a.append(f); }
     const top = el("div", "pc-top"); top.append(chapIco(c, "sm"), el("span", null, catName(p.catId))); if (isUnread(p)) top.append(el("span", "pill new", "Neu"));
     a.append(top, el("div", "pc-title", p.title || "(ohne Titel)"), el("div", "pc-prev", plainOf(p).raw.slice(0, 220)), el("div", "pc-meta", fmtRel(p.updatedAt || p.createdAt)));
     return a;
@@ -1329,7 +1510,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     s.append(h); return s;
   }
   const plist = (posts, q) => { const box = el("div", "plist"); posts.forEach(p => box.append(postRow(p, q))); return box; };
-  function emptyState(emoji, title, text, cta) { const d = el("div", "empty"); d.append(el("div", "ei", emoji), el("b", null, title)); if (text) d.append(el("span", null, text)); if (cta) { const b = el("button", "btn primary", cta[0]); b.type = "button"; b.addEventListener("click", cta[1]); d.append(b); } return d; }
+  function emptyState(ic, title, text, cta) { const d = el("div", "empty"), e = el("div", "ei"); e.append(icon(ic)); d.append(e, el("b", null, title)); if (text) d.append(el("span", null, text)); if (cta) { const b = el("button", "btn primary", cta[0]); b.type = "button"; b.addEventListener("click", cta[1]); d.append(b); } return d; }
   function setCat(id) {
     S.cat = id; S.search = ""; $("post-search").value = ""; renderInfos();
     const g = document.querySelector("#sec-infos .infos-grid"); const top = g.getBoundingClientRect().top;
@@ -1342,11 +1523,11 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const n = unread.length;
     $("hero-lead").textContent = !vis.length ? "Hier findest du alle wichtigen Infos und Anleitungen für das Team." : n ? (n === 1 ? "1 neuer Beitrag wartet auf dich." : n + " neue Beiträge warten auf dich.") : "Du bist auf dem neuesten Stand – alles gelesen.";
     const bs = $("banner-stats"); bs.replaceChildren();
-    const stat = (num, label, go, dot) => { const b = el("button", "bstat"); b.type = "button"; if (dot) b.append(el("span", "dot")); b.append(el("b", null, String(num)), el("span", null, label)); b.addEventListener("click", go); bs.append(b); };
+    const stat = (num, label, go, dot, minor) => { const b = el("button", "bstat" + (minor ? " minor" : "")); b.type = "button"; if (dot) b.append(el("span", "dot")); b.append(el("b", null, String(num)), el("span", null, label)); b.addEventListener("click", go); bs.append(b); };
     if (n) stat(n, "neu", () => setCat("unread"), true);
     if (pinned.length) stat(pinned.length, "angeheftet", () => setCat("pinned"));
-    stat(vis.length, vis.length === 1 ? "Beitrag" : "Beiträge", () => setCat("all"));
-    if (S.cats.length) stat(S.cats.length, "Kapitel", () => setCat("all"));
+    stat(vis.length, vis.length === 1 ? "Beitrag" : "Beiträge", () => setCat("all"), false, true);
+    if (S.cats.length) stat(S.cats.length, "Kapitel", () => setCat("chapters"), false, true);
     $("add-post").hidden = !canInfo();
   }
   function renderNav(vis, unread, pinned) {
@@ -1355,7 +1536,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       const cur = String(S.cat === id && !S.search);
       const b = el("button", "side-item"); b.type = "button"; b.setAttribute("aria-current", cur);
       const c = el("button", "chip"); c.type = "button"; c.setAttribute("aria-pressed", cur);
-      if (typeof ico === "string") b.append(icon(ico)); else { c.append(el("span", null, ico.textContent)); b.append(ico); }
+      if (typeof ico === "string") b.append(icon(ico)); else { b.append(chapIco(ico, "sm")); c.append(chapIco(ico)); }
       b.append(el("span", "nm", label)); c.append(el("span", null, label));
       if (n) { b.append(el("span", "n" + (hot ? " hot" : ""), String(n))); c.append(el("span", "n" + (hot ? " hot" : ""), String(n))); }
       b.addEventListener("click", () => setCat(id)); c.addEventListener("click", () => setCat(id));
@@ -1367,12 +1548,18 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const lab = el("div", "side-label"); lab.append(el("span", null, "Kapitel"));
     if (canInfo()) { const b = el("button", "lnk", "Verwalten"); b.type = "button"; b.addEventListener("click", () => { showTab("leitung"); showLeadTab("cats"); }); lab.append(b); }
     side.append(lab);
-    S.cats.forEach(c => { const n = vis.filter(p => p.catId === c.id).length, u = unread.filter(p => p.catId === c.id).length; add(c.id, c.name, chapIco(c, "sm"), u || n, !!u); });
+    S.cats.forEach(c => { const n = vis.filter(p => p.catId === c.id).length, u = unread.filter(p => p.catId === c.id).length; add(c.id, c.name, c, u || n, !!u); });
     if (!S.cats.length) side.append(el("div", "meta", "Noch keine Kapitel."));
   }
-  function renderInfos() {
+  function chapterTile(c, vis, unread) {
+    const n = vis.filter(p => p.catId === c.id).length, u = unread.filter(p => p.catId === c.id).length, b = el("button", "ctile"); b.type = "button";
+    b.append(chapIco(c), el("b", null, c.name), el("span", "meta", n + (n === 1 ? " Beitrag" : " Beiträge") + (u ? " · " + u + " neu" : "")));
+    b.addEventListener("click", () => setCat(c.id)); return b;
+  }
+  function renderInfos() { renderInfosInner(); hydrateImages($("post-list")); renderTabbar(); }
+  function renderInfosInner() {
     const vis = visiblePosts(), unread = vis.filter(isUnread).sort(byCreated), pinned = vis.filter(p => p.pinned).sort(byCreated);
-    if (!["all", "unread", "pinned"].includes(S.cat) && !catOf(S.cat)) S.cat = "all";
+    if (!["all", "unread", "pinned", "chapters", "search"].includes(S.cat) && !catOf(S.cat)) S.cat = "all";
     renderBanner(vis, unread, pinned); renderNav(vis, unread, pinned);
     $("count-infos").textContent = unread.length ? String(unread.length) : "";
     $("read-all").hidden = !unread.length;
@@ -1380,10 +1567,17 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const q = S.search;
     if (q) {
       const res = vis.filter(p => (p.title || "").toLowerCase().includes(q) || plainOf(p).low.includes(q) || catName(p.catId).toLowerCase().includes(q)).sort(byPinned);
-      const s = section(res.length === 1 ? "1 Treffer" : res.length + " Treffer"); s.append(res.length ? plist(res, q) : emptyState("🔍", "Nichts gefunden", "Versuche es mit einem anderen Wort.")); list.append(s); return;
+      const s = section(res.length === 1 ? "1 Treffer" : res.length + " Treffer"); s.append(res.length ? plist(res, q) : emptyState("search", "Nichts gefunden", "Versuche es mit einem anderen Wort.")); list.append(s); return;
     }
-    if (S.cat === "unread") { const s = section("Ungelesen", unread.length); s.append(unread.length ? plist(unread) : emptyState("🎉", "Alles gelesen", "Es gibt keine ungelesenen Beiträge.")); list.append(s); return; }
-    if (S.cat === "pinned") { const s = section("Angeheftet", pinned.length); s.append(pinned.length ? plist(pinned) : emptyState("📌", "Nichts angeheftet", "Wichtige Beiträge kann die Leitung oben anheften.")); list.append(s); return; }
+    if (S.cat === "unread") { const s = section("Ungelesen", unread.length); s.append(unread.length ? plist(unread) : emptyState("checkCircle", "Alles gelesen", "Es gibt keine ungelesenen Beiträge.")); list.append(s); return; }
+    if (S.cat === "pinned") { const s = section("Angeheftet", pinned.length); s.append(pinned.length ? plist(pinned) : emptyState("pin", "Nichts angeheftet", "Wichtige Beiträge kann die Leitung oben anheften.")); list.append(s); return; }
+    if (S.cat === "chapters") {
+      const s = section("Alle Kapitel", S.cats.length);
+      if (!S.cats.length) s.append(emptyState("folder", "Noch keine Kapitel", canInfo() ? "Lege unter «Leitung → Kapitel» das erste Kapitel an." : "Die Leitung legt bald Kapitel an."));
+      else { const g = el("div", "ctiles"); S.cats.forEach(c => g.append(chapterTile(c, vis, unread))); s.append(g); }
+      list.append(s); return;
+    }
+    if (S.cat === "search") { const s = section("Zuletzt aktualisiert"); s.append(vis.length ? plist(vis.slice().sort(byUpdated).slice(0, 10)) : emptyState("search", "Noch nichts zu finden", "Sobald es Beiträge gibt, kannst du sie hier durchsuchen.")); list.append(s); return; }
     if (S.cat !== "all") {
       const c = catOf(S.cat), posts = vis.filter(p => p.catId === c.id).sort(byPinned);
       const h = el("div", "chap-h"), g = el("div", "grow"); g.append(el("h2", null, c.name), el("div", "meta", posts.length + (posts.length === 1 ? " Beitrag" : " Beiträge")));
@@ -1392,13 +1586,13 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       list.append(h, posts.length ? plist(posts) : emptyState(catIcon(c), "Dieses Kapitel ist noch leer", canInfo() ? "Schreibe den ersten Beitrag." : "Hier erscheinen bald Beiträge."));
       return;
     }
-    if (!vis.length) { list.append(emptyState("📚", "Noch keine Beiträge", canInfo() ? "Lege die erste Info oder Anleitung an – mit Vorlagen geht das ganz schnell." : "Sobald die Leitung Infos veröffentlicht, erscheinen sie hier.", canInfo() ? ["Ersten Beitrag schreiben", () => startPost(null)] : null)); return; }
+    if (!vis.length) { list.append(emptyState("book", "Noch keine Beiträge", canInfo() ? "Lege die erste Info oder Anleitung an – mit Vorlagen geht das ganz schnell." : "Sobald die Leitung Infos veröffentlicht, erscheinen sie hier.", canInfo() ? ["Ersten Beitrag schreiben", () => startPost(null)] : null)); return; }
     if (pinned.length) { const s = section("Angeheftet", pinned.length), g = el("div", "pin-grid"); pinned.forEach(p => g.append(pinCard(p))); s.append(g); list.append(s); }
     const fresh = unread.filter(p => !p.pinned);
     if (fresh.length) { const s = section("Neu für dich", fresh.length, fresh.length > 5 ? ["Alle anzeigen", () => setCat("unread")] : null); s.append(plist(fresh.slice(0, 5))); list.append(s); }
     if (S.cats.length) {
       const s = section("Kapitel", S.cats.length), g = el("div", "ctiles"); s.classList.add("mobile-only");
-      S.cats.forEach(c => { const n = vis.filter(p => p.catId === c.id).length, u = unread.filter(p => p.catId === c.id).length; const b = el("button", "ctile"); b.type = "button"; b.append(chapIco(c), el("b", null, c.name), el("span", "meta", n + (n === 1 ? " Beitrag" : " Beiträge") + (u ? " · " + u + " neu" : ""))); b.addEventListener("click", () => setCat(c.id)); g.append(b); });
+      S.cats.forEach(c => g.append(chapterTile(c, vis, unread)));
       s.append(g); list.append(s);
     }
     const shown = new Set([...pinned, ...fresh.slice(0, 5)].map(p => p.id));
@@ -1406,6 +1600,23 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     if (recent.length) { const s = section("Zuletzt aktualisiert"); s.append(plist(recent)); list.append(s); }
   }
   $("add-post").addEventListener("click", () => startPost(null));
+  // ---- Handy: untere Leiste und Plus-Knopf
+  function renderTabbar() {
+    const inLead = !$("sec-leitung").hidden, view = inLead ? "leitung" : S.cat === "chapters" || S.cat === "search" ? S.cat : "home";
+    $("tabbar").querySelectorAll("button[data-go]").forEach(b => b.setAttribute("aria-current", String(b.dataset.go === view)));
+    $("go-leitung").hidden = !canInfo();
+    const u = unreadCount(), n = isLead() ? pendingMembers().length : 0;
+    $("count-home").textContent = u ? String(u) : ""; $("count-lead2").textContent = n ? String(n) : "";
+    $("fab-new").hidden = !canInfo() || inLead;
+    document.body.classList.toggle("searching", !inLead && S.cat === "search");
+  }
+  $("tabbar").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-go]"); if (!b) return; const go = b.dataset.go;
+    if (go === "leitung") { showTab("leitung"); return; }
+    showTab("infos"); setCat(go === "home" ? "all" : go);
+    if (go === "search") setTimeout(() => $("post-search").focus(), 60);
+  });
+  $("fab-new").addEventListener("click", () => startPost(null));
   $("read-all").addEventListener("click", async () => {
     const ids = S.posts.filter(p => canSeePost(p) && isUnread(p)).map(p => p.id); if (!ids.length) return;
     const t = now(); S.myReads = { ...S.myReads }; ids.forEach(id => { S.myReads[id] = t; }); renderAll();
@@ -1416,9 +1627,10 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   async function hydrateImages(root) {
     const imgs = [...root.querySelectorAll("img[data-id]")];
     await Promise.all(imgs.map(async (img) => {
-      const id = img.dataset.id; if (!id) return;
+      const id = img.dataset.id; if (!validId(id)) return;
       if (S.imgCache[id] == null) { try { const d = await db.collection("images").doc(id).get(); S.imgCache[id] = d.exists ? d.data().data : ""; } catch (_) { S.imgCache[id] = ""; } }
-      if (/^data:image\//.test(S.imgCache[id] || "")) img.src = S.imgCache[id]; else img.alt = "Bild nicht verfügbar";
+      if (/^data:image\//.test(S.imgCache[id] || "")) img.src = S.imgCache[id];
+      else { img.alt = "Bild nicht verfügbar"; if (img.matches(".thumb, .pc-cover img, .r-cover img")) img.hidden = true; }
     }));
   }
   function renderBody(box, p) {
@@ -1465,6 +1677,9 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     $("r-chap").replaceChildren(chapIco(c, "sm"), el("span", null, catName(p.catId)));
     const bd = $("r-badges"); bd.replaceChildren(); if (p.pinned) bd.append(el("span", "pill open", "Angeheftet")); if (restricted(p)) bd.append(el("span", "pill restricted", "Eingeschränkt sichtbar"));
     $("r-title").textContent = p.title || "(ohne Titel)";
+    const cov = $("r-cover");
+    if (validId(p.cover)) { if (cov.dataset.id !== p.cover) { const i = el("img"); i.alt = ""; i.dataset.id = p.cover; cov.replaceChildren(i); cov.dataset.id = p.cover; hydrateImages(cov); } cov.hidden = false; }
+    else { cov.hidden = true; cov.replaceChildren(); cov.dataset.id = ""; }
     const meta = $("r-meta"); meta.replaceChildren(avatar(p.authorId), el("b", null, nameOf(p.authorId)), el("span", null, "· " + fmtWhen(p.createdAt)));
     if (p.updatedAt && p.createdAt && new Date(p.updatedAt) - new Date(p.createdAt) > 60000) meta.append(el("span", null, "· aktualisiert " + fmtRel(p.updatedAt)));
     meta.append(el("span", null, "· " + readingMinutes(p) + " Min. Lesezeit"));
@@ -1482,14 +1697,27 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const order = readerOrder(), i = order.indexOf(id);
     $("r-prev").disabled = i <= 0; $("r-next").disabled = i < 0 || i >= order.length - 1;
     $("r-pos").textContent = i >= 0 && order.length > 1 ? (i + 1) + " / " + order.length : "";
+    const nav = $("r-nav"); nav.replaceChildren();
+    const navBtn = (d, label, cls) => {
+      const q = i >= 0 ? S.posts.find(x => x.id === order[i + d]) : null, b = el("button", cls), sp = el("span"); b.type = "button";
+      if (d < 0) sp.append(icon("chevL"), document.createTextNode(label)); else sp.append(document.createTextNode(label), icon("chevR"));
+      b.append(sp, el("b", null, q ? (q.title || "(ohne Titel)") : "")); b.disabled = !q; b.addEventListener("click", () => stepReader(d)); nav.append(b);
+    };
+    if (order.length > 1) { navBtn(-1, "Vorheriger Beitrag", "prev"); navBtn(1, "Nächster Beitrag", "next"); }
   }
+  async function sharePost(p) {
+    const url = location.origin + location.pathname + "#beitrag/" + p.id;
+    if (navigator.share) { try { await navigator.share({ title: p.title || "Beitrag", url }); return; } catch (e) { if (e && e.name === "AbortError") return; } }
+    copyLink(p.id);
+  }
+  $("r-share").addEventListener("click", () => { const p = S.posts.find(x => x.id === S.readerId); if (p) sharePost(p); });
   function stepReader(d) { const order = readerOrder(), n = order[order.indexOf(S.readerId) + d]; if (!n) return; history.replaceState(null, "", "#beitrag/" + n); showReader(n); }
   $("r-prev").addEventListener("click", () => stepReader(-1));
   $("r-next").addEventListener("click", () => stepReader(1));
   $("r-close").addEventListener("click", closeReader);
   $("reader-bg").addEventListener("click", closeReader);
   document.addEventListener("click", (e) => {
-    const img = e.target.closest(".body img"); if (!img || !img.src) return;
+    const img = e.target.closest(".body img, .r-cover img"); if (!img || !img.src) return;
     const lb = el("div", "lightbox"); lb.setAttribute("role", "dialog"); lb.setAttribute("aria-label", "Bild");
     const big = el("img"); big.src = img.src; big.alt = ""; const x = el("button", null, "×"); x.setAttribute("aria-label", "Schliessen");
     lb.append(big, x); lb.addEventListener("click", () => lb.remove()); document.body.append(lb); x.focus();
@@ -1498,6 +1726,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     if (e.key === "Escape") {
       const lb = document.querySelector(".lightbox"); if (lb) { lb.remove(); return; }
       if (S.pop) { closePop(); return; }
+      if ($("composer").classList.contains("opts")) { $("composer").classList.remove("opts"); return; }
       if (!$("reader").hidden && $("composer").hidden) { closeReader(); return; }
     }
     if (!$("reader").hidden && $("composer").hidden && !e.target.closest("input, textarea, select, [contenteditable]")) {
@@ -1585,16 +1814,16 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   function menuPop(anchor, title, items) {
     openPop(anchor, p => {
       keepSel(p); p.append(el("div", "pop-h", title));
-      items.forEach(([e, label, fn]) => { const b = el("button", "pop-item"); b.type = "button"; b.append(el("span", "e", e), document.createTextNode(label)); b.addEventListener("click", () => { closePop(); fn(); }); p.append(b); });
+      items.forEach(([e, label, fn]) => { const b = el("button", "pop-item"), ic = el("span", "e"); b.type = "button"; if (I[e]) ic.append(icon(e)); else ic.textContent = e; b.append(ic, document.createTextNode(label)); b.addEventListener("click", () => { closePop(); fn(); }); p.append(b); });
     });
   }
   const casePop = (a) => menuPop(a, "Gross-/Kleinschreibung", [["Aa", "Satzanfang gross", () => applyCase("sentence")], ["aa", "kleinbuchstaben", () => applyCase("lower")], ["AA", "GROSSBUCHSTABEN", () => applyCase("upper")], ["Ab", "Jedes Wort Gross", () => applyCase("title")]]);
   const insertPop = (a) => menuPop(a, "Einfügen", [
-    ["ℹ️", "Hinweis-Box", () => insertHTML('<div class="callout"><b>Hinweis:</b>&nbsp;</div><p><br></p>')],
-    ["💡", "Tipp-Box", () => insertHTML('<div class="callout tip"><b>Tipp:</b>&nbsp;</div><p><br></p>')],
-    ["⚠️", "Wichtig-Box", () => insertHTML('<div class="callout warn"><b>Wichtig:</b>&nbsp;</div><p><br></p>')],
-    ["🕒", "Tagesablauf", () => insertHTML(PLAN)],
-    ["➖", "Trennlinie", () => insertHTML("<hr><p><br></p>")]
+    ["info", "Hinweis-Box", () => insertHTML('<div class="callout"><b>Hinweis:</b>&nbsp;</div><p><br></p>')],
+    ["bulb", "Tipp-Box", () => insertHTML('<div class="callout tip"><b>Tipp:</b>&nbsp;</div><p><br></p>')],
+    ["alert", "Wichtig-Box", () => insertHTML('<div class="callout warn"><b>Wichtig:</b>&nbsp;</div><p><br></p>')],
+    ["clock", "Tagesablauf", () => insertHTML(PLAN)],
+    ["minus", "Trennlinie", () => insertHTML("<hr><p><br></p>")]
   ]);
   function linkAt() { const n = savedRange && savedRange.startContainer, e = n && (n.nodeType === 1 ? n : n.parentElement), a = e && e.closest("a"); return a && ed.contains(a) ? a : null; }
   function normUrl(v) {
@@ -1664,10 +1893,10 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     if (t !== "row" && t !== "col") { savedRange = null; $("tablebar").hidden = true; }
     markDirty();
   });
-  function shrinkImage(file) {
+  function shrinkImage(file, max = 1200, q0 = .8) {
     return new Promise((res, rej) => {
       const img = new Image(), url = URL.createObjectURL(file);
-      img.onload = () => { const max = 1200, k = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); let q = .8, out = c.toDataURL("image/jpeg", q); while (out.length > 700000 && q > .4) { q -= .1; out = c.toDataURL("image/jpeg", q); } res(out); };
+      img.onload = () => { const k = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); let q = q0, out = c.toDataURL("image/jpeg", q); while (out.length > 700000 && q > .4) { q -= .1; out = c.toDataURL("image/jpeg", q); } res(out); };
       img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("decode")); };
       img.src = url;
     });
@@ -1683,6 +1912,26 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const tag = (id, cls) => '<img data-id="' + id + '" src="' + S.imgCache[id] + '" alt=""' + (cls ? ' class="' + cls + '"' : "") + ">";
     insertHTML(ids.length === 1 ? tag(ids[0], "size-l") + "<p><br></p>" : '<div class="gallery">' + ids.map(id => tag(id)).join("") + "</div><p><br></p>");
   }
+  // Titelbild: grosses Bild für die Leseansicht, kleines für Listen und Karten
+  function paintCover() {
+    const box = $("cover-prev"), has = !!(S.cover && S.cover.id); box.replaceChildren(); box.classList.toggle("has", has);
+    if (has) { const i = el("img"); i.alt = ""; i.dataset.id = S.cover.thumb || S.cover.id; box.append(i); hydrateImages(box); }
+    else box.append(icon("image"), el("span", null, "Noch kein Titelbild"));
+    $("cover-remove").hidden = !has; $("cover-pick").lastChild.textContent = has ? "Anderes Bild" : "Titelbild wählen";
+  }
+  $("cover-pick").addEventListener("click", () => $("cover-file").click());
+  $("cover-remove").addEventListener("click", () => { S.cover = null; paintCover(); markDirty(); });
+  $("cover-file").addEventListener("change", async () => {
+    const f = $("cover-file").files[0]; $("cover-file").value = ""; if (!f) return;
+    const st = $("cover-state"); st.hidden = false; st.textContent = "Titelbild wird hochgeladen …"; $("cover-pick").disabled = true;
+    try {
+      const big = await shrinkImage(f, 1600, .82), small = await shrinkImage(f, 480, .74);
+      const r1 = await db.collection("images").add({ data: big, by: S.uid, createdAt: now() });
+      const r2 = await db.collection("images").add({ data: small, by: S.uid, createdAt: now() });
+      S.imgCache[r1.id] = big; S.imgCache[r2.id] = small; S.cover = { id: r1.id, thumb: r2.id }; paintCover(); markDirty();
+    } catch (e) { console.error(e); toast("Das Titelbild konnte nicht hochgeladen werden."); }
+    st.hidden = true; $("cover-pick").disabled = false;
+  });
   $("img-file").addEventListener("change", () => { const files = [...$("img-file").files]; $("img-file").value = ""; if (files.length) uploadImages(files); });
   ed.addEventListener("paste", (e) => {
     const cd = e.clipboardData; if (!cd) return;
@@ -1702,16 +1951,16 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
 
   // Vorlagen
   const TEMPLATES = [
-    { label: "Anleitung", e: "📘", cat: /anleit/i, title: "Anleitung: ", html: '<h2>Worum geht es?</h2><p>Kurz beschreiben, wofür diese Anleitung ist.</p><h2>Das brauchst du</h2><ul><li>Material oder Zugang</li></ul><h2>So geht’s</h2><ol><li>Erster Schritt</li><li>Zweiter Schritt</li><li>Dritter Schritt</li></ol><div class="callout warn"><b>Wichtig:</b> Worauf besonders achten?</div><p><br></p>' },
-    { label: "Ankündigung", e: "📢", cat: /allgem|news|neu/i, title: "", html: '<div class="callout"><b>Kurz gesagt:</b> Was ändert sich?</div><p><b>Ab wann:</b> </p><p><b>Wer ist betroffen:</b> </p><p><b>Was heisst das für dich:</b> </p><p><br></p>' },
-    { label: "Checkliste", e: "✅", cat: /check|ablauf/i, title: "Checkliste: ", html: '<p>Bitte alles der Reihe nach abhaken:</p><ul><li>☐ Erster Punkt</li><li>☐ Zweiter Punkt</li><li>☐ Dritter Punkt</li></ul><p><br></p>' },
-    { label: "Tagesablauf", e: "🕒", cat: /ablauf|plan/i, title: "Tagesablauf", html: PLAN },
-    { label: "Regel", e: "📋", cat: /regel|sicher/i, title: "", html: '<h2>Die Regel</h2><p>Was genau gilt?</p><h2>Warum?</h2><p>Kurz begründen.</p><div class="callout tip"><b>Tipp:</b> So klappt es im Alltag.</div><p><br></p>' }
+    { label: "Anleitung", e: "book", cat: /anleit/i, title: "Anleitung: ", html: '<h2>Worum geht es?</h2><p>Kurz beschreiben, wofür diese Anleitung ist.</p><h2>Das brauchst du</h2><ul><li>Material oder Zugang</li></ul><h2>So geht’s</h2><ol><li>Erster Schritt</li><li>Zweiter Schritt</li><li>Dritter Schritt</li></ol><div class="callout warn"><b>Wichtig:</b> Worauf besonders achten?</div><p><br></p>' },
+    { label: "Ankündigung", e: "megaphone", cat: /allgem|news|neu/i, title: "", html: '<div class="callout"><b>Kurz gesagt:</b> Was ändert sich?</div><p><b>Ab wann:</b> </p><p><b>Wer ist betroffen:</b> </p><p><b>Was heisst das für dich:</b> </p><p><br></p>' },
+    { label: "Checkliste", e: "checkCircle", cat: /check|ablauf/i, title: "Checkliste: ", html: '<p>Bitte alles der Reihe nach erledigen:</p><ul class="checklist"><li>Erster Punkt</li><li>Zweiter Punkt</li><li>Dritter Punkt</li></ul><p><br></p>' },
+    { label: "Tagesablauf", e: "clock", cat: /ablauf|plan/i, title: "Tagesablauf", html: PLAN },
+    { label: "Regel", e: "clipboard", cat: /regel|sicher/i, title: "", html: '<h2>Die Regel</h2><p>Was genau gilt?</p><h2>Warum?</h2><p>Kurz begründen.</p><div class="callout tip"><b>Tipp:</b> So klappt es im Alltag.</div><p><br></p>' }
   ];
   function renderTemplates() {
     const row = $("tpl-row"); row.replaceChildren(el("span", null, "Vorlage:"));
     TEMPLATES.forEach(t => {
-      const b = el("button", "tpl"), lab = el("span", null, t.label); b.type = "button"; b.append(el("span", null, t.e), lab);
+      const b = el("button", "tpl"), lab = el("span", null, t.label); b.type = "button"; b.append(icon(t.e), lab);
       let armed = false, tm;
       b.addEventListener("click", () => {
         if (((ed.textContent || "").trim() || ed.querySelector("img, table")) && !armed) { armed = true; lab.textContent = "Inhalt ersetzen?"; tm = setTimeout(() => { armed = false; lab.textContent = t.label; }, 3500); return; }
@@ -1726,15 +1975,15 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
 
   // Entwurf (nur auf diesem Gerät) und Zähler
   const draftKey = () => "draft:" + S.uid;
-  function readDraft() { try { const d = JSON.parse(localStorage.getItem(draftKey()) || "null"); return d && (d.title || d.html) ? d : null; } catch (_) { return null; } }
+  function readDraft() { try { const d = JSON.parse(localStorage.getItem(draftKey()) || "null"); return d && (d.title || d.html || d.cover) ? d : null; } catch (_) { return null; } }
   const clearDraft = () => { try { localStorage.removeItem(draftKey()); } catch (_) {} };
   function stripSrc(html) { const doc = new DOMParser().parseFromString(html, "text/html"); doc.querySelectorAll("img").forEach(i => i.removeAttribute("src")); return doc.body.innerHTML; }
   function saveDraft() {
     if (S.editingPost || $("composer").hidden) return;
     try {
       const html = stripSrc(ed.innerHTML), title = $("post-title").value;
-      if (!title.trim() && !(ed.textContent || "").trim() && !/<img|<table/.test(html)) { clearDraft(); return; }
-      localStorage.setItem(draftKey(), JSON.stringify({ title, html, catId: $("post-cat").value, at: now() }));
+      if (!title.trim() && !(ed.textContent || "").trim() && !/<img|<table/.test(html) && !S.cover) { clearDraft(); return; }
+      localStorage.setItem(draftKey(), JSON.stringify({ title, html, catId: $("post-cat").value, cover: S.cover, at: now() }));
       $("draft-state").textContent = "Entwurf gespeichert · " + new Date().toLocaleTimeString("de-CH", { hour: "2-digit", minute: "2-digit" });
     } catch (_) {}
   }
@@ -1751,6 +2000,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const d = readDraft(); if (!d) return;
     $("post-title").value = d.title || ""; ed.innerHTML = toEditorHTML(sanitize(d.html || "")); hydrateImages(ed);
     if (d.catId && catOf(d.catId)) $("post-cat").value = d.catId;
+    S.cover = d.cover && validId(d.cover.id) ? { id: d.cover.id, thumb: validId(d.cover.thumb) ? d.cover.thumb : d.cover.id } : null; paintCover();
     $("draft-banner").hidden = true; S.dirty = true; updateCount();
   });
   $("draft-discard").addEventListener("click", () => { clearDraft(); $("draft-banner").hidden = true; });
@@ -1764,11 +2014,13 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     $("form-post-title").textContent = S.editingPost ? "Beitrag bearbeiten" : dup ? "Beitrag duplizieren" : "Neuer Beitrag";
     $("post-submit").textContent = S.editingPost ? "Speichern" : "Veröffentlichen";
     $("draft-state").textContent = S.editingPost ? "Änderungen gelten erst nach «Speichern»" : "Entwurf wird automatisch gespeichert";
-    const sel = $("post-cat"); sel.replaceChildren(); S.cats.forEach(c => { const o = el("option", null, catIcon(c) + "  " + c.name); o.value = c.id; sel.append(o); });
+    const sel = $("post-cat"); sel.replaceChildren(); S.cats.forEach(c => { const o = el("option", null, c.name); o.value = c.id; sel.append(o); });
     sel.value = p && catOf(p.catId) ? p.catId : (catOf(S.cat) ? S.cat : S.cats[0].id);
     $("post-title").value = p ? (dup ? (p.title || "") + " (Kopie)" : p.title || "") : "";
     ed.innerHTML = p ? toEditorHTML(sanitize(p.html || ("<p>" + esc(p.text || "") + "</p>"))) : "";
     if (p) hydrateImages(ed);
+    S.cover = p && validId(p.cover) ? { id: p.cover, thumb: validId(p.coverThumb) ? p.coverThumb : p.cover } : null; paintCover();
+    $("composer").classList.remove("opts");
     $("post-pin").checked = !!(p && p.pinned && !dup); $("imgbar").hidden = true; $("tablebar").hidden = true; selImg = null; savedRange = null;
     $("fmt-size").value = "3"; $("fmt-font").value = ""; ribbon.querySelectorAll("[aria-pressed]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.block === "p" || b.dataset.state === "justifyLeft")));
     const restr = !!(p && restricted(p));
@@ -1788,9 +2040,17 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     if (!force && S.editingPost && S.dirty && !window.confirm("Änderungen verwerfen?")) return;
     if (!force && !S.editingPost && S.dirty) { saveDraft(); toast("Entwurf gespeichert – du kannst später weiterschreiben."); }
     clearTimeout(draftT); closePop();
-    $("composer").hidden = true; S.editingPost = null; S.dirty = false; savedRange = null; unlock();
+    $("composer").hidden = true; $("composer").classList.remove("opts"); S.editingPost = null; S.dirty = false; savedRange = null; unlock();
   }
   $("post-cancel").addEventListener("click", () => closeComposer(false));
+  $("post-opts").addEventListener("click", () => { closePop(); $("composer").classList.add("opts"); });
+  $("opts-done").addEventListener("click", () => $("composer").classList.remove("opts"));
+  $("opts-bg").addEventListener("click", () => $("composer").classList.remove("opts"));
+  // Handy: Werkzeugleiste bleibt über der Bildschirmtastatur
+  if (window.visualViewport) {
+    const vv = window.visualViewport, place = () => document.documentElement.style.setProperty("--kb", Math.max(0, Math.round(innerHeight - vv.height - vv.offsetTop)) + "px");
+    vv.addEventListener("resize", place); vv.addEventListener("scroll", place); place();
+  }
   $("post-vis").addEventListener("change", () => { $("post-vis-box").hidden = $("post-vis").value !== "some"; });
   $("form-post").addEventListener("keydown", (e) => {
     if (!(e.ctrlKey || e.metaKey)) return;
@@ -1804,10 +2064,10 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const some = $("post-vis").value === "some";
     const visibleGroups = some ? S.groups.filter(g => $("pg-" + g.id) && $("pg-" + g.id).checked).map(g => g.id) : [];
     const visibleTo = some ? activeMembers().filter(m => $("pp-" + m) && $("pp-" + m).checked) : [];
-    if (some && !visibleGroups.length && !visibleTo.length) { toast("Wähle mindestens eine Person oder Gruppe."); return; }
+    if (some && !visibleGroups.length && !visibleTo.length) { $("composer").classList.add("opts"); toast("Wähle mindestens eine Person oder Gruppe."); return; }
     const html = sanitize(ed.innerHTML), text = (ed.innerText || "").replace(/\s+/g, " ").trim();
-    if (!text && !/<img|<table/.test(html)) { toast("Der Beitrag ist noch leer."); ed.focus(); return; }
-    const data = { catId: $("post-cat").value, title, text: text.slice(0, 400), html, pinned: $("post-pin").checked, visibleTo, visibleGroups, updatedAt: now() };
+    if (!text && !/<img|<table/.test(html) && !S.cover) { toast("Der Beitrag ist noch leer."); ed.focus(); return; }
+    const data = { catId: $("post-cat").value, title, text: text.slice(0, 400), html, cover: S.cover ? S.cover.id : "", coverThumb: S.cover ? (S.cover.thumb || S.cover.id) : "", pinned: $("post-pin").checked, visibleTo, visibleGroups, updatedAt: now() };
     const editing = S.editingPost;
     await act($("post-submit"), async () => {
       if (editing) await db.collection("posts").doc(editing.id).update(data);
@@ -1833,23 +2093,23 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     const todo = $("lead-todo"); todo.replaceChildren(); let n = 0;
     const btn = (label, cls, fn, sure) => { const b = el("button", "btn small" + (cls ? " " + cls : ""), label); b.type = "button"; if (sure) confirmBtn(b, label, fn); else b.addEventListener("click", () => fn(b)); return b; };
     const item = (tone, emoji, title, text, actions, pct) => {
-      const d = el("div", "titem " + tone), t = el("div", "tt"); d.append(el("div", "ti", emoji)); t.append(el("b", null, title), el("span", null, text));
+      const d = el("div", "titem " + tone), t = el("div", "tt"), ti = el("div", "ti"); ti.append(icon(emoji)); d.append(ti); t.append(el("b", null, title), el("span", null, text));
       if (pct != null) { const b = el("div", "tbar"), i = el("i"); i.style.width = pct + "%"; b.append(i); t.append(b); }
       d.append(t); if (actions.length) { const a = el("div", "actions"); a.append(...actions); d.append(a); } todo.append(d); n++;
     };
-    if (isLead()) pendingMembers().forEach(id => item("warn", "👋", nameOf(id) + " möchte ins Team", "Hat sich registriert und wartet auf deine Freischaltung.", [
+    if (isLead()) pendingMembers().forEach(id => item("warn", "userPlus", nameOf(id) + " möchte ins Team", "Hat sich registriert und wartet auf deine Freischaltung.", [
       btn("Freischalten", "ok", (b) => act(b, () => db.collection("users").doc(id).update({ active: true, pending: false }), nameOf(id) + " ist freigeschaltet.")),
       btn("Ablehnen", "bad", () => db.collection("users").doc(id).update({ pending: false, active: false }), true)]));
-    if (!S.cats.length) item("info", "📁", "Lege ein erstes Kapitel an", "Kapitel ordnen die Infos, z. B. «Allgemein» und «Anleitungen».", [btn("Kapitel anlegen", "primary", () => showLeadTab("cats"))]);
-    else if (!S.posts.length) item("info", "✍️", "Schreibe den ersten Beitrag", "Mit der Vorlage «Anleitung» geht das in wenigen Minuten.", [btn("Beitrag schreiben", "primary", () => startPost(null))]);
+    if (!S.cats.length) item("info", "folder", "Lege ein erstes Kapitel an", "Kapitel ordnen die Infos, z. B. «Allgemein» und «Anleitungen».", [btn("Kapitel anlegen", "primary", () => showLeadTab("cats"))]);
+    else if (!S.posts.length) item("info", "pen", "Schreibe den ersten Beitrag", "Mit der Vorlage «Anleitung» geht das in wenigen Minuten.", [btn("Beitrag schreiben", "primary", () => startPost(null))]);
     const st2 = S.settings || {};
-    if (isLead() && !validLogo(st2.logo) && !SYMBOLS[st2.logoIcon]) item("info", "🎨", "Gib dem Portal euer Logo", "Eigenes Logo hochladen oder ein Symbol wählen – erscheint auch als App-Symbol auf dem Handy.", [btn("Logo wählen", "", () => { showLeadTab("design"); renderDesign(); })]);
-    if (isLead()) Object.keys(S.logins).filter(id => S.logins[id].reset && S.users[id] && S.users[id].active !== false).forEach(id => item("info", "🔑", nameOf(id) + " wählt eine neue PIN", "Passiert automatisch beim nächsten Anmelden – du musst nichts tun.", []));
+    if (isLead() && !validLogo(st2.logo) && !SYMBOLS[st2.logoIcon]) item("info", "palette", "Gib dem Portal euer Logo", "Eigenes Logo hochladen oder ein Symbol wählen – erscheint auch als App-Symbol auf dem Handy.", [btn("Logo wählen", "", () => { showLeadTab("design"); renderDesign(); })]);
+    if (isLead()) Object.keys(S.logins).filter(id => S.logins[id].reset && S.users[id] && S.users[id].active !== false).forEach(id => item("info", "key", nameOf(id) + " wählt eine neue PIN", "Passiert automatisch beim nächsten Anmelden – du musst nichts tun.", []));
     const day = Date.now() - 864e5;
     S.posts.map(p => ({ p, r: readStats(p) })).filter(x => x.r.total && x.r.read < x.r.total && new Date(x.p.createdAt || 0).getTime() < day)
       .sort((a, b) => a.r.read / a.r.total - b.r.read / b.r.total).slice(0, 5)
-      .forEach(({ p, r }) => item("read", "📖", "«" + (p.title || "ohne Titel") + "»", (r.total - r.read) + " von " + r.total + " haben noch nicht gelesen.", [btn("Wer fehlt?", "", () => { S.readsOpen.add(p.id); openPost(p.id); })], Math.round(100 * r.read / r.total)));
-    if (!n) { const d = el("div", "alldone"); d.append(el("div", null, "🎉"), el("b", null, "Alles erledigt"), el("span", null, "Hier erscheinen neue Anmeldungen und Beiträge, die noch nicht alle gelesen haben.")); todo.append(d); }
+      .forEach(({ p, r }) => item("read", "eye", "«" + (p.title || "ohne Titel") + "»", (r.total - r.read) + " von " + r.total + " haben noch nicht gelesen.", [btn("Wer fehlt?", "", () => { S.readsOpen.add(p.id); openPost(p.id); })], Math.round(100 * r.read / r.total)));
+    if (!n) { const d = el("div", "alldone"); const ei = el("div", "ei"); ei.append(icon("checkCircle")); d.append(ei, el("b", null, "Alles erledigt"), el("span", null, "Hier erscheinen neue Anmeldungen und Beiträge, die noch nicht alle gelesen haben.")); todo.append(d); }
   }
 
   // ---- LEITUNG: Mitarbeitende (Rolle per Auswahl, weitere Aktionen im «⋯»-Menü)
@@ -1942,7 +2202,7 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   function renderGroups() {
     if (!isLead()) return;
     const gl = $("group-list"); gl.replaceChildren();
-    if (!S.groups.length) gl.append(emptyState("👥", "Noch keine Gruppen", "Lege oben eine Gruppe an und hake danach die Mitglieder an."));
+    if (!S.groups.length) gl.append(emptyState("users", "Noch keine Gruppen", "Lege oben eine Gruppe an und hake danach die Mitglieder an."));
     for (const g of S.groups) {
       const card = el("div", "card"), top = el("div", "top"), t = el("div"); t.append(el("div", "title", g.name), el("div", "meta", (g.memberIds || []).length + " Mitglieder")); top.append(t);
       const del = el("button", "btn small bad", "Gruppe löschen"); del.type = "button"; confirmBtn(del, "Gruppe löschen", () => db.collection("groups").doc(g.id).delete()); top.append(del); card.append(top);
@@ -1962,13 +2222,13 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     if (!S.cats.length) { list.append(el("div", "meta", "Noch keine Kapitel. Lege oben das erste an, z. B. «Allgemein» oder «Anleitungen».")); return; }
     S.cats.forEach((c, i) => {
       const row = el("div", "cat-row");
-      const ib = el("button", "cico", catIcon(c)); ib.type = "button"; ib.style.setProperty("--cc", catColor(c)); ib.title = "Symbol und Farbe ändern"; ib.setAttribute("aria-label", "Symbol und Farbe von " + c.name + " ändern");
+      const ib = el("button", "cico"); ib.append(icon(catIcon(c))); ib.type = "button"; ib.style.setProperty("--cc", catColor(c)); ib.title = "Symbol und Farbe ändern"; ib.setAttribute("aria-label", "Symbol und Farbe von " + c.name + " ändern");
       ib.addEventListener("click", () => togglePop(ib, (a) => catPop(a, c)));
       const n = el("input"); n.value = c.name; n.maxLength = 60; n.setAttribute("aria-label", "Kapitelname");
       n.addEventListener("change", () => { const v = n.value.trim(); if (v && v !== c.name) db.collection("categories").doc(c.id).update({ name: v }).then(() => toast("Umbenannt.")).catch(e => toast(errMsg(e))); });
       const cnt = S.posts.filter(p => p.catId === c.id).length, a = el("div", "actions");
-      const up = el("button", "btn icon", "↑"); up.type = "button"; up.disabled = i === 0; up.setAttribute("aria-label", "Nach oben"); up.addEventListener("click", () => moveCat(i, -1));
-      const dn = el("button", "btn icon", "↓"); dn.type = "button"; dn.disabled = i === S.cats.length - 1; dn.setAttribute("aria-label", "Nach unten"); dn.addEventListener("click", () => moveCat(i, 1));
+      const up = el("button", "btn icon"); up.append(icon("chevUp")); up.type = "button"; up.disabled = i === 0; up.setAttribute("aria-label", "Nach oben"); up.addEventListener("click", () => moveCat(i, -1));
+      const dn = el("button", "btn icon"); dn.append(icon("chevDown")); dn.type = "button"; dn.disabled = i === S.cats.length - 1; dn.setAttribute("aria-label", "Nach unten"); dn.addEventListener("click", () => moveCat(i, 1));
       const del = el("button", "btn small bad", "Löschen"); del.type = "button"; del.disabled = cnt > 0; del.title = cnt ? "Zuerst die Beiträge verschieben oder löschen" : "";
       confirmBtn(del, "Löschen", () => db.collection("categories").doc(c.id).delete());
       a.append(el("span", "meta", cnt + (cnt === 1 ? " Beitrag" : " Beiträge")), up, dn, del); row.append(ib, n, a); list.append(row);
@@ -1977,8 +2237,8 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
   function catPop(anchor, c) {
     openPop(anchor, p => {
       p.append(el("div", "pop-h", "Symbol"));
-      const g = el("div", "emoji-grid");
-      EMOJIS.forEach(e => { const b = el("button", null, e); b.type = "button"; b.setAttribute("aria-pressed", String(catIcon(c) === e)); b.addEventListener("click", () => { closePop(); db.collection("categories").doc(c.id).update({ icon: e }).catch(err => toast(errMsg(err))); }); g.append(b); });
+      const g = el("div", "icon-grid");
+      CHAPTER_ICONS.forEach(k => { const b = el("button"); b.type = "button"; b.append(icon(k)); b.setAttribute("aria-label", "Symbol " + k); b.setAttribute("aria-pressed", String(catIcon(c) === k)); b.addEventListener("click", () => { closePop(); db.collection("categories").doc(c.id).update({ icon: k }).catch(err => toast(errMsg(err))); }); g.append(b); });
       p.append(g, el("div", "pop-h", "Farbe"));
       const cg = el("div", "sw-grid");
       Object.entries(CHAPTER_COLORS).forEach(([k, hex]) => { const b = el("button", "sw"); b.type = "button"; b.style.background = hex; b.setAttribute("aria-label", "Farbe " + k); b.setAttribute("aria-pressed", String(catColor(c) === hex)); b.addEventListener("click", () => { closePop(); db.collection("categories").doc(c.id).update({ color: k }).catch(err => toast(errMsg(err))); }); cg.append(b); });
@@ -1986,8 +2246,9 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
     });
   }
   async function moveCat(i, d) {
-    const a = S.cats[i], b = S.cats[i + d]; if (!b) return;
-    try { const batch = db.batch(); batch.update(db.collection("categories").doc(a.id), { order: b.order || 0 }); batch.update(db.collection("categories").doc(b.id), { order: a.order || 0 }); await batch.commit(); } catch (e) { toast(errMsg(e)); }
+    const list = S.cats.slice(), j = i + d; if (!list[j]) return;
+    [list[i], list[j]] = [list[j], list[i]];
+    try { const batch = db.batch(); list.forEach((c, k) => { if ((c.order || 0) !== (k + 1) * 10) batch.update(db.collection("categories").doc(c.id), { order: (k + 1) * 10 }); }); await batch.commit(); } catch (e) { toast(errMsg(e)); }
   }
   $("form-cat").addEventListener("submit", async (e) => {
     e.preventDefault(); const name = $("cat-name").value.trim(); if (!name) return;
@@ -2105,8 +2366,8 @@ details.off-list summary { cursor: pointer; font-size: 13px; font-weight: 600; c
       batch.set(db.collection("users").doc(id), { name, active: true, owner: true, colead: true, infos: true, loginDomain: LOGIN_DOMAIN, createdAt: now() });
       batch.set(db.collection("logins").doc(id), { d: LOGIN_DOMAIN });
       batch.set(db.collection("settings").doc("portal"), { name: "Team-Portal", sub: "", accent: "#0f5c6e", setupDone: true, createdAt: now() });
-      batch.set(db.collection("categories").doc("allgemein"), { name: "Allgemein", order: 10, icon: "📢", color: "teal", createdAt: now() });
-      batch.set(db.collection("categories").doc("anleitungen"), { name: "Anleitungen", order: 20, icon: "📘", color: "blue", createdAt: now() });
+      batch.set(db.collection("categories").doc("allgemein"), { name: "Allgemein", order: 10, icon: "megaphone", color: "teal", createdAt: now() });
+      batch.set(db.collection("categories").doc("anleitungen"), { name: "Anleitungen", order: 20, icon: "book", color: "blue", createdAt: now() });
       await batch.commit();
       S.settingUp = false; boot(auth.currentUser);
     } catch (err) { console.error(err); S.settingUp = false; showErr("setup-err", "Einrichten fehlgeschlagen: " + (err && err.code || err.message)); b.disabled = false; }
