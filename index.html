@@ -1,0 +1,1215 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f5c6e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Team-Portal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky header, tab bar (bottom on phones), one 800px column. Cards only for list entries; forms and pickers sit on panels. */
+:root {
+  --bg: #f6f4ef; --surface: #ffffff; --fg: #1d2330; --muted: #68707f; --line: #ddd8cf;
+  --accent-base: #0f5c6e; --accent: var(--accent-base); --accent-fg: #ffffff; --accent-soft: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  --ok: #1f7a4d; --ok-soft: #dff1e6; --warn: #9a6200; --warn-soft: #fbefcf; --bad: #a83a2a; --bad-soft: #f8e1dc;
+  --shadow: 0 1px 2px rgba(20, 30, 40, .06), 0 4px 14px rgba(20, 30, 40, .05);
+  --radius: 12px;
+  --display: "Bricolage Grotesque", "Public Sans", system-ui, sans-serif;
+  --body: "Public Sans", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #151922; --surface: #1e242f; --fg: #e9ebef; --muted: #9aa3b2; --line: #333b49;
+  --accent: color-mix(in srgb, var(--accent-base) 55%, #ffffff); --accent-fg: #0f1a26; --accent-soft: color-mix(in srgb, var(--accent) 18%, var(--surface));
+  --ok: #7cd3a1; --ok-soft: #1d3a2b; --warn: #f0c060; --warn-soft: #3e3214; --bad: #f09a8a; --bad-soft: #452420;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
+  color-scheme: dark;
+}}
+:root[data-theme="dark"] {
+  --bg: #151922; --surface: #1e242f; --fg: #e9ebef; --muted: #9aa3b2; --line: #333b49;
+  --accent: color-mix(in srgb, var(--accent-base) 55%, #ffffff); --accent-fg: #0f1a26; --accent-soft: color-mix(in srgb, var(--accent) 18%, var(--surface));
+  --ok: #7cd3a1; --ok-soft: #1d3a2b; --warn: #f0c060; --warn-soft: #3e3214; --bad: #f09a8a; --bad-soft: #452420;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5; margin: 0; }
+
+header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--surface); border-bottom: 1px solid var(--line); }
+.hwrap { max-width: 800px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.brand { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 12px 10px; }
+.brand h1 { font-family: var(--display); font-size: 21px; font-weight: 700; margin: 0; letter-spacing: -0.01em; line-height: 1.15; }
+.brand .sub2 { font-size: 12px; color: var(--muted); font-weight: 500; }
+.brand .logo { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand .mark { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); color: var(--accent-fg); display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 16px; flex: none; }
+.who { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); min-width: 0; }
+.who img { width: 28px; height: 28px; border-radius: 50%; }
+.who b { color: var(--fg); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.role { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; padding: 2px 7px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 600; white-space: nowrap; }
+nav { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; max-width: 800px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+nav button { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); font: inherit; font-weight: 600; padding: 10px 12px; min-height: 44px; cursor: pointer; white-space: nowrap; display: flex; gap: 8px; align-items: center; position: relative; }
+nav button svg { width: 20px; height: 20px; flex: none; }
+nav button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+nav button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 4px; }
+.count { background: var(--warn); color: var(--surface); font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 999px; font-variant-numeric: tabular-nums; }
+.count:empty { display: none; }
+main { max-width: 800px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 60px; }
+@media (max-width: 640px) {
+  nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 9; max-width: none; background: var(--surface); border-top: 1px solid var(--line); justify-content: space-around; gap: 0; overflow: visible;
+    padding-left: max(4px, env(safe-area-inset-left, 0px)); padding-right: max(4px, env(safe-area-inset-right, 0px)); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  nav button { flex: 1 1 0; flex-direction: column; gap: 3px; font-size: 11px; padding: 8px 2px 6px; min-height: 58px; border-bottom: 0; border-top: 2px solid transparent; justify-content: center; min-width: 0; }
+  nav button[aria-selected="true"] { border-top-color: var(--accent); }
+  nav button svg { width: 24px; height: 24px; }
+  nav .count { position: absolute; top: 4px; right: calc(50% - 22px); }
+  main { padding-block: 16px calc(90px + env(safe-area-inset-bottom, 0px)); }
+  .btn:not(.small) { width: 100%; min-height: 48px; font-size: 16px; }
+  .btn.small { min-height: 40px; padding: 8px 12px; flex: 1 1 auto; }
+  #toast { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+}
+section[hidden], [hidden] { display: none !important; }
+h2 { font-family: var(--display); font-size: 20px; font-weight: 700; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+.lead { color: var(--muted); margin: 0 0 16px; max-width: 60ch; }
+.notice { background: var(--accent-soft); color: var(--fg); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 6px 6px 0; margin-bottom: 18px; font-size: 14px; }
+.notice.bad { background: var(--bad-soft); border-left-color: var(--bad); }
+.panel { display: grid; gap: 12px; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 20px; box-shadow: var(--shadow); }
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.row > label { flex: 1 1 160px; min-width: 0; }
+label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); }
+label.check { display: flex; align-items: center; gap: 8px; color: var(--fg); font-weight: 500; font-size: 14px; min-height: 36px; }
+label.check input { width: 20px; height: 20px; min-height: 0; margin: 0; accent-color: var(--accent); }
+input, select, textarea { font: inherit; font-size: 16px; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 11px 12px; min-height: 46px; width: 100%; min-width: 0; }
+textarea { resize: vertical; min-height: 110px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn { font: inherit; font-weight: 600; font-size: 14px; border-radius: 6px; padding: 8px 14px; min-height: 40px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.btn.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.btn.bad { background: var(--bad-soft); color: var(--bad); border-color: transparent; }
+.btn.small { padding: 5px 10px; font-size: 13px; min-height: 34px; }
+.btn.icon { padding: 4px 8px; min-height: 32px; font-size: 16px; line-height: 1; }
+.btn:disabled { opacity: .5; cursor: default; }
+.add { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; font: inherit; font-weight: 600; font-size: 16px; border-radius: var(--radius); border: 1px dashed var(--accent); background: var(--accent-soft); color: var(--accent); cursor: pointer; margin-bottom: 16px; }
+.add svg { width: 20px; height: 20px; }
+.list { display: grid; gap: 10px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 8px; box-shadow: var(--shadow); }
+.card.mine { border-left: 3px solid var(--accent); }
+.card.pinned { border-color: var(--accent); }
+.card .top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
+.card .title { font-weight: 600; font-size: 16px; }
+.card .date { font-family: var(--display); font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
+.card p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.meta { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.meta img { width: 20px; height: 20px; border-radius: 50%; }
+.pill { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.pill.pending { background: var(--warn-soft); color: var(--warn); }
+.pill.approved { background: var(--ok-soft); color: var(--ok); }
+.pill.rejected { background: var(--bad-soft); color: var(--bad); }
+.pill.open { background: var(--accent-soft); color: var(--accent); }
+.pill.restricted { background: var(--warn-soft); color: var(--warn); }
+.takers { display: grid; gap: 6px; padding: 8px 10px; background: var(--bg); border-radius: 6px; font-size: 14px; }
+.taker { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.empty { color: var(--muted); padding: 22px 16px; text-align: center; border: 1px dashed var(--line); border-radius: 8px; }
+.sub { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; margin: 22px 0 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; margin-bottom: 14px; }
+.chip { font: inherit; font-size: 14px; font-weight: 600; padding: 7px 14px; min-height: 38px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; white-space: nowrap; }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.member { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px 3px 3px; font-size: 13px; }
+.member img { width: 22px; height: 22px; border-radius: 50%; }
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 2px 12px; }
+/* Dienstplan */
+.weeknav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.weeknav .wk { font-family: var(--display); font-weight: 700; font-size: 17px; text-align: center; flex: 1; }
+.day { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.day.today { border-color: var(--accent); }
+.day .dh { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: var(--bg); font-weight: 600; font-size: 14px; }
+.day .dh .dn { font-family: var(--display); font-size: 15px; }
+.day.today .dh { background: var(--accent-soft); color: var(--accent); }
+.shift { display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-top: 1px solid var(--line); font-size: 14px; }
+.shift img { width: 24px; height: 24px; border-radius: 50%; }
+.shift .sn { font-weight: 600; min-width: 86px; }
+.shift .pn { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shift.me { background: var(--accent-soft); }
+.shift.none { color: var(--muted); font-style: italic; }
+.addshift { display: grid; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--line); background: var(--bg); }
+.addshift .row > label { flex: 1 1 130px; }
+/* Team */
+.trow { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.trow .roles { display: flex; gap: 10px; flex-wrap: wrap; }
+.trow .roles label.check { min-height: 30px; font-size: 13px; }
+@media (max-width: 520px) { .trow { grid-template-columns: 1fr; } }
+/* Editor + post body */
+.toolbar { display: flex; gap: 6px; flex-wrap: wrap; }
+.toolbar button { font: inherit; font-size: 13px; font-weight: 600; min-height: 36px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+.toolbar button.hl { background: var(--warn-soft); color: var(--warn); }
+.editor { min-height: 160px; max-height: 60vh; overflow: auto; font-size: 16px; line-height: 1.55; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+.editor:empty::before { content: attr(data-placeholder); color: var(--muted); }
+.editor:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.body, .editor { overflow-wrap: anywhere; }
+.body p, .editor p, .body div, .editor div { margin: 0 0 8px; }
+.body h3, .editor h3 { font-family: var(--display); font-size: 17px; margin: 14px 0 6px; }
+.body ul, .editor ul, .body ol, .editor ol { margin: 0 0 8px; padding-left: 22px; }
+.body mark, .editor mark { background: var(--warn-soft); color: inherit; padding: 0 3px; border-radius: 3px; }
+.body img, .editor img { display: block; max-width: 100%; height: auto; border-radius: 10px; margin: 8px 0; cursor: zoom-in; }
+.body img.size-s, .editor img.size-s { max-width: 40%; }
+.body img.size-m, .editor img.size-m { max-width: 70%; }
+.body img.size-l, .editor img.size-l { max-width: 100%; }
+.editor img.sel { outline: 3px solid var(--accent); outline-offset: 2px; }
+.body .gallery, .editor .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; margin: 8px 0; }
+.body .gallery img, .editor .gallery img { margin: 0; width: 100%; aspect-ratio: 1; object-fit: cover; max-width: 100%; border-radius: 8px; }
+.body .callout, .editor .callout { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 10px 14px; border-radius: 0 10px 10px 0; margin: 10px 0; }
+.body .callout.warn, .editor .callout.warn { border-left-color: var(--bad); background: var(--bad-soft); }
+.body hr, .editor hr { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
+.body a.file, .editor a.file { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--accent); font-weight: 600; text-decoration: none; margin: 4px 6px 4px 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.body a.file::before, .editor a.file::before { content: "📎"; }
+.imgbar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding: 8px 10px; background: var(--accent-soft); border-radius: 8px; font-size: 13px; }
+.toolbar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 58px); z-index: 2; background: var(--surface); padding: 6px 0; }
+.lightbox { position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, .92); display: flex; align-items: center; justify-content: center; padding: 16px; padding-top: calc(16px + env(safe-area-inset-top, 0px)); }
+.lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; }
+.lightbox button { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .15); color: #fff; font-size: 24px; cursor: pointer; }
+.body .time, .editor .time { display: inline-block; min-width: 56px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent); }
+.card.post { padding: 0; overflow: hidden; }
+.card.post .ph { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; }
+.card.post .ph .chev { flex: none; color: var(--muted); transition: transform .15s; }
+.card.post[data-open="true"] .ph .chev { transform: rotate(90deg); }
+.card.post .pb { padding: 0 16px 14px; display: grid; gap: 10px; }
+.pill.new { background: var(--bad); color: #fff; }
+.reads { display: grid; gap: 6px; padding: 10px 12px; background: var(--bg); border-radius: 10px; font-size: 14px; }
+.reads .bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.reads .bar i { display: block; height: 100%; background: var(--ok); }
+.reads .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.reads .col h4 { margin: 0 0 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.reads .col div { display: flex; align-items: center; gap: 6px; padding: 2px 0; font-size: 13px; }
+.reads .col img { width: 18px; height: 18px; border-radius: 50%; }
+.reads .col .t { color: var(--muted); font-size: 11px; margin-left: auto; white-space: nowrap; }
+.reads .toggle { font: inherit; font-size: 13px; font-weight: 600; background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; text-align: left; }
+@media (max-width: 420px) { .reads .cols { grid-template-columns: 1fr; } }
+.card.post .preview { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (prefers-reduced-motion: reduce) { .card.post .ph .chev { transition: none; } }
+/* simpler swap cards */
+.swap { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: center; }
+.swap .d { grid-row: span 2; font-family: var(--display); font-weight: 700; font-size: 15px; line-height: 1.2; text-align: center; min-width: 58px; padding: 8px 6px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); }
+.swap .d b { display: block; font-size: 24px; }
+.swap .s { font-weight: 600; font-size: 16px; }
+/* Startseite */
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 8px; box-shadow: var(--shadow); align-content: start; }
+.tile h3 { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.tile h3 .lnk { font: inherit; text-transform: none; letter-spacing: 0; background: none; border: 0; color: var(--accent); cursor: pointer; font-weight: 600; padding: 0; min-height: 0; }
+.tile .big { font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1.2; }
+.tile .line { display: flex; align-items: center; gap: 8px; font-size: 14px; padding: 4px 0; border-top: 1px solid var(--line); }
+.tile .line:first-of-type { border-top: 0; }
+.tile .line img { width: 22px; height: 22px; border-radius: 50%; }
+.tile .line .sn { font-weight: 600; min-width: 78px; }
+.tile .line .pn { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile.alert { border-color: var(--warn); background: var(--warn-soft); }
+.tile.alert .big { color: var(--warn); }
+.quick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 18px; }
+.quick button { min-height: 52px; border-radius: var(--radius); font-size: 15px; }
+.greet { margin: 0 0 4px; font-family: var(--display); font-size: 24px; font-weight: 700; }
+.search { position: relative; margin-bottom: 12px; }
+.search input { padding-left: 40px; }
+.search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
+.subtabs { display: flex; gap: 6px; margin-bottom: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 4px; }
+.subtabs button { flex: 1; font: inherit; font-weight: 600; font-size: 14px; min-height: 40px; border: 0; border-radius: 9px; background: none; color: var(--muted); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; }
+.subtabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-fg); }
+.swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.swatch { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; padding: 0; }
+.swatch[aria-pressed="true"] { border-color: var(--fg); }
+.stat { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.stat span { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; font-size: 13px; color: var(--muted); }
+.stat b { color: var(--fg); font-variant-numeric: tabular-nums; }
+#toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: 14px; max-width: calc(100% - 32px); opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 20; }
+#toast.show { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+
+/* Hilfe */
+.help .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
+.help .links .btn { text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+.help details { border: 1px solid var(--line); border-radius: 8px; padding: 0 12px; background: var(--bg); }
+.help summary { cursor: pointer; font-weight: 600; padding: 10px 0; list-style: none; display: flex; align-items: center; gap: 8px; }
+.help summary::before { content: "›"; color: var(--muted); transition: transform .15s; }
+.help details[open] summary::before { transform: rotate(90deg); }
+.help details p, .help details ol { margin: 0 0 12px; font-size: 14px; }
+.help details ol { padding-left: 20px; }
+.help code { background: var(--surface); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+/* Login */
+html, body { min-height: 100%; }
+.login { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)); }
+.loginbox { width: 100%; max-width: 400px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); display: grid; gap: 16px; }
+.loginbox h1 { font-family: var(--display); font-size: 22px; margin: 0; }
+.loginbox form { display: grid; gap: 12px; }
+.loginbox .btn { width: 100%; min-height: 48px; font-size: 16px; }
+.loginbox .notice { margin: 0; }
+.av { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; color: #fff; font-size: 10px; font-weight: 700; flex: none; letter-spacing: .02em; }
+.member .av { width: 26px; height: 26px; }
+.reads .col .av { width: 18px; height: 18px; font-size: 8px; }
+.who .btn { margin-left: 6px; }
+</style>
+</head>
+<body>
+<!-- LOGIN -->
+<div id="login" class="login" hidden>
+  <div class="loginbox">
+    <div class="logo"><div class="mark" id="l-mark">TP</div><div><h1 id="l-name">Team-Portal</h1><div class="sub2" id="l-sub"></div></div></div>
+    <form id="form-login">
+      <label>Dein Name <input id="login-id" autocomplete="username" required placeholder="Vorname Nachname"></label>
+      <label>PIN <input id="login-pin" type="password" inputmode="numeric" autocomplete="current-password" required placeholder="6 Ziffern"></label>
+      <button class="btn primary" type="submit" id="login-btn">Anmelden</button>
+      <div class="notice bad" id="login-err" hidden></div>
+    </form>
+    <p class="meta">Neu im Team? <button class="btn small" type="button" id="to-register">Registrieren</button></p>
+  </div>
+</div>
+
+<!-- NEUE PIN (nach Zurücksetzen durch die Leitung) -->
+<div id="newpin" class="login" hidden>
+  <div class="loginbox">
+    <h1>Neue PIN wählen</h1>
+    <p class="lead" id="newpin-lead">Deine PIN wurde zurückgesetzt. Wähle jetzt eine neue PIN mit 6 Ziffern.</p>
+    <form id="form-newpin">
+      <label>Neue PIN <input id="np-pin" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
+      <label>Neue PIN wiederholen <input id="np-pin2" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
+      <button class="btn primary" type="submit">Speichern und anmelden</button>
+      <button class="btn" type="button" id="np-back">Abbrechen</button>
+      <div class="notice bad" id="np-err" hidden></div>
+    </form>
+  </div>
+</div>
+
+<!-- REGISTRIEREN -->
+<div id="register" class="login" hidden>
+  <div class="loginbox">
+    <h1>Registrieren</h1>
+    <p class="lead">Wähle deinen Namen und eine PIN. Die Leitung schaltet dich danach frei.</p>
+    <form id="form-register">
+      <label>Dein Name <input id="reg-name" required maxlength="60" placeholder="Vorname Nachname"></label>
+      <label>Deine PIN (6 Ziffern) <input id="reg-pin" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
+      <label>PIN wiederholen <input id="reg-pin2" type="password" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
+      <button class="btn primary" type="submit">Registrieren</button>
+      <button class="btn" type="button" id="to-login">Zurück zur Anmeldung</button>
+      <div class="notice bad" id="reg-err" hidden></div>
+      <div class="notice" id="reg-ok" hidden></div>
+    </form>
+  </div>
+</div>
+
+<!-- SETUP (first run) -->
+<div id="setup" class="login" hidden>
+  <div class="loginbox">
+    <h1>Portal einrichten</h1>
+    <p class="lead">Du bist die erste Person. Lege dein eigenes Leitungs-Konto an.</p>
+    <form id="form-setup">
+      <label>Dein Name <input id="setup-name" required maxlength="60"></label>
+      <label>Deine PIN (6 Ziffern) <input id="setup-pin" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6"></label>
+      <button class="btn primary" type="submit">Einrichten</button>
+      <div class="notice bad" id="setup-err" hidden></div>
+    </form>
+  </div>
+</div>
+
+<div id="app" hidden>
+<header>
+  <div class="hwrap">
+    <div class="brand">
+      <div class="logo"><div class="mark" id="brand-mark">TP</div><div><h1 id="brand-name">Team-Portal</h1><div class="sub2" id="brand-sub" hidden></div></div></div>
+      <div class="who" id="who"><b id="who-name"></b><span class="role" id="who-role"></span><button class="btn small" id="logout" type="button">Abmelden</button></div>
+    </div>
+  </div>
+</header>
+<nav role="tablist" id="tabs" aria-label="Bereiche">
+  <button role="tab" data-tab="heute" aria-selected="true" id="tab-heute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Heute</span></button>
+  <button role="tab" data-tab="infos" aria-selected="false" id="tab-infos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/><path d="M20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/></svg><span>Infos</span><span class="count" id="count-infos"></span></button>
+  <button role="tab" data-tab="anfragen" aria-selected="false" id="tab-anfragen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><span>Anfragen</span><span class="count" id="count-tausch"></span></button>
+  <button role="tab" data-tab="leitung" aria-selected="false" id="tab-leitung" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg><span>Leitung</span><span class="count" id="count-leitung"></span></button>
+</nav>
+
+<main>
+  <div class="notice" id="status-note" hidden></div>
+
+  <section id="sec-heute">
+    <p class="greet" id="greet">Hallo</p>
+    <p class="lead" id="today-line"></p>
+    <div class="quick"><button class="btn" id="q-swap">Schicht abgeben</button><button class="btn" id="q-vac">Ferien beantragen</button></div>
+    <div class="grid2" id="home-tiles"></div>
+  </section>
+
+  <section id="sec-infos" hidden>
+    <h2>Infos</h2>
+    <p class="lead">Tippe auf einen Beitrag, um ihn zu öffnen.</p>
+    <button class="add" id="add-post" aria-expanded="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Neuer Beitrag</button>
+    <form class="panel" id="form-post" hidden>
+      <h3 id="form-post-title">Neuer Beitrag</h3>
+      <div class="row">
+        <label>Kapitel <select id="post-cat" required></select></label>
+        <label>Titel <input id="post-title" required maxlength="140" placeholder="z. B. Öffnungszeiten über Weihnachten"></label>
+      </div>
+      <div class="toolbar" role="toolbar" aria-label="Formatierung">
+        <button type="button" data-cmd="bold"><b>Fett</b></button>
+        <button type="button" data-cmd="mark" class="hl">Markieren</button>
+        <button type="button" data-cmd="h3">Titel</button>
+        <button type="button" data-cmd="ul">Liste</button>
+        <button type="button" data-cmd="img" id="btn-img">Bilder</button>
+        <button type="button" data-cmd="note">Hinweis</button>
+        <button type="button" data-cmd="warn">Wichtig</button>
+        <button type="button" data-cmd="hr">Linie</button>
+        <button type="button" data-cmd="plan">Tagesablauf</button>
+        <input type="file" id="img-file" accept="image/*" multiple hidden>
+      </div>
+      <div class="imgbar" id="imgbar" hidden><span>Bild:</span><button type="button" class="btn small" data-size="size-s">Klein</button><button type="button" class="btn small" data-size="size-m">Mittel</button><button type="button" class="btn small" data-size="size-l">Gross</button><button type="button" class="btn small bad" data-size="remove">Entfernen</button></div>
+      <div class="editor" id="post-editor" contenteditable="true" data-placeholder="Der Inhalt des Beitrags – Text, Bilder, Markierungen" aria-label="Text"></div>
+      <div class="meta" id="img-status" hidden>Bild wird hochgeladen …</div>
+      <label class="check"><input type="checkbox" id="post-pin"> Oben anheften</label>
+      <label>Sichtbar für
+        <select id="post-vis"><option value="all">Alle im Team</option><option value="some">Nur bestimmte Personen oder Gruppen</option></select>
+      </label>
+      <div id="post-vis-box" hidden>
+        <div class="sub" style="margin-top:0">Gruppen</div>
+        <div class="checks" id="post-groups"></div>
+        <div class="sub">Personen</div>
+        <div class="checks" id="post-people"></div>
+      </div>
+      <div class="actions"><button class="btn primary" type="submit" id="post-submit">Veröffentlichen</button><button class="btn" type="button" id="post-cancel">Abbrechen</button></div>
+    </form>
+    <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="post-search" placeholder="Infos durchsuchen …" aria-label="Infos durchsuchen"></div>
+    <div class="chips" id="cat-chips"></div>
+    <div class="list" id="post-list"></div>
+  </section>
+
+  <section id="sec-anfragen" hidden>
+    <div class="subtabs" role="tablist" id="subtabs"><button role="tab" data-sub="tausch" aria-selected="true">Schichttausch</button><button role="tab" data-sub="ferien" aria-selected="false">Ferien</button></div>
+    <div id="sec-tausch">
+      <h2>Schichttausch</h2>
+      <p class="lead">Schicht abgeben, Schicht übernehmen, Leitung gibt frei.</p>
+      <button class="add" id="add-swap" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Schicht abgeben</button>
+      <form class="panel" id="form-swap" hidden>
+        <h3>Ich gebe eine Schicht ab</h3>
+        <div class="row">
+          <label>Datum <input type="date" id="swap-date" required></label>
+          <label>Schicht <select id="swap-shift"></select></label>
+        </div>
+        <label>Bemerkung (optional) <input id="swap-note" maxlength="300" placeholder="z. B. Arzttermin, gerne auch Tausch gegen Spätdienst"></label>
+        <div class="actions"><button class="btn primary" type="submit" id="swap-submit">Schicht einstellen</button><button class="btn" type="button" id="swap-cancel">Abbrechen</button></div>
+      </form>
+      <div class="sub">Offene Schichten</div>
+      <div class="list" id="swap-open"></div>
+      <div class="sub">Erledigt</div>
+      <div class="list" id="swap-done"></div>
+    </div>
+    <div id="sec-ferien" hidden>
+      <h2>Ferien &amp; Freitage</h2>
+      <p class="lead">Beantrage Ferien oder einzelne freie Tage.</p>
+      <button class="add" id="add-vac" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ferien beantragen</button>
+      <form class="panel" id="form-vac" hidden>
+        <h3>Neuer Antrag</h3>
+        <div class="row">
+          <label>Von <input type="date" id="vac-from" required></label>
+          <label>Bis <input type="date" id="vac-to" required></label>
+        </div>
+        <label>Bemerkung (optional) <input id="vac-note" maxlength="300" placeholder="z. B. Familienferien"></label>
+        <div class="actions"><button class="btn primary" type="submit" id="vac-submit">Antrag senden</button><button class="btn" type="button" id="vac-cancel">Abbrechen</button></div>
+      </form>
+      <div class="sub">Meine Anträge</div>
+      <div class="list" id="vac-mine"></div>
+      <div class="sub">Abwesenheiten im Team (freigegeben)</div>
+      <div class="list" id="vac-team"></div>
+    </div>
+  </section>
+
+  <section id="sec-leitung" hidden>
+    <h2>Leitung</h2>
+    <p class="lead">Freigaben, Kapitel, Team, Berechtigungen und Einstellungen.</p>
+    <div class="stat" id="lead-stat"></div>
+    <div id="lead-approve" hidden>
+      <div class="sub" style="margin-top:0">Offene Ferienanträge</div>
+      <div class="list" id="chef-vac"></div>
+      <div class="sub">Offene Schichtübernahmen</div>
+      <div class="list" id="chef-swap"></div>
+    </div>
+    <div id="lead-cats" hidden>
+      <div class="sub">Kapitel der Infos</div>
+      <form class="panel" id="form-cat">
+        <div class="row"><label style="flex:3">Neues Kapitel <input id="cat-name" required maxlength="60" placeholder="z. B. Sicherheit"></label><label style="flex:1;align-self:end">&nbsp;<button class="btn primary" type="submit">Anlegen</button></label></div>
+        <div class="list" id="cat-list"></div>
+      </form>
+    </div>
+    <div id="lead-team" hidden>
+      <div class="sub">Mitarbeitende</div>
+      <form class="panel" id="form-user">
+        <h3>Neue Person anlegen</h3>
+        <div class="row">
+          <label>Name <input id="u-name" required maxlength="60" placeholder="Vorname Nachname"></label>
+          <label>PIN (6 Ziffern) <input id="u-pin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required></label>
+        </div>
+        <div class="actions"><button class="btn primary" type="submit">Anlegen</button><button class="btn" type="button" id="u-gen">PIN vorschlagen</button></div>
+        <div class="notice" id="u-result" hidden></div>
+      </form>
+      <div class="panel" id="team-panel">
+        <p class="meta" style="margin:0">Jede Person meldet sich mit ihrem Namen (genau wie hier geschrieben) und ihrer PIN an. Hake an, was die Person zusätzlich darf. «PIN zurücksetzen»: Die Person wählt beim nächsten Anmelden selbst eine neue PIN.</p>
+        <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="team-search" placeholder="Person suchen …" aria-label="Person suchen"></div>
+        <div id="team-list"></div>
+      </div>
+      <div class="sub">Gruppen</div>
+      <form class="panel" id="form-group">
+        <div class="row"><label style="flex:3">Neue Gruppe <input id="group-name" required maxlength="60" placeholder="z. B. Küche, Service, Nachtteam"></label><label style="flex:1;align-self:end">&nbsp;<button class="btn primary" type="submit">Anlegen</button></label></div>
+        <div class="list" id="group-list"></div>
+      </form>
+    </div>
+    <div id="lead-help" hidden>
+      <div class="sub">Hilfe für die Leitung</div>
+      <div class="panel help">
+        <h3>Wichtige Links</h3>
+        <div class="links">
+          <a class="btn" id="lnk-fs" target="_blank" rel="noopener">Firebase: Daten und Regeln</a>
+          <a class="btn" href="https://app.netlify.com" target="_blank" rel="noopener">Netlify: App hochladen</a>
+          <a class="btn" href="https://console.firebase.google.com" target="_blank" rel="noopener">Firebase-Konsole</a>
+        </div>
+        <h3>Was tun, wenn …</h3>
+        <details><summary>… jemand die PIN vergessen hat?</summary><p>Leitung → Mitarbeitende → bei der Person auf <b>PIN zurücksetzen</b>. Die Person öffnet das Portal, gibt nur ihren Namen ein und wird gefragt, welche neue PIN sie möchte. Fertig.</p></details>
+        <details><summary>… sich jemand neu registriert hat?</summary><p>Unter Leitung → Mitarbeitende erscheint oben «… wartet auf Freischaltung». Auf <b>Freischalten</b> tippen. Erst danach kann sich die Person anmelden.</p></details>
+        <details><summary>… jemand das Team verlässt?</summary><p>Leitung → Mitarbeitende → bei der Person auf <b>Deaktivieren</b>. Sie kann sich dann nicht mehr anmelden. Die Beiträge bleiben.</p></details>
+        <details><summary>… «Name oder PIN stimmt nicht» erscheint?</summary><p>Der Name muss so geschrieben sein, wie er angelegt wurde (Gross-/Kleinschreibung ist egal, Vor- und Nachname müssen passen). Im Zweifel: «PIN zurücksetzen» wie oben.</p></details>
+        <details><summary>… «Dein Zugang ist noch nicht freigeschaltet» erscheint?</summary><p>Die Person hat sich registriert, aber die Leitung hat noch nicht auf «Freischalten» getippt. Oder der Zugang wurde deaktiviert.</p></details>
+        <details><summary>… «Kein Zugriff auf einen Datenbereich» erscheint?</summary><p>Die Sicherheitsregeln in Firebase fehlen oder sind veraltet. Link «Firebase: Daten und Regeln» → Reiter <b>Regeln</b> → Inhalt der Datei <code>firestore.rules</code> einfügen → <b>Veröffentlichen</b>.</p></details>
+        <details><summary>… ein Bild nicht hochgeladen werden kann?</summary><p>Nur Fotos (JPG, PNG, HEIC vom iPhone geht nicht direkt – vorher als JPG teilen). Bei vielen Bildern auf einmal etwas warten, sie werden nacheinander verarbeitet.</p></details>
+        <details><summary>… die App geändert werden soll?</summary><p>Die App ist eine einzige Datei <code>index.html</code>. Neue Version bekommen → bei Netlify unter <b>Deploys</b> den Ordner ins Feld ziehen → Seite mit Strg + F5 neu laden.</p></details>
+        <details><summary>… das Portal aufs Handy soll?</summary><p>Link im Browser öffnen → Teilen → <b>Zum Home-Bildschirm</b>. Dann startet es wie eine App.</p></details>
+        <details><summary>… wer darf was (Teamleitung / Stv. Leitung)?</summary><p><b>Teamleitung:</b> darf alles. Nur sie ernennt oder entfernt eine Stv. Leitung, nur sie kann die Teamleitung weitergeben (<b>Teamleitung übertragen</b>). Sie selbst kann von niemandem verändert werden.<br><b>Stv. Leitung:</b> dieselben Rechte wie die Teamleitung, auch andere zur Stv. Leitung ernennen. Zwei Grenzen: Sie kann die Teamleitung nicht verändern, und sie kann sich selbst weder die Rolle entziehen noch sich deaktivieren – das kann nur die Teamleitung.</p></details>
+        <details><summary>… es Kosten gibt?</summary><p>Firebase (Spark) und Netlify sind in dieser Grösse kostenlos. Grenzen: 1 GB Daten, 50 000 Lesezugriffe pro Tag – für ein Team bis ca. 50 Personen ausreichend. Firebase meldet sich per E-Mail, falls es eng wird.</p></details>
+      </div>
+    </div>
+    <div id="lead-settings" hidden>
+      <div class="sub">Einstellungen</div>
+      <form class="panel" id="form-settings">
+        <div class="row">
+          <label>Name des Betriebs <input id="set-name" maxlength="40"></label>
+          <label>Untertitel <input id="set-sub" maxlength="60" placeholder="z. B. Team-Portal"></label>
+        </div>
+        <label>Farbe <div class="swatches" id="swatches"></div></label>
+        <div class="actions"><button class="btn primary" type="submit">Speichern</button></div>
+      </form>
+    </div>
+  </section>
+</main>
+</div>
+<div id="toast" role="status"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+(() => {
+  // ================= KONFIGURATION =================
+  // Diese Werte kommen aus der Firebase-Konsole (Projekteinstellungen → "Deine Apps" → Web-App).
+  const firebaseConfig = {
+    apiKey: "AIzaSyC_J2sQZpGw7U0Q0rSsu-0GFn65RfjM_VA",
+    authDomain: "mitarbeiter-portal-70231.firebaseapp.com",
+    projectId: "mitarbeiter-portal-70231",
+    storageBucket: "mitarbeiter-portal-70231.firebasestorage.app",
+    messagingSenderId: "875285713266",
+    appId: "1:875285713266:web:16a94e286fb7274a868deb"
+  };
+  const LOGIN_DOMAIN = "team.portal"; // intern, bleibt unsichtbar
+  // =================================================
+
+  const $ = (id) => document.getElementById(id);
+  const SHIFTS = ["Frühdienst", "Spätdienst", "Nachtdienst", "Tagdienst", "Pikett", "Andere"];
+  const S = { uid: null, me: null, users: {}, logins: {}, groups: [], cats: [], posts: [], reqs: [], decs: {}, reads: {}, myReads: {}, settings: {}, cat: "all", sub: "tausch", search: "", teamSearch: "", editingPost: null, openPosts: new Set(), readsOpen: new Set(), unsub: [], imgCache: {} };
+  const STATUS_DE = { pending: "Offen", approved: "Freigegeben", rejected: "Abgelehnt", open: "Sucht Tausch" };
+
+  if (firebaseConfig.apiKey === "HIER_EINTRAGEN") { document.body.innerHTML = '<div class="login"><div class="loginbox"><h1>Noch nicht eingerichtet</h1><p>In der Datei <b>index.html</b> fehlen die Firebase-Zugangsdaten (Abschnitt KONFIGURATION ganz oben im Skript).</p></div></div>'; return; }
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth(); const db = firebase.firestore();
+  auth.languageCode = "de";
+  const emailFor = (id, domain) => id + "@" + (domain || LOGIN_DOMAIN);
+  const nextDomain = (d) => { const m = /^v(\d+)\./.exec(d || ""); return "v" + ((m ? +m[1] : 1) + 1) + "." + LOGIN_DOMAIN; };
+  async function loginInfo(id) { try { const d = await db.collection("logins").doc(id).get(); return d.exists ? d.data() : {}; } catch (_) { return {}; } }
+  async function loginDomainFor(id) { const i = await loginInfo(id); return i.d || LOGIN_DOMAIN; }
+  const cleanId = (name) => name.toLowerCase().trim().replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, ".").replace(/[^a-z0-9._-]/g, "");
+
+  // ---- permissions
+  const isOwner = () => !!(S.me && S.me.owner);
+  const isLead = () => isOwner() || !!(S.me && S.me.colead);
+  const canInfo = () => isLead() || !!(S.me && S.me.infos);
+  const canApprove = () => isLead() || !!(S.me && S.me.approve);
+  const roleLabel = () => isOwner() ? "Teamleitung" : S.me && S.me.colead ? "Stv. Leitung" : S.me && (S.me.infos || S.me.approve) ? "Erweitert" : "Team";
+
+  // ---- helpers
+  let toastT;
+  function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 3200); }
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const iso = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  const today = () => iso(new Date());
+  function fmtDate(s, opts) { if (!s) return ""; const d = new Date(s + (s.length === 10 ? "T12:00:00" : "")); return d.toLocaleDateString("de-CH", opts || { weekday: "short", day: "numeric", month: "short", year: "numeric" }); }
+  const fmtRange = (a, b) => a === b ? fmtDate(a) : fmtDate(a) + " – " + fmtDate(b);
+  function fmtWhen(s) { if (!s) return ""; const d = new Date(s); return d.toLocaleDateString("de-CH", { day: "numeric", month: "short" }) + ", " + d.toLocaleTimeString("de-CH", { hour: "2-digit", minute: "2-digit" }); }
+  const statusOf = (id) => (S.decs[id] && S.decs[id].status) || "pending";
+  const pill = (st) => el("span", "pill " + st, STATUS_DE[st] || st);
+  function errMsg(e) {
+    const c = e && e.code || "";
+    if (c.includes("permission-denied")) return "Keine Berechtigung. Sind die neuesten Regeln in Firebase veröffentlicht? (Leitung → Hilfe)";
+    if (c === "login-exists") return "Login konnte nicht angelegt werden. Bitte nochmals versuchen.";
+    if (c === "auth/operation-not-allowed") return "In Firebase ist «E-Mail/Passwort» unter Authentication → Anmeldemethode noch nicht aktiviert.";
+    if (c === "auth/weak-password") return "Die PIN muss 6 Ziffern haben.";
+    if (c === "auth/network-request-failed" || c.includes("unavailable")) return "Keine Verbindung. Bitte Internet prüfen.";
+    return "Speichern hat nicht geklappt" + (c ? " (" + c + ")" : "") + ". Bitte nochmals versuchen.";
+  }
+  const nameOf = (id) => id === S.uid ? "Du" : ((S.users[id] && S.users[id].name) || "Teammitglied");
+  const initials = (n) => (n || "?").split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase();
+  function avatar(id) { const a = el("span", "av", initials(S.users[id] && S.users[id].name)); a.style.background = colorFor(id); return a; }
+  function colorFor(id) { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360; return "hsl(" + h + " 45% 45%)"; }
+  function person(meta, id) { meta.append(avatar(id), el("span", null, nameOf(id))); }
+  function confirmBtn(btn, label, fn) {
+    let armed = false, t;
+    btn.addEventListener("click", async () => {
+      if (!armed) { armed = true; btn.textContent = "Wirklich? Nochmals klicken"; t = setTimeout(() => { armed = false; btn.textContent = label; }, 4000); return; }
+      clearTimeout(t); btn.disabled = true;
+      try { await fn(); } catch (e) { toast(errMsg(e)); btn.disabled = false; armed = false; btn.textContent = label; }
+    });
+  }
+  async function act(btn, fn, okMsg) { if (btn) btn.disabled = true; try { await fn(); if (okMsg) toast(okMsg); } catch (e) { console.error(e); toast(errMsg(e)); } finally { if (btn) btn.disabled = false; } }
+  const activeMembers = () => Object.keys(S.users).filter(id => S.users[id].active !== false);
+  const groupsOf = (uid) => S.groups.filter(g => (g.memberIds || []).includes(uid));
+  function canSeePost(p) {
+    if (canInfo()) return true;
+    const people = p.visibleTo || [], groups = p.visibleGroups || [];
+    if (!people.length && !groups.length) return true;
+    if (people.includes(S.uid)) return true;
+    return groupsOf(S.uid).some(g => groups.includes(g.id));
+  }
+  const now = () => new Date().toISOString();
+
+  // ---- tabs
+  const tabs = ["heute", "infos", "anfragen", "leitung"];
+  function showTab(name, sub) {
+    if (!tabs.includes(name)) name = "heute";
+    if (name === "leitung" && !(canApprove() || canInfo())) name = "heute";
+    tabs.forEach(t => { $("sec-" + t).hidden = t !== name; $("tab-" + t).setAttribute("aria-selected", String(t === name)); });
+    if (sub) showSub(sub);
+    try { localStorage.setItem("tab", name); } catch (_) {}
+    window.scrollTo({ top: 0 });
+  }
+  function showSub(sub) { S.sub = sub; $("sec-tausch").hidden = sub !== "tausch"; $("sec-ferien").hidden = sub !== "ferien"; $("subtabs").querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.sub === sub))); }
+  $("tabs").addEventListener("click", (e) => { const b = e.target.closest("button[data-tab]"); if (b) showTab(b.dataset.tab); });
+  $("subtabs").addEventListener("click", (e) => { const b = e.target.closest("button[data-sub]"); if (b) showSub(b.dataset.sub); });
+  $("q-swap").addEventListener("click", () => { showTab("anfragen", "tausch"); openForm("swap", true); });
+  $("q-vac").addEventListener("click", () => { showTab("anfragen", "ferien"); openForm("vac", true); });
+  $("post-search").addEventListener("input", () => { S.search = $("post-search").value.trim().toLowerCase(); renderInfos(); });
+  $("team-search").addEventListener("input", () => { S.teamSearch = $("team-search").value.trim().toLowerCase(); renderTeam(); });
+  $("logout").addEventListener("click", () => auth.signOut());
+  function openForm(k, open) { const f = $("form-" + k), b = $("add-" + k); f.hidden = !open; b.setAttribute("aria-expanded", String(open)); b.hidden = open || b.dataset.hide === "1"; if (open) { const first = f.querySelector("input:not([type=checkbox]), textarea, select"); if (first) first.focus(); } }
+  ["post", "swap", "vac"].forEach(k => { $("add-" + k).addEventListener("click", () => { if (k === "post") startPost(null); else openForm(k, true); }); $(k + "-cancel").addEventListener("click", () => { $("form-" + k).reset(); if (k === "post") { S.editingPost = null; ed.innerHTML = ""; } openForm(k, false); }); });
+  SHIFTS.forEach(n => $("swap-shift").append(el("option", null, n)));
+
+  // ---- Editor
+  const ALLOWED = { P: 1, BR: 1, B: 1, STRONG: 1, I: 1, EM: 1, U: 1, MARK: 1, UL: 1, OL: 1, LI: 1, H3: 1, IMG: 1, SPAN: 1, DIV: 1, HR: 1 };
+  const CLASSES = { IMG: ["size-s", "size-m", "size-l"], DIV: ["gallery", "callout", "callout warn"], SPAN: ["time"] };
+  function sanitize(html) {
+    const doc = new DOMParser().parseFromString("<div>" + (html || "") + "</div>", "text/html");
+    const root = doc.body.firstChild;
+    const walk = (node) => {
+      for (const ch of [...node.childNodes]) {
+        if (ch.nodeType === 3) continue;
+        if (ch.nodeType !== 1 || !ALLOWED[ch.tagName]) { ch.replaceWith(...ch.childNodes); walk(node); return; }
+        const keep = {};
+        if (ch.tagName === "IMG") { const id = ch.getAttribute("data-id") || ""; if (!/^[A-Za-z0-9_-]{4,64}$/.test(id)) { ch.remove(); continue; } keep["data-id"] = id; keep.alt = ""; }
+        const cls = (ch.getAttribute("class") || "").replace(/\bsel\b/, "").trim(); if (CLASSES[ch.tagName] && CLASSES[ch.tagName].includes(cls)) keep["class"] = cls;
+        [...ch.attributes].forEach(a => ch.removeAttribute(a.name));
+        Object.entries(keep).forEach(([k, v]) => ch.setAttribute(k, v));
+        walk(ch);
+      }
+    };
+    walk(root);
+    return root.innerHTML;
+  }
+  const esc = (t) => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const ed = $("post-editor");
+  function insertHTML(html) { ed.focus(); if (!document.execCommand("insertHTML", false, html)) ed.insertAdjacentHTML("beforeend", html); }
+  async function hydrateImages(root) {
+    const imgs = [...root.querySelectorAll("img[data-id]")];
+    await Promise.all(imgs.map(async (img) => {
+      const id = img.dataset.id; if (!id) return;
+      if (!S.imgCache[id]) { try { const d = await db.collection("images").doc(id).get(); S.imgCache[id] = d.exists ? d.data().data : ""; } catch (_) { S.imgCache[id] = ""; } }
+      if (S.imgCache[id]) img.src = S.imgCache[id]; else img.alt = "Bild nicht verfügbar";
+    }));
+  }
+  document.querySelector("#form-post .toolbar").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-cmd]"); if (!b) return; const cmd = b.dataset.cmd; ed.focus();
+    if (cmd === "bold") document.execCommand("bold");
+    else if (cmd === "ul") document.execCommand("insertUnorderedList");
+    else if (cmd === "h3") document.execCommand("formatBlock", false, "h3");
+    else if (cmd === "mark") { const sel = window.getSelection(); const t = sel ? sel.toString() : ""; if (t) insertHTML("<mark>" + esc(t) + "</mark>"); else toast("Zuerst Text markieren, dann «Markieren» tippen."); }
+    else if (cmd === "plan") insertHTML('<h3>Tagesablauf</h3><p><span class="time">07:00</span> Übergabe und Tagesplanung</p><p><span class="time">09:30</span> Pause</p><p><span class="time">12:00</span> Mittag</p><p><span class="time">17:00</span> Abschluss und Übergabe</p><p><br></p>');
+    else if (cmd === "img") $("img-file").click();
+    else if (cmd === "note") insertHTML('<div class="callout"><b>Hinweis:</b> </div><p><br></p>');
+    else if (cmd === "warn") insertHTML('<div class="callout warn"><b>Wichtig:</b> </div><p><br></p>');
+    else if (cmd === "hr") insertHTML("<hr><p><br></p>");
+  });
+  let selImg = null;
+  ed.addEventListener("click", (e) => { const img = e.target.closest("img"); ed.querySelectorAll("img.sel").forEach(i => i.classList.remove("sel")); selImg = img || null; if (img) img.classList.add("sel"); $("imgbar").hidden = !img; });
+  $("imgbar").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-size]"); if (!b || !selImg) return;
+    if (b.dataset.size === "remove") { const g = selImg.closest(".gallery"); selImg.remove(); if (g && !g.querySelector("img")) g.remove(); selImg = null; $("imgbar").hidden = true; return; }
+    if (selImg.closest(".gallery")) { const g = selImg.closest(".gallery"); g.parentNode.insertBefore(selImg, g); if (!g.querySelector("img")) g.remove(); }
+    selImg.classList.remove("size-s", "size-m", "size-l"); selImg.classList.add(b.dataset.size);
+  });
+  function shrinkImage(file) {
+    return new Promise((res, rej) => {
+      const img = new Image(); const url = URL.createObjectURL(file);
+      img.onload = () => { const max = 1200; const k = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); let q = 0.8, out = c.toDataURL("image/jpeg", q); while (out.length > 700000 && q > 0.4) { q -= 0.1; out = c.toDataURL("image/jpeg", q); } res(out); };
+      img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("decode")); };
+      img.src = url;
+    });
+  }
+  $("img-file").addEventListener("change", async () => {
+    const files = [...$("img-file").files]; $("img-file").value = ""; if (!files.length) return;
+    const st = $("img-status"); st.hidden = false; const ids = [];
+    for (let i = 0; i < files.length; i++) {
+      st.textContent = files.length > 1 ? "Bild " + (i + 1) + " von " + files.length + " wird hochgeladen …" : "Bild wird hochgeladen …";
+      try { const data = await shrinkImage(files[i]); const ref = await db.collection("images").add({ data, by: S.uid, createdAt: now() }); S.imgCache[ref.id] = data; ids.push(ref.id); }
+      catch (e) { console.error(e); toast("Ein Bild konnte nicht hochgeladen werden."); break; }
+    }
+    st.hidden = true;
+    if (!ids.length) return;
+    const tag = (id, cls) => '<img data-id="' + id + '" src="' + S.imgCache[id] + '" alt=""' + (cls ? ' class="' + cls + '"' : "") + ">";
+    if (ids.length === 1) insertHTML(tag(ids[0], "size-l") + "<p><br></p>");
+    else insertHTML('<div class="gallery">' + ids.map(id => tag(id)).join("") + "</div><p><br></p>");
+  });
+  document.addEventListener("click", (e) => {
+    const img = e.target.closest(".body img"); if (!img || !img.src) return;
+    const lb = el("div", "lightbox"); lb.setAttribute("role", "dialog"); lb.setAttribute("aria-label", "Bild");
+    const big = el("img"); big.src = img.src; big.alt = ""; const x = el("button", null, "×"); x.setAttribute("aria-label", "Schliessen");
+    lb.append(big, x); const close = () => lb.remove(); lb.addEventListener("click", close); document.addEventListener("keydown", function k(ev) { if (ev.key === "Escape") { close(); document.removeEventListener("keydown", k); } });
+    document.body.append(lb); x.focus();
+  });
+
+  // ---- Lesebestätigungen
+  async function markRead(id) {
+    if (!S.uid || S.myReads[id]) return;
+    S.myReads = { ...S.myReads, [id]: now() };
+    try { await db.collection("reads").doc(S.uid).set({ posts: S.myReads, updatedAt: now() }, { merge: true }); } catch (e) { console.error(e); }
+    $("count-infos").textContent = unreadCount() ? String(unreadCount()) : "";
+  }
+  function unreadCount() { return S.uid ? S.posts.filter(p => canSeePost(p) && !S.myReads[p.id]).length : 0; }
+  function audience(p) {
+    const people = p.visibleTo || [], groups = p.visibleGroups || [];
+    const members = activeMembers();
+    if (!people.length && !groups.length) return members;
+    const set = new Set(people); S.groups.filter(g => groups.includes(g.id)).forEach(g => (g.memberIds || []).forEach(id => set.add(id)));
+    return [...set].filter(id => members.includes(id));
+  }
+  function readStats(p) {
+    const ids = audience(p).filter(id => id !== p.authorId);
+    const read = ids.filter(id => S.reads[id] && S.reads[id].posts && S.reads[id].posts[p.id]);
+    return { total: ids.length, read: read.length, readIds: read, unreadIds: ids.filter(id => !read.includes(id)) };
+  }
+  function readsBox(p) {
+    const r = readStats(p); const box = el("div", "reads");
+    const head = el("div", "taker"); head.append(el("b", null, "Gelesen von " + r.read + " von " + r.total));
+    const tg = el("button", "toggle", S.readsOpen.has(p.id) ? "Liste ausblenden" : "Wer hat gelesen?"); tg.type = "button";
+    tg.addEventListener("click", () => { if (S.readsOpen.has(p.id)) S.readsOpen.delete(p.id); else S.readsOpen.add(p.id); renderInfos(); });
+    head.append(tg); box.append(head);
+    const bar = el("div", "bar"); const fill = el("i"); fill.style.width = (r.total ? Math.round(100 * r.read / r.total) : 0) + "%"; bar.append(fill); box.append(bar);
+    if (S.readsOpen.has(p.id)) {
+      const cols = el("div", "cols");
+      const mk = (title, ids, withTime) => { const c = el("div", "col"); c.append(el("h4", null, title + " (" + ids.length + ")")); if (!ids.length) c.append(el("div", "meta", "–")); ids.sort((a, b) => nameOf(a).localeCompare(nameOf(b), "de")).forEach(id => { const d = el("div"); person(d, id); if (withTime) d.append(el("span", "t", fmtWhen(S.reads[id].posts[p.id]))); c.append(d); }); return c; };
+      cols.append(mk("Gelesen", r.readIds, true), mk("Noch nicht gelesen", r.unreadIds, false)); box.append(cols);
+    }
+    return box;
+  }
+
+  // ---- INFOS
+  function catName(id) { const c = S.cats.find(c => c.id === id); return c ? c.name : "Allgemein"; }
+  async function renderInfos() {
+    $("add-post").dataset.hide = canInfo() ? "0" : "1"; if ($("form-post").hidden) $("add-post").hidden = !canInfo();
+    const visible = S.posts.filter(canSeePost);
+    const chips = $("cat-chips"); chips.replaceChildren();
+    const mk = (id, label) => { const b = el("button", "chip", label); b.type = "button"; b.setAttribute("aria-pressed", String(S.cat === id)); b.addEventListener("click", () => { S.cat = id; renderInfos(); }); return b; };
+    chips.append(mk("all", "Alle")); S.cats.forEach(c => chips.append(mk(c.id, c.name)));
+    if (!S.cats.find(c => c.id === S.cat) && S.cat !== "all") S.cat = "all";
+    const q = S.search;
+    const shown = visible.filter(p => (S.cat === "all" || p.catId === S.cat) && (!q || (p.title || "").toLowerCase().includes(q) || (p.text || "").toLowerCase().includes(q))).sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.createdAt || "").localeCompare(a.createdAt || ""));
+    $("count-infos").textContent = unreadCount() ? String(unreadCount()) : "";
+    const list = $("post-list"); list.replaceChildren();
+    if (!shown.length) { list.append(el("div", "empty", q ? "Nichts gefunden." : S.posts.length ? "In diesem Kapitel gibt es noch nichts." : "Noch keine Beiträge. Die Leitung legt Kapitel an und schreibt die ersten Infos.")); return; }
+    for (const p of shown) {
+      const open = S.openPosts.has(p.id) || (p.pinned && !S.openPosts.has("!" + p.id));
+      const unread = !!S.uid && !S.myReads[p.id];
+      if (open && unread) markRead(p.id);
+      const c = el("article", "card post" + (p.pinned ? " pinned" : "")); c.dataset.open = String(open);
+      const ph = el("div", "ph"); ph.setAttribute("role", "button"); ph.tabIndex = 0; ph.setAttribute("aria-expanded", String(open));
+      const l = el("div"); l.style.minWidth = "0"; l.append(el("div", "title", p.title || "(ohne Titel)"));
+      const metaLine = [catName(p.catId), fmtWhen(p.updatedAt || p.createdAt)]; if (p.pinned) metaLine.push("Angeheftet"); if ((p.visibleTo || []).length || (p.visibleGroups || []).length) metaLine.push("Eingeschränkt");
+      const ml = el("div", "meta"); if (unread && !open) ml.append(el("span", "pill new", "Neu")); ml.append(el("span", null, metaLine.join(" · ")));
+      if (canInfo()) { const r = readStats(p); ml.append(el("span", "pill " + (r.total && r.read === r.total ? "approved" : "pending"), "Gelesen " + r.read + "/" + r.total)); }
+      l.append(ml);
+      if (!open) l.append(el("div", "preview", (p.text || "").replace(/\s+/g, " ").slice(0, 120)));
+      ph.append(l, el("span", "chev", "›")); c.append(ph);
+      const toggle = () => { if (open) { S.openPosts.delete(p.id); if (p.pinned) S.openPosts.add("!" + p.id); } else { S.openPosts.add(p.id); S.openPosts.delete("!" + p.id); } renderInfos(); };
+      ph.addEventListener("click", toggle); ph.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+      if (open) {
+        const pb = el("div", "pb"); const body = el("div", "body");
+        if (p.html) { body.innerHTML = sanitize(p.html); hydrateImages(body); } else body.append(el("p", null, p.text || ""));
+        pb.append(body);
+        const meta = el("div", "meta"); person(meta, p.authorId); pb.append(meta);
+        if (canInfo()) { pb.append(readsBox(p)); const a = el("div", "actions"); const e = el("button", "btn small", "Bearbeiten"); e.addEventListener("click", () => startPost(p)); const d = el("button", "btn small bad", "Löschen"); confirmBtn(d, "Löschen", () => db.collection("posts").doc(p.id).delete()); a.append(e, d); pb.append(a); }
+        c.append(pb);
+      }
+      list.append(c);
+    }
+  }
+  function checkbox(id, label, checked) { const l = el("label", "check"); const i = el("input"); i.type = "checkbox"; i.id = id; i.checked = !!checked; l.append(i, el("span", null, label)); return l; }
+  async function startPost(p) {
+    S.editingPost = p;
+    $("form-post-title").textContent = p ? "Beitrag bearbeiten" : "Neuer Beitrag";
+    $("post-submit").textContent = p ? "Speichern" : "Veröffentlichen";
+    const sel = $("post-cat"); sel.replaceChildren(); S.cats.forEach(c => { const o = el("option", null, c.name); o.value = c.id; sel.append(o); });
+    if (!S.cats.length) { toast("Lege zuerst unter «Leitung» ein Kapitel an."); return; }
+    sel.value = p ? p.catId : (S.cat !== "all" ? S.cat : S.cats[0].id);
+    $("post-title").value = p ? p.title : ""; ed.innerHTML = p ? (p.html ? sanitize(p.html) : "<p>" + esc(p.text || "") + "</p>") : ""; if (p) hydrateImages(ed);
+    $("post-pin").checked = !!(p && p.pinned); $("imgbar").hidden = true; selImg = null;
+    const restricted = !!(p && ((p.visibleTo || []).length || (p.visibleGroups || []).length));
+    $("post-vis").value = restricted ? "some" : "all"; $("post-vis-box").hidden = !restricted;
+    const gb = $("post-groups"); gb.replaceChildren(); S.groups.forEach(g => gb.append(checkbox("pg-" + g.id, g.name, p && (p.visibleGroups || []).includes(g.id))));
+    if (!S.groups.length) gb.append(el("span", "meta", "Noch keine Gruppen."));
+    const pb = $("post-people"); pb.replaceChildren();
+    activeMembers().sort((a, b) => nameOf(a).localeCompare(nameOf(b), "de")).forEach(m => pb.append(checkbox("pp-" + m, nameOf(m), p && (p.visibleTo || []).includes(m))));
+    openForm("post", true);
+  }
+  $("post-vis").addEventListener("change", () => { $("post-vis-box").hidden = $("post-vis").value !== "some"; });
+  $("form-post").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const some = $("post-vis").value === "some";
+    const visibleGroups = some ? S.groups.filter(g => $("pg-" + g.id) && $("pg-" + g.id).checked).map(g => g.id) : [];
+    const visibleTo = some ? activeMembers().filter(m => $("pp-" + m) && $("pp-" + m).checked) : [];
+    if (some && !visibleGroups.length && !visibleTo.length) { toast("Wähle mindestens eine Person oder Gruppe."); return; }
+    const html = sanitize(ed.innerHTML); const text = (ed.textContent || "").trim();
+    if (!text && !/<img/.test(html)) { toast("Der Beitrag ist noch leer."); return; }
+    const data = { catId: $("post-cat").value, title: $("post-title").value.trim(), text: text.slice(0, 400), html, pinned: $("post-pin").checked, visibleTo, visibleGroups, updatedAt: now() };
+    await act($("post-submit"), async () => {
+      if (S.editingPost) await db.collection("posts").doc(S.editingPost.id).update(data);
+      else await db.collection("posts").add({ ...data, authorId: S.uid, createdAt: now() });
+      e.target.reset(); ed.innerHTML = ""; S.editingPost = null; openForm("post", false);
+    }, S.editingPost ? "Gespeichert." : "Beitrag veröffentlicht.");
+  });
+
+  // ---- Kapitel
+  function renderCats() {
+    const list = $("cat-list"); list.replaceChildren();
+    if (!S.cats.length) { list.append(el("div", "empty", "Noch keine Kapitel. Lege oben das erste an, z. B. «Allgemein».")); return; }
+    S.cats.forEach((c, i) => {
+      const row = el("div", "taker"); const n = el("input"); n.value = c.name; n.maxLength = 60; n.style.flex = "1"; n.setAttribute("aria-label", "Kapitelname");
+      n.addEventListener("change", () => { const v = n.value.trim(); if (v && v !== c.name) db.collection("categories").doc(c.id).update({ name: v }).then(() => toast("Umbenannt.")).catch(e => toast(errMsg(e))); });
+      const a = el("div", "actions");
+      const up = el("button", "btn icon", "↑"); up.type = "button"; up.disabled = i === 0; up.setAttribute("aria-label", "Nach oben"); up.addEventListener("click", () => moveCat(i, -1));
+      const dn = el("button", "btn icon", "↓"); dn.type = "button"; dn.disabled = i === S.cats.length - 1; dn.setAttribute("aria-label", "Nach unten"); dn.addEventListener("click", () => moveCat(i, 1));
+      const cnt = S.posts.filter(p => p.catId === c.id).length;
+      const del = el("button", "btn small bad", "Löschen"); del.type = "button"; del.disabled = cnt > 0; del.title = cnt ? cnt + " Beiträge, zuerst verschieben" : "";
+      confirmBtn(del, "Löschen", () => db.collection("categories").doc(c.id).delete());
+      a.append(up, dn, el("span", "meta", cnt + (cnt === 1 ? " Beitrag" : " Beiträge")), del); row.append(n, a); list.append(row);
+    });
+  }
+  async function moveCat(i, d) {
+    const a = S.cats[i], b = S.cats[i + d]; if (!b) return;
+    try { const batch = db.batch(); batch.update(db.collection("categories").doc(a.id), { order: b.order }); batch.update(db.collection("categories").doc(b.id), { order: a.order }); await batch.commit(); } catch (e) { toast(errMsg(e)); }
+  }
+  $("form-cat").addEventListener("submit", async (e) => {
+    e.preventDefault(); const name = $("cat-name").value.trim(); if (!name) return;
+    const order = (S.cats.reduce((m, c) => Math.max(m, c.order || 0), 0)) + 10;
+    await act(e.submitter, async () => { await db.collection("categories").add({ name, order, createdAt: now() }); $("cat-name").value = ""; }, "Kapitel angelegt.");
+  });
+
+  // ---- TAUSCH
+  $("form-swap").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const date = $("swap-date").value, shift = $("swap-shift").value; if (!date) { toast("Bitte ein Datum angeben."); return; }
+    await act($("swap-submit"), async () => { await db.collection("requests").add({ type: "swap", date, shift, note: $("swap-note").value.trim(), userId: S.uid, createdAt: now() }); e.target.reset(); openForm("swap", false); }, "Schicht eingestellt.");
+  });
+  function swapCard(offer, takes, adminMode) {
+    const st = statusOf(offer.id) === "approved" ? "approved" : statusOf(offer.id) === "rejected" ? "rejected" : "open";
+    const c = el("article", "card" + (offer.userId === S.uid ? " mine" : ""));
+    const g = el("div", "swap"); const dd = el("div", "d"); const dt = new Date(offer.date + "T12:00:00");
+    dd.append(document.createTextNode(dt.toLocaleDateString("de-CH", { weekday: "short" })), el("b", null, String(dt.getDate())), document.createTextNode(dt.toLocaleDateString("de-CH", { month: "short" })));
+    const s1 = el("div", "s"); s1.append(document.createTextNode(offer.shift || ""), el("span", "meta", " "), pill(st));
+    const s2 = el("div", "meta"); person(s2, offer.userId); s2.append(el("span", null, "gibt ab" + (offer.note ? " · " + offer.note : "")));
+    g.append(dd, s1, s2); c.append(g);
+    if (!adminMode && takes.length && st === "open" && offer.userId !== S.uid) c.append(el("div", "meta", takes.length === 1 ? "1 Person hat sich gemeldet" : takes.length + " Personen haben sich gemeldet"));
+    const dec = S.decs[offer.id];
+    if (st === "approved" && dec && dec.takerId) { const m = el("div", "meta"); m.append(el("span", null, "Übernimmt:")); person(m, dec.takerId); c.append(m); }
+    if (takes.length && st === "open" && (adminMode || offer.userId === S.uid)) {
+      const box = el("div", "takers"); box.append(el("div", "meta", "Interessierte Übernahmen"));
+      for (const tk of takes) {
+        const row = el("div", "taker"); const m = el("span", "meta"); person(m, tk.userId); row.append(m);
+        const ts = statusOf(tk.id);
+        if (ts === "rejected") row.append(pill("rejected"));
+        else if (adminMode) { const a = el("div", "actions"); const ok = el("button", "btn small ok", "Freigeben"); ok.addEventListener("click", () => decideTake(offer, tk, true, ok)); const no = el("button", "btn small bad", "Ablehnen"); no.addEventListener("click", () => decideTake(offer, tk, false, no)); a.append(ok, no); row.append(a); }
+        else row.append(pill("pending"));
+        box.append(row);
+      }
+      c.append(box);
+    }
+    const a = el("div", "actions");
+    if (st === "open" && !adminMode) {
+      if (offer.userId !== S.uid) { const already = takes.some(t => t.userId === S.uid); const b = el("button", "btn primary small", already ? "Du hast dich gemeldet" : "Ich übernehme diese Schicht"); b.disabled = already; b.addEventListener("click", () => act(b, () => db.collection("requests").add({ type: "take", refId: offer.id, userId: S.uid, createdAt: now() }), "Gemeldet. Die Leitung gibt den Tausch frei.")); a.append(b); }
+      else { const d = el("button", "btn small bad", "Zurückziehen"); confirmBtn(d, "Zurückziehen", () => db.collection("requests").doc(offer.id).delete()); a.append(d); }
+    }
+    if (adminMode && st === "open" && !takes.length) { const no = el("button", "btn small bad", "Ohne Tausch schliessen"); confirmBtn(no, "Ohne Tausch schliessen", () => db.collection("decisions").doc(offer.id).set({ status: "rejected", decidedAt: now(), byId: S.uid })); a.append(no); }
+    if (a.childNodes.length) c.append(a);
+    return c;
+  }
+  async function decideTake(offer, take, approve, btn) {
+    await act(btn, async () => {
+      const batch = db.batch();
+      batch.set(db.collection("decisions").doc(take.id), { status: approve ? "approved" : "rejected", decidedAt: now(), byId: S.uid });
+      if (approve) batch.set(db.collection("decisions").doc(offer.id), { status: "approved", takerId: take.userId, decidedAt: now(), byId: S.uid });
+      await batch.commit();
+    }, approve ? "Tausch freigegeben." : "Übernahme abgelehnt.");
+  }
+  function renderSwaps() {
+    const offers = S.reqs.filter(r => r.type === "swap");
+    const takesBy = {}; S.reqs.filter(r => r.type === "take").forEach(t => (takesBy[t.refId] = takesBy[t.refId] || []).push(t));
+    const open = offers.filter(o => statusOf(o.id) === "pending").sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+    const done = offers.filter(o => statusOf(o.id) !== "pending").sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 8);
+    const L1 = $("swap-open"); L1.replaceChildren(); if (!open.length) L1.append(el("div", "empty", "Zurzeit sucht niemand einen Tausch.")); open.forEach(o => L1.append(swapCard(o, (takesBy[o.id] || []).filter(t => statusOf(t.id) !== "approved"), false)));
+    const L2 = $("swap-done"); L2.replaceChildren(); if (!done.length) L2.append(el("div", "empty", "Noch keine abgeschlossenen Tausche.")); done.forEach(o => L2.append(swapCard(o, [], false)));
+    $("count-tausch").textContent = open.length ? String(open.length) : "";
+    if (!canApprove()) return 0;
+    const L3 = $("chef-swap"); L3.replaceChildren();
+    const needs = open.filter(o => (takesBy[o.id] || []).some(t => statusOf(t.id) === "pending"));
+    if (!needs.length) L3.append(el("div", "empty", "Keine offenen Schichtübernahmen."));
+    needs.forEach(o => L3.append(swapCard(o, (takesBy[o.id] || []).filter(t => statusOf(t.id) !== "approved"), true)));
+    return needs.length;
+  }
+
+  // ---- FERIEN
+  function vacCard(v, adminMode) {
+    const st = statusOf(v.id);
+    const c = el("article", "card" + (v.userId === S.uid ? " mine" : ""));
+    const top = el("div", "top"); const left = el("div"); left.append(el("div", "date", fmtRange(v.from, v.to)));
+    const days = v.from && v.to ? Math.round((new Date(v.to) - new Date(v.from)) / 864e5) + 1 : 0;
+    if (days > 0) left.append(el("div", "meta", days === 1 ? "1 Tag" : days + " Tage"));
+    top.append(left, pill(st)); c.append(top);
+    if (v.note) c.append(el("p", null, v.note));
+    const meta = el("div", "meta"); person(meta, v.userId); meta.append(el("span", null, "· beantragt " + fmtWhen(v.createdAt))); c.append(meta);
+    const a = el("div", "actions");
+    if (adminMode && st === "pending") {
+      const ok = el("button", "btn small ok", "Freigeben"), no = el("button", "btn small bad", "Ablehnen");
+      const dec = (s, b) => () => act(b, () => db.collection("decisions").doc(v.id).set({ status: s, decidedAt: now(), byId: S.uid }), s === "approved" ? "Freigegeben." : "Abgelehnt.");
+      ok.addEventListener("click", dec("approved", ok)); no.addEventListener("click", dec("rejected", no)); a.append(ok, no);
+    } else if (!adminMode && v.userId === S.uid && st === "pending") { const d = el("button", "btn small bad", "Zurückziehen"); confirmBtn(d, "Zurückziehen", () => db.collection("requests").doc(v.id).delete()); a.append(d); }
+    if (a.childNodes.length) c.append(a);
+    return c;
+  }
+  function renderVac() {
+    const vacs = S.reqs.filter(r => r.type === "vacation"); const t = today();
+    const mine = vacs.filter(v => v.userId === S.uid).sort((a, b) => (b.from || "").localeCompare(a.from || ""));
+    const team = vacs.filter(v => statusOf(v.id) === "approved" && v.to >= t).sort((a, b) => (a.from || "").localeCompare(b.from || ""));
+    const L1 = $("vac-mine"); L1.replaceChildren(); if (!mine.length) L1.append(el("div", "empty", "Du hast noch keinen Antrag gestellt.")); mine.forEach(v => L1.append(vacCard(v, false)));
+    const L2 = $("vac-team"); L2.replaceChildren(); if (!team.length) L2.append(el("div", "empty", "Keine freigegebenen Abwesenheiten.")); team.forEach(v => L2.append(vacCard(v, false)));
+    if (!canApprove()) return 0;
+    const pend = vacs.filter(v => statusOf(v.id) === "pending").sort((a, b) => (a.from || "").localeCompare(b.from || ""));
+    const L3 = $("chef-vac"); L3.replaceChildren(); if (!pend.length) L3.append(el("div", "empty", "Keine offenen Ferienanträge.")); pend.forEach(v => L3.append(vacCard(v, true)));
+    return pend.length;
+  }
+  $("vac-from").addEventListener("change", () => { if (!$("vac-to").value || $("vac-to").value < $("vac-from").value) $("vac-to").value = $("vac-from").value; });
+  $("form-vac").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const from = $("vac-from").value, to = $("vac-to").value || from;
+    if (to < from) { toast("Das Enddatum liegt vor dem Startdatum."); return; }
+    await act($("vac-submit"), async () => { await db.collection("requests").add({ type: "vacation", from, to, note: $("vac-note").value.trim(), userId: S.uid, createdAt: now() }); e.target.reset(); openForm("vac", false); }, "Antrag gesendet.");
+  });
+
+  // ---- TEAM: Personen anlegen (über eine zweite Firebase-Instanz, damit die Leitung angemeldet bleibt)
+  let secondary = null;
+  function secondaryAuth() { if (!secondary) secondary = firebase.initializeApp(firebaseConfig, "secondary"); return secondary.auth(); }
+  // Legt einen Login an. Falls es für den Namen schon einen gibt, wird eine neue Version verwendet (v2, v3 …).
+  async function createLogin(id, pin, startDomain) {
+    const a2 = secondaryAuth(); let domain = startDomain || LOGIN_DOMAIN;
+    try {
+      for (let i = 0; i < 30; i++) {
+        try { await a2.createUserWithEmailAndPassword(emailFor(id, domain), pin); return domain; }
+        catch (err) { if (err && err.code === "auth/email-already-in-use") domain = nextDomain(domain); else throw err; }
+      }
+      throw Object.assign(new Error("exists"), { code: "login-exists" });
+    } finally { await a2.signOut().catch(() => {}); }
+  }
+  async function setPin(id, pin) {
+    const cur = S.users[id] && S.users[id].loginDomain;
+    const domain = await createLogin(id, pin, nextDomain(cur || LOGIN_DOMAIN));
+    const batch = db.batch();
+    batch.update(db.collection("users").doc(id), { loginDomain: domain });
+    batch.set(db.collection("logins").doc(id), { d: domain });
+    await batch.commit();
+  }
+  $("u-gen").addEventListener("click", () => { $("u-pin").value = String(Math.floor(100000 + Math.random() * 900000)); });
+  $("form-user").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = $("u-name").value.trim(), id = cleanId(name), pin = $("u-pin").value.trim();
+    if (!id) { toast("Bitte einen Namen eingeben."); return; }
+    if (!/^\d{6}$/.test(pin)) { toast("Die PIN muss aus 6 Ziffern bestehen."); return; }
+    if (S.users[id] && S.users[id].active !== false) { toast("Diesen Namen gibt es schon. Füge z. B. den zweiten Vornamen oder einen Buchstaben hinzu."); return; }
+    const res = $("u-result"); res.hidden = true;
+    await act(e.submitter, async () => {
+      const domain = await createLogin(id, pin);
+      const batch = db.batch();
+      batch.set(db.collection("users").doc(id), { name, active: true, infos: false, approve: false, colead: false, loginDomain: domain, createdAt: now(), createdBy: S.uid });
+      batch.set(db.collection("logins").doc(id), { d: domain });
+      await batch.commit();
+      res.hidden = false; res.replaceChildren(); res.append(el("b", null, name + " ist angelegt. "), el("span", null, "Anmelden mit Name "), el("b", null, name), el("span", null, " und PIN "), el("b", null, pin), el("div", "meta", "Gib der Person die PIN persönlich weiter. Sie wird hier nicht mehr angezeigt."));
+      e.target.reset();
+    }).catch(() => {});
+  });
+  function renderTeam() {
+    if (!isLead()) return;
+    const list = $("team-list"); list.replaceChildren();
+    const pending = Object.keys(S.users).filter(id => S.users[id].pending && S.users[id].active === false);
+    if (pending.length) {
+      const box = el("div", "notice"); box.append(el("b", null, pending.length === 1 ? "1 Person wartet auf Freischaltung" : pending.length + " Personen warten auf Freischaltung"));
+      pending.forEach(id => { const r = el("div", "taker"); r.style.marginTop = "6px"; const w = el("span", "member"); person(w, id); r.append(w); const a = el("div", "actions"); const ok = el("button", "btn small ok", "Freischalten"); ok.type = "button"; ok.addEventListener("click", () => act(ok, () => db.collection("users").doc(id).update({ active: true, pending: false }), nameOf(id) + " ist freigeschaltet.")); const no = el("button", "btn small bad", "Ablehnen"); no.type = "button"; confirmBtn(no, "Ablehnen", () => db.collection("users").doc(id).update({ pending: false, active: false })); a.append(ok, no); r.append(a); box.append(r); });
+      list.append(box);
+    }
+    const ids = Object.keys(S.users).filter(id => S.users[id].active !== false).sort((a, b) => nameOf(a).localeCompare(nameOf(b), "de")).filter(id => !S.teamSearch || nameOf(id).toLowerCase().includes(S.teamSearch) || id.includes(S.teamSearch));
+    if (!ids.length) list.append(el("div", "empty", "Noch niemand angelegt."));
+    for (const id of ids) {
+      const u = S.users[id]; const row = el("div", "trow");
+      const left = el("div"); const who = el("span", "member"); person(who, id); left.append(who, el("div", "meta", (groupsOf(id).length ? groupsOf(id).map(g => g.name).join(", ") : "Anmeldename: " + u.name))); row.append(left);
+      const roles = el("div", "roles");
+      const isSelf = id === S.uid;
+      const mayEdit = isOwner() || (isLead() && !u.owner); // Stv. darf alles ausser Teamleitung ändern
+      if (u.owner) roles.append(el("span", "pill open", "Teamleitung"), el("span", "meta", "kann nicht deaktiviert werden"));
+      else {
+        [["infos", "Infos schreiben"], ["approve", "Freigaben"], ["colead", "Stv. Leitung"]].forEach(([k, label]) => {
+          const l = checkbox("role-" + k + "-" + id, label, u[k]); const i = l.querySelector("input"); i.disabled = !mayEdit || (isSelf && k === "colead");
+          if (isSelf && k === "colead") l.title = "Die eigene Rolle kann nur die Teamleitung ändern.";
+          i.addEventListener("change", () => db.collection("users").doc(id).update({ [k]: i.checked }).then(() => toast("Berechtigung gespeichert.")).catch(e => { toast(errMsg(e)); i.checked = !i.checked; }));
+          roles.append(l);
+        });
+        const li = S.logins[id] || {};
+        if (!mayEdit) { row.append(roles); list.append(row); continue; }
+        if (isSelf) { roles.append(el("span", "meta", "dich selbst kann nur die Teamleitung deaktivieren")); row.append(roles); list.append(row); continue; }
+        if (li.reset) roles.append(el("span", "pill pending", "PIN wird beim nächsten Anmelden neu gewählt"));
+        else { const pinb = el("button", "btn small", "PIN zurücksetzen"); pinb.type = "button"; confirmBtn(pinb, "PIN zurücksetzen", async () => { await db.collection("logins").doc(id).set({ d: u.loginDomain || LOGIN_DOMAIN, reset: true }, { merge: true }); toast(u.name + " wählt beim nächsten Anmelden eine neue PIN."); }); roles.append(pinb); }
+        const off = el("button", "btn small bad", "Deaktivieren"); off.type = "button"; confirmBtn(off, "Deaktivieren", () => db.collection("users").doc(id).update({ active: false })); roles.append(off);
+        if (isOwner()) { const tr = el("button", "btn small", "Teamleitung übertragen"); tr.type = "button"; confirmBtn(tr, "Teamleitung übertragen", async () => { const batch = db.batch(); batch.update(db.collection("users").doc(id), { owner: true, colead: true, infos: true, approve: true, active: true }); batch.update(db.collection("users").doc(S.uid), { owner: false, colead: true }); await batch.commit(); toast(u.name + " ist jetzt Teamleitung, du bist Stv. Leitung."); }); roles.append(tr); }
+      }
+      row.append(roles); list.append(row);
+    }
+    const gl = $("group-list"); gl.replaceChildren();
+    if (!S.groups.length) gl.append(el("div", "empty", "Noch keine Gruppen."));
+    for (const g of S.groups) {
+      const card = el("div", "card"); const top = el("div", "top"); top.append(el("div", "title", g.name));
+      const del = el("button", "btn small bad", "Gruppe löschen"); del.type = "button"; confirmBtn(del, "Gruppe löschen", () => db.collection("groups").doc(g.id).delete()); top.append(del); card.append(top);
+      const ch = el("div", "checks");
+      activeMembers().sort((a, b) => nameOf(a).localeCompare(nameOf(b), "de")).forEach(m => { const l = checkbox("gm-" + g.id + "-" + m, nameOf(m), (g.memberIds || []).includes(m)); const i = l.querySelector("input"); i.addEventListener("change", () => { const ids = new Set(g.memberIds || []); i.checked ? ids.add(m) : ids.delete(m); db.collection("groups").doc(g.id).update({ memberIds: [...ids] }).catch(e => { toast(errMsg(e)); i.checked = !i.checked; }); }); ch.append(l); });
+      card.append(ch); gl.append(card);
+    }
+  }
+  function showPinForm(row, id, name) {
+    if (row.querySelector(".pinform")) return;
+    const f = el("form", "pinform"); f.style.gridColumn = "1 / -1"; const r = el("div", "row");
+    const l = el("label", null, "Neue PIN für " + name + " (6 Ziffern)"); const i = el("input"); i.inputMode = "numeric"; i.maxLength = 6; i.required = true; i.pattern = "[0-9]{6}"; l.append(i);
+    const lb = el("label"); lb.style.alignSelf = "end"; const b = el("button", "btn primary small", "Speichern"); b.type = "submit"; const c = el("button", "btn small", "Abbrechen"); c.type = "button"; c.addEventListener("click", () => f.remove()); lb.append(b); const lc = el("label"); lc.style.alignSelf = "end"; lc.append(c);
+    r.append(l, lb, lc); f.append(r); row.append(f); i.focus();
+    f.addEventListener("submit", (e) => { e.preventDefault(); const pin = i.value.trim(); if (!/^\d{6}$/.test(pin)) { toast("Die PIN muss aus 6 Ziffern bestehen."); return; } act(b, async () => { await setPin(id, pin); f.remove(); }, "Neue PIN für " + name + " gespeichert: " + pin); });
+  }
+  function showPinHelp(id, name) {
+    const n = $("status-note"); n.hidden = false; n.classList.remove("bad"); n.replaceChildren();
+    n.append(el("b", null, "Neue PIN für " + name), el("div", null, "1. Öffne in der Firebase-Konsole «Authentication» → «Users»."), el("div", null, "2. Lösche den Eintrag " + emailFor(id) + "."), el("div", null, "3. Komm hierher zurück und lege die Person mit genau demselben Namen und einer neuen PIN nochmals an. Alle Daten bleiben erhalten."));
+    const x = el("button", "btn small", "Schliessen"); x.type = "button"; x.addEventListener("click", () => { n.hidden = true; }); n.append(x);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  $("form-group").addEventListener("submit", async (e) => {
+    e.preventDefault(); const name = $("group-name").value.trim(); if (!name) return;
+    await act(e.submitter, async () => { await db.collection("groups").add({ name, memberIds: [], createdAt: now() }); $("group-name").value = ""; }, "Gruppe angelegt.");
+  });
+
+  // ---- Einstellungen
+  const SWATCHES = ["#0f5c6e", "#1f4e79", "#2f6b3a", "#7a3b8f", "#a8411f", "#8a6a00", "#2b2b2b", "#b0276a"];
+  function applySettings() {
+    const st = S.settings || {}; const name = st.name || "Team-Portal";
+    ["brand-name", "l-name"].forEach(i => $(i).textContent = name); document.title = name;
+    const mark = name.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase() || "TP"; ["brand-mark", "l-mark"].forEach(i => $(i).textContent = mark);
+    $("brand-sub").textContent = st.sub || ""; $("brand-sub").hidden = !st.sub; $("l-sub").textContent = st.sub || "";
+    document.documentElement.style.setProperty("--accent-base", /^#[0-9a-f]{6}$/i.test(st.accent || "") ? st.accent : "#0f5c6e");
+  }
+  function renderSettings() {
+    if (!isLead()) return;
+    const st = S.settings || {};
+    if (document.activeElement !== $("set-name")) $("set-name").value = st.name || ""; if (document.activeElement !== $("set-sub")) $("set-sub").value = st.sub || "";
+    const sw = $("swatches"); if (!sw.childNodes.length) SWATCHES.forEach(c => { const b = el("button", "swatch"); b.type = "button"; b.style.background = c; b.dataset.c = c; b.setAttribute("aria-label", "Farbe " + c); b.addEventListener("click", () => { sw.querySelectorAll(".swatch").forEach(x => x.setAttribute("aria-pressed", String(x === b))); }); sw.append(b); });
+    if (!sw.querySelector('[aria-pressed="true"]')) sw.querySelectorAll(".swatch").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.c === (st.accent || "#0f5c6e"))));
+  }
+  $("form-settings").addEventListener("submit", async (e) => {
+    e.preventDefault(); const pressed = $("swatches").querySelector('[aria-pressed="true"]');
+    await act(e.submitter, () => db.collection("settings").doc("portal").set({ name: $("set-name").value.trim(), sub: $("set-sub").value.trim(), accent: pressed ? pressed.dataset.c : "#0f5c6e", setupDone: true, updatedAt: now() }, { merge: true }), "Einstellungen gespeichert.");
+  });
+
+  // ---- Startseite
+  function renderHome(pending) {
+    const h = new Date().getHours(); const g = h < 11 ? "Guten Morgen" : h < 18 ? "Guten Tag" : "Guten Abend";
+    $("greet").textContent = g + (S.me && S.me.name ? ", " + S.me.name.split(" ")[0] : "") + ".";
+    const t = today();
+    $("today-line").textContent = new Date().toLocaleDateString("de-CH", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    const tiles = $("home-tiles"); tiles.replaceChildren();
+    const tile = (title, linkLabel, go) => { const d = el("div", "tile"); const hh = el("h3"); hh.append(el("span", null, title)); if (linkLabel) { const b = el("button", "lnk", linkLabel); b.type = "button"; b.addEventListener("click", go); hh.append(b); } d.append(hh); return d; };
+    if (canApprove() && pending > 0) { const d = tile("Wartet auf dich", "Zu den Freigaben ›", () => showTab("leitung")); d.classList.add("alert"); d.append(el("div", "big", pending === 1 ? "1 offene Anfrage" : pending + " offene Anfragen")); tiles.append(d); }
+    const vis = S.posts.filter(canSeePost);
+    const pinned = vis.filter(p => p.pinned).slice(0, 4);
+    const unreadP = vis.filter(p => !p.pinned && !S.myReads[p.id]).slice(0, 4);
+    const recent = vis.filter(p => !p.pinned && !unreadP.includes(p)).slice(0, Math.max(0, 3 - unreadP.length));
+    const d3 = tile(unreadCount() ? "Infos · " + unreadCount() + " neu" : "Wichtige Infos", "Alle Infos ›", () => showTab("infos"));
+    if (!pinned.length && !recent.length && !unreadP.length) d3.append(el("div", "meta", "Noch keine Infos."));
+    [...pinned, ...unreadP, ...recent].forEach(p => { const l = el("div", "line"); const b = el("button", "lnk", p.title || "(ohne Titel)"); b.type = "button"; b.style.textAlign = "left"; b.addEventListener("click", () => { S.openPosts.add(p.id); S.openPosts.delete("!" + p.id); S.cat = "all"; showTab("infos"); renderInfos(); }); l.append(b); if (!S.myReads[p.id]) l.append(el("span", "pill new", "Neu")); else if (p.pinned) l.append(el("span", "pill open", "Angeheftet")); d3.append(l); });
+    tiles.append(d3);
+    const open = S.reqs.filter(r => r.type === "swap" && statusOf(r.id) === "pending" && r.userId !== S.uid && r.date >= t).sort((a, b) => a.date.localeCompare(b.date));
+    const d2 = tile("Offene Schichten", "Tausch ›", () => showTab("anfragen", "tausch"));
+    if (!open.length) d2.append(el("div", "meta", "Niemand sucht gerade einen Tausch."));
+    open.slice(0, 5).forEach(o => { const l = el("div", "line"); l.append(el("span", "sn", fmtDate(o.date, { weekday: "short", day: "numeric", month: "short" })), el("span", "pn", o.shift + " · " + nameOf(o.userId))); d2.append(l); });
+    tiles.append(d2);
+    const away = S.reqs.filter(r => r.type === "vacation" && statusOf(r.id) === "approved" && r.from <= t && r.to >= t);
+    const d4 = tile("Heute abwesend", "Ferien ›", () => showTab("anfragen", "ferien"));
+    if (!away.length) d4.append(el("div", "meta", "Alle da."));
+    away.slice(0, 8).forEach(v => { const l = el("div", "line"); l.append(avatar(v.userId), el("span", "pn", nameOf(v.userId)), el("span", "meta", "bis " + fmtDate(v.to, { day: "numeric", month: "short" }))); d4.append(l); });
+    tiles.append(d4);
+  }
+  function renderStat(a, b) {
+    if (!(canApprove() || canInfo())) return;
+    const st = $("lead-stat"); st.replaceChildren();
+    const add = (label, n) => { const sp = el("span"); sp.append(el("b", null, String(n)), document.createTextNode(" " + label)); st.append(sp); };
+    add("Mitarbeitende", activeMembers().length); add("Gruppen", S.groups.length); add("Infos", S.posts.length); add("offene Ferienanträge", b); add("offene Übernahmen", a);
+  }
+
+  // ---- render orchestration
+  let renderQueued = false;
+  function applyRole() {
+    $("who-name").textContent = S.me ? S.me.name : ""; $("who-role").textContent = roleLabel();
+    const lead = canApprove() || canInfo();
+    $("tab-leitung").hidden = !lead; $("lead-approve").hidden = !canApprove(); $("lead-cats").hidden = !canInfo(); $("lead-team").hidden = !isLead(); $("lead-settings").hidden = !isLead(); $("lead-help").hidden = !isLead();
+    $("lnk-fs").href = "https://console.firebase.google.com/project/" + firebaseConfig.projectId + "/firestore";
+    if ($("sec-leitung").hidden === false && !lead) showTab("heute");
+  }
+  function renderAll() {
+    if (renderQueued || !S.me) return; renderQueued = true;
+    queueMicrotask(async () => {
+      renderQueued = false; applyRole(); applySettings();
+      const a = renderSwaps(), b = renderVac(); await renderInfos(); renderTeam();
+      if (canInfo()) renderCats();
+      renderSettings(); renderStat(a, b);
+      const n = a + b; $("count-leitung").textContent = n ? String(n) : "";
+      renderHome(n);
+    });
+  }
+
+  // ---- Login / Setup
+  const showErr = (id, msg) => { const n = $(id); n.hidden = !msg; n.textContent = msg || ""; };
+  function loginErr(e) { const c = e && e.code || ""; if (c.includes("wrong-password") || c.includes("user-not-found") || c.includes("invalid-credential") || c.includes("invalid-login")) return "Name oder PIN stimmt nicht. Der Name muss so geschrieben sein, wie die Leitung ihn angelegt hat."; if (c.includes("too-many-requests")) return "Zu viele Versuche. Bitte kurz warten."; if (c.includes("network")) return "Keine Verbindung."; return "Anmeldung nicht möglich (" + c + ")."; }
+  $("form-login").addEventListener("submit", async (e) => {
+    e.preventDefault(); showErr("login-err", ""); const b = $("login-btn"); b.disabled = true;
+    try {
+      const id = cleanId($("login-id").value); const info = await loginInfo(id);
+      if (info.reset) { S.resetId = id; S.resetDomain = info.d || LOGIN_DOMAIN; $("login").hidden = true; $("newpin").hidden = false; $("np-pin").focus(); b.disabled = false; return; }
+      await auth.signInWithEmailAndPassword(emailFor(id, info.d || LOGIN_DOMAIN), $("login-pin").value.trim());
+    }
+    catch (err) { showErr("login-err", loginErr(err)); }
+    b.disabled = false;
+  });
+  $("form-setup").addEventListener("submit", async (e) => {
+    e.preventDefault(); showErr("setup-err", "");
+    const org = "Team-Portal", name = $("setup-name").value.trim(), id = cleanId(name), pin = $("setup-pin").value.trim();
+    if (!id || !/^\d{6}$/.test(pin)) { showErr("setup-err", "Bitte Namen eingeben und eine PIN mit 6 Ziffern wählen."); return; }
+    const b = e.submitter; b.disabled = true; S.settingUp = true;
+    try {
+      try { await auth.createUserWithEmailAndPassword(emailFor(id), pin); }
+      catch (err) { if (err && err.code === "auth/email-already-in-use") await auth.signInWithEmailAndPassword(emailFor(id), pin); else throw err; }
+      const batch = db.batch();
+      batch.set(db.collection("users").doc(id), { name, active: true, owner: true, colead: true, infos: true, approve: true, loginDomain: LOGIN_DOMAIN, createdAt: now() });
+      batch.set(db.collection("logins").doc(id), { d: LOGIN_DOMAIN });
+      batch.set(db.collection("settings").doc("portal"), { name: org, sub: "", accent: "#0f5c6e", setupDone: true, createdAt: now() });
+      batch.set(db.collection("categories").doc("allgemein"), { name: "Allgemein", order: 10, createdAt: now() });
+      await batch.commit();
+      S.settingUp = false; boot(auth.currentUser);
+    } catch (err) { console.error(err); S.settingUp = false; showErr("setup-err", "Einrichten fehlgeschlagen: " + (err && err.code || err.message)); b.disabled = false; }
+  });
+  $("np-back").addEventListener("click", () => { $("newpin").hidden = true; $("login").hidden = false; });
+  $("form-newpin").addEventListener("submit", async (e) => {
+    e.preventDefault(); showErr("np-err", "");
+    const pin = $("np-pin").value.trim(); if (!/^\d{6}$/.test(pin)) { showErr("np-err", "Die PIN muss aus 6 Ziffern bestehen."); return; }
+    if (pin !== $("np-pin2").value.trim()) { showErr("np-err", "Die beiden PINs sind nicht gleich."); return; }
+    const b = e.submitter; b.disabled = true; const id = S.resetId;
+    try {
+      const a2 = secondaryAuth(); let domain = nextDomain(S.resetDomain);
+      try {
+        for (let i = 0; i < 30; i++) { try { await a2.createUserWithEmailAndPassword(emailFor(id, domain), pin); break; } catch (err) { if (err && err.code === "auth/email-already-in-use") domain = nextDomain(domain); else throw err; } }
+        const db2 = secondary.firestore(); const batch = db2.batch();
+        batch.update(db2.collection("users").doc(id), { loginDomain: domain });
+        batch.update(db2.collection("logins").doc(id), { d: domain, reset: false });
+        await batch.commit();
+      } finally { await a2.signOut().catch(() => {}); }
+      $("form-newpin").reset(); $("newpin").hidden = true;
+      await auth.signInWithEmailAndPassword(emailFor(id, domain), pin);
+    } catch (err) { console.error(err); showErr("np-err", "Das hat nicht geklappt (" + (err && err.code || "") + "). Bitte die Leitung fragen."); }
+    b.disabled = false;
+  });
+  $("to-register").addEventListener("click", () => { $("login").hidden = true; $("register").hidden = false; });
+  $("to-login").addEventListener("click", () => { $("register").hidden = true; $("login").hidden = false; });
+  $("form-register").addEventListener("submit", async (e) => {
+    e.preventDefault(); showErr("reg-err", ""); $("reg-ok").hidden = true;
+    const name = $("reg-name").value.trim(), id = cleanId(name), pin = $("reg-pin").value.trim();
+    if (!id) { showErr("reg-err", "Bitte einen Namen eingeben."); return; }
+    if (!/^\d{6}$/.test(pin)) { showErr("reg-err", "Die PIN muss aus 6 Ziffern bestehen."); return; }
+    if (pin !== $("reg-pin2").value.trim()) { showErr("reg-err", "Die beiden PINs sind nicht gleich."); return; }
+    const b = e.submitter; b.disabled = true;
+    try {
+      if (S.users[id]) throw Object.assign(new Error("taken"), { code: "auth/email-already-in-use" });
+      const a2 = secondaryAuth(); let domain = LOGIN_DOMAIN;
+      try {
+        for (let i = 0; i < 30; i++) { try { await a2.createUserWithEmailAndPassword(emailFor(id, domain), pin); break; } catch (err) { if (err && err.code === "auth/email-already-in-use") domain = nextDomain(domain); else throw err; } }
+        const db2 = secondary.firestore(); const batch = db2.batch();
+        batch.set(db2.collection("users").doc(id), { name, active: false, pending: true, infos: false, approve: false, colead: false, loginDomain: domain, createdAt: now() });
+        batch.set(db2.collection("logins").doc(id), { d: domain });
+        await batch.commit();
+      } finally { await a2.signOut().catch(() => {}); }
+      $("form-register").reset(); const ok = $("reg-ok"); ok.hidden = false; ok.textContent = "Danke, " + name + "! Sobald die Leitung dich freigeschaltet hat, kannst du dich mit Name und PIN anmelden.";
+    } catch (err) {
+      console.error(err);
+      showErr("reg-err", err && err.code === "auth/email-already-in-use" ? "Diesen Namen gibt es schon. Ergänze z. B. einen Buchstaben oder frag die Leitung." : "Registrieren hat nicht geklappt (" + (err && err.code || "") + ").");
+    }
+    b.disabled = false;
+  });
+  function sub(q, fn, onErr) { S.unsub.push(q.onSnapshot(s => { fn(s); renderAll(); }, (e) => { console.error(e); if (onErr) onErr(e); else if (e.code === "permission-denied") toast("Kein Zugriff auf einen Datenbereich. Regeln prüfen."); })); }
+  const rows = (s) => s.docs.map(d => ({ id: d.id, ...d.data() }));
+  function stopAll() { S.unsub.forEach(u => u()); S.unsub = []; }
+  async function boot(user) {
+    stopAll();
+    $("login").hidden = true; $("setup").hidden = true; $("register").hidden = true; $("app").hidden = true;
+    const setupSnap = await db.collection("settings").doc("portal").get().catch(() => null);
+    if (!user) {
+      if (setupSnap && !setupSnap.exists) { $("setup").hidden = false; return; }
+      $("login").hidden = false; $("login-pin").value = ""; return;
+    }
+    S.uid = (user.email || "").split("@")[0];
+    if (S.settingUp) return;
+    let meSnap = null; try { meSnap = await db.collection("users").doc(S.uid).get(); } catch (e) { console.error(e); }
+    if (!meSnap || !meSnap.exists) {
+      await auth.signOut();
+      $("login").hidden = false; showErr("login-err", "Dein Zugang ist noch nicht freigeschaltet (oder wurde deaktiviert). Bitte die Leitung fragen.");
+      return;
+    }
+    sub(db.collection("users"), s => { const m = {}; s.docs.forEach(d => m[d.id] = d.data()); S.users = m; S.me = m[S.uid] || null; if (S.me && S.me.active === false) { toast("Dein Zugang ist deaktiviert."); auth.signOut(); } if (S.me) { $("app").hidden = false; let saved = "heute"; try { saved = localStorage.getItem("tab") || "heute"; } catch (_) {} if (!$("app").dataset.booted) { $("app").dataset.booted = "1"; showTab(saved); } } }, (e) => { if (e.code === "permission-denied") { auth.signOut().then(() => showErr("login-err", "Dein Zugang ist noch nicht freigeschaltet (oder wurde deaktiviert). Bitte die Leitung fragen.")); } });
+    sub(db.collection("settings").doc("portal"), s => { S.settings = s.exists ? s.data() : {}; applySettings(); });
+    sub(db.collection("logins"), s => { const m = {}; s.docs.forEach(d => m[d.id] = d.data()); S.logins = m; }, () => {});
+    sub(db.collection("groups"), s => { S.groups = rows(s).sort((a, b) => a.name.localeCompare(b.name)); });
+    sub(db.collection("categories"), s => { S.cats = rows(s).sort((a, b) => (a.order || 0) - (b.order || 0) || (a.createdAt || "").localeCompare(b.createdAt || "")); });
+    sub(db.collection("posts").orderBy("createdAt", "desc").limit(500), s => { S.posts = rows(s); });
+    sub(db.collection("requests").orderBy("createdAt", "desc").limit(1000), s => { S.reqs = rows(s); });
+    sub(db.collection("decisions"), s => { const m = {}; s.docs.forEach(d => m[d.id] = d.data()); S.decs = m; });
+    sub(db.collection("reads"), s => { const m = {}; s.docs.forEach(d => m[d.id] = d.data()); S.reads = m; if (m[S.uid] && m[S.uid].posts) S.myReads = { ...m[S.uid].posts, ...S.myReads }; });
+  }
+  auth.onAuthStateChanged(user => { if (!user) { S.me = null; S.uid = null; delete $("app").dataset.booted; } boot(user); });
+  applySettings();
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+
+    // Die Mitarbeiter-ID steckt vor dem @ in der Login-Adresse (z. B. anna@team.portal)
+    function myId() { return request.auth.token.email.split('@')[0]; }
+    function userDoc() { return get(/databases/$(db)/documents/users/$(myId())).data; }
+    function myDomain() { return request.auth.token.email.split('@')[1]; }
+    function signedIn() {
+      return request.auth != null
+        && exists(/databases/$(db)/documents/users/$(myId()))
+        && userDoc().get('active', false) == true
+        && userDoc().get('loginDomain', 'team.portal') == myDomain();
+    }
+    function isOwner()    { return signedIn() && userDoc().get('owner', false) == true; }
+    function isLead()     { return signedIn() && (userDoc().get('owner', false) == true || userDoc().get('colead', false) == true); }
+    function canInfo()    { return isLead() || (signedIn() && userDoc().get('infos', false) == true); }
+    function canApprove() { return isLead() || (signedIn() && userDoc().get('approve', false) == true); }
+    function setupDone()  { return exists(/databases/$(db)/documents/settings/portal); }
+
+    // Einstellungen: jeder darf lesen (für die Login-Seite), nur Inhaber ändert
+    match /settings/portal {
+      allow get: if true;
+      allow list: if signedIn();
+      allow create: if request.auth != null && !setupDone();
+      allow update: if isLead();
+    }
+
+    // Mitarbeitende
+    match /users/{id} {
+      allow read: if signedIn();
+      // Erste Einrichtung: der allererste Account darf sich selbst als Inhaber anlegen
+      allow create: if request.auth != null && !setupDone() && id == myId() && request.resource.data.get('owner', false) == true;
+      // Danach: Leitung legt Personen an (nie als Inhaber)
+      allow create: if isLead() && request.resource.data.get('owner', false) != true;
+      // Selbst registrieren: nur das eigene Konto, inaktiv und ohne Rechte, bis die Leitung freischaltet
+      allow create: if request.auth != null && id == myId() && setupDone()
+        && request.resource.data.get('active', true) == false && request.resource.data.get('pending', false) == true
+        && request.resource.data.get('owner', false) != true && request.resource.data.get('colead', false) != true
+        && request.resource.data.get('infos', false) != true && request.resource.data.get('approve', false) != true
+        && request.resource.data.get('loginDomain', '') == myDomain();
+      // Berechtigungen und Deaktivieren: nur Inhaber; Inhaber-Flag kann nicht vergeben werden
+      // Teamleitung darf alles ändern, auch die Leitung übertragen
+      allow update: if isOwner();
+      // Stv. Leitung darf alle anderen ändern (auch Stv. ernennen), aber nie die Teamleitung und nie das Teamleitungs-Flag
+      allow update: if isLead() && id != myId()
+        && resource.data.get('owner', false) != true && request.resource.data.get('owner', false) != true;
+      // Sich selbst: Rolle und Aktiv-Status bleiben erhalten
+      allow update: if isLead() && id == myId()
+        && request.resource.data.get('owner', false) == resource.data.get('owner', false)
+        && request.resource.data.get('colead', false) == resource.data.get('colead', false)
+        && request.resource.data.get('active', true) == true;
+      // Nach «PIN zurücksetzen» darf die Person ihre eigene Login-Version eintragen
+      allow update: if request.auth != null && id == myId()
+        && get(/databases/$(db)/documents/logins/$(id)).data.get('reset', false) == true
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['loginDomain'])
+        && request.resource.data.get('loginDomain', '') == myDomain();
+      allow delete: if false;
+    }
+
+    // Welche Login-Version gilt für einen Namen (nur der Domain-Teil, keine Namen): für die Anmeldeseite lesbar
+    match /logins/{id} {
+      allow get: if true;
+      allow list: if isLead();
+      function targetIsOwner() { return get(/databases/$(db)/documents/users/$(id)).data.get('owner', false) == true; }
+      allow create: if isLead() || (request.auth != null && id == myId() && !exists(/databases/$(db)/documents/users/$(id)));
+      // PIN zurücksetzen: Leitung bei allen ausser der Teamleitung (die nur bei sich selbst)
+      allow update: if isOwner() || (isLead() && !targetIsOwner());
+      // Nach «PIN zurücksetzen»: die Person selbst übernimmt die neue Login-Version
+      allow update: if request.auth != null && id == myId()
+        && resource.data.get('reset', false) == true
+        && request.resource.data.get('d', '') == myDomain()
+        && request.resource.data.get('reset', true) == false;
+      allow delete: if isLead();
+    }
+
+    match /groups/{id} {
+      allow read: if signedIn();
+      allow write: if isLead();
+    }
+
+    match /categories/{id} {
+      allow read: if signedIn();
+      allow create, update, delete: if canInfo();
+      allow create: if request.auth != null && !setupDone();
+    }
+
+    match /posts/{id} {
+      allow read: if signedIn();
+      allow create: if canInfo() && request.resource.data.authorId == myId();
+      allow update, delete: if canInfo();
+    }
+
+    match /images/{id} {
+      allow read: if signedIn();
+      allow create: if canInfo() && request.resource.data.by == myId() && request.resource.data.data.size() < 900000;
+      allow delete: if canInfo();
+    }
+
+    // Lesebestätigungen: jeder nur die eigene
+    match /reads/{id} {
+      allow read: if signedIn();
+      allow write: if signedIn() && id == myId();
+    }
+
+    // Anfragen (Schichttausch, Übernahmen, Ferien): eigene erstellen/löschen
+    match /requests/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.userId == myId();
+      allow delete: if signedIn() && resource.data.userId == myId();
+      allow delete: if canApprove();
+      allow update: if false;
+    }
+
+    // Entscheidungen: nur Freigabe-Berechtigte
+    match /decisions/{id} {
+      allow read: if signedIn();
+      allow create, update: if canApprove() && request.resource.data.byId == myId();
+      allow delete: if canApprove();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
