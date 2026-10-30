@@ -17,12 +17,13 @@ service cloud.firestore {
     function canInfo()    { return isLead() || (signedIn() && userDoc().get('infos', false) == true); }
     function setupDone()  { return exists(/databases/$(db)/documents/settings/portal); }
 
-    // Einstellungen: jeder darf lesen (für die Login-Seite), nur Inhaber ändert
+    // Einstellungen (Name, Farbe, Logo): jeder darf lesen (für die Anmeldeseite), nur die Leitung ändert
     match /settings/portal {
       allow get: if true;
       allow list: if signedIn();
       allow create: if request.auth != null && !setupDone();
-      allow update: if isLead();
+      // Logo als Bild-Daten: höchstens ca. 400 KB
+      allow update: if isLead() && request.resource.data.get('logo', '').size() < 400000;
     }
 
     // Mitarbeitende
